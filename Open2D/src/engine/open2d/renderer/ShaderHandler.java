@@ -5,14 +5,14 @@ import java.util.Hashtable;
 import android.opengl.GLES20;
 import android.util.Log;
 
-public class ShaderHandlers {
+public class ShaderHandler {
 	private String vShader;
 	private String fShader;
 	private String attributes[];
 	
 	private int compiledShaderProgram;
 	
-	public ShaderHandlers(String vShader,String fShader, String...attributes){
+	public ShaderHandler(String vShader,String fShader, String...attributes){
 		this.vShader = vShader;
 		this.fShader = fShader;
 		
@@ -64,9 +64,8 @@ public class ShaderHandlers {
     	GLES20.glAttachShader(programHandle, fragmentShaderProgram);
     	
     	if(attribute != null) {
-    		for(int i = 0; i < attribute.length; i++) {
+    		for(int i = 0; i < attribute.length; i++)
 		    	GLES20.glBindAttribLocation(programHandle, i, attribute[i]);
-    		}
     	}
     	
     	GLES20.glLinkProgram(programHandle);

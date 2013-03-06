@@ -1,6 +1,8 @@
 package engine.open2d.renderer;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.LinkedHashSet;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -24,14 +26,25 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	private float[] MVMatrix = new float[16];
 	private float[] MVPMatrix = new float[16];
 	
-	ShaderHandlers shaders;
+	ArrayList<ShaderHandler> shaders = null;
 	
-	public WorldRenderer(final Context activityContext) {
+
+	//singlton design pattern
+    private WorldRenderer() { }
+
+    private static class WorldRendererHolder { 
+            public static final WorldRenderer INSTANCE = new WorldRenderer();
+    }
+
+    public static WorldRenderer getInstance() {
+            return WorldRendererHolder.INSTANCE;
+    }
+	//end singleton
+    
+    
+	public void initSetup(final Context activityContext, ArrayList<ShaderHandler> shaderList){
 		this.activityContext = activityContext;
 		
-	}
-	
-	public void initSetup(){
 		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		
 		GLES20.glEnable(GLES20.GL_CULL_FACE);
@@ -41,7 +54,18 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 		
 	    Matrix.setLookAtM(viewMatrix, 0, 0.0f, 0.0f, -0.5f, 0.0f, 0.0f, -5.0f, 0.0f, 1.0f, 0.0f);
 	    
-	    shaders.buildShaderProgram();
+	    //build shaders set by users
+	    buildShaders();
+	    
+	    //build textures
+	}
+	
+	private void buildShaders(){
+	    if(shaders == null)
+			throw new RuntimeException("no shaders present");
+	    
+	    for(ShaderHandler shader:shaders)
+	    	shader.buildShaderProgram();
 	}
 	
 	public void passTouchEvents(MotionEvent e){}

@@ -13,7 +13,7 @@ public class SurfaceView extends GLSurfaceView{
         super(context);
         
         setEGLContextClientVersion(2);
-        WorldRenderer = new WorldRenderer(context);
+        WorldRenderer = WorldRenderer.getInstance();
         setRenderer(WorldRenderer);
         
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);

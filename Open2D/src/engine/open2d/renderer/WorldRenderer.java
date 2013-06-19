@@ -30,14 +30,14 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	
 
 	//singlton design pattern
-    private WorldRenderer() { }
+    private WorldRenderer() {}
 
     private static class WorldRendererHolder { 
-            public static final WorldRenderer INSTANCE = new WorldRenderer();
+    	public static final WorldRenderer INSTANCE = new WorldRenderer();
     }
 
     public static WorldRenderer getInstance() {
-            return WorldRendererHolder.INSTANCE;
+    	return WorldRendererHolder.INSTANCE;
     }
 	//end singleton
     

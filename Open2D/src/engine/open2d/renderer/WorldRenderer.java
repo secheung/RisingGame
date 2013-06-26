@@ -29,17 +29,21 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	ArrayList<ShaderHandler> shaders = null;
 	
 	//singlton design pattern
+<<<<<<< HEAD
     public WorldRenderer(final Context activityContext) { 
     	this.activityContext = activityContext;
     }
+=======
+    private WorldRenderer() {}
+>>>>>>> a4d078071ae44599debaa8fc0740426cd7a21909
 
     /*
     private static class WorldRendererHolder { 
-            public static final WorldRenderer INSTANCE = new WorldRenderer();
+    	public static final WorldRenderer INSTANCE = new WorldRenderer();
     }
 
     public static WorldRenderer getInstance() {
-            return WorldRendererHolder.INSTANCE;
+    	return WorldRendererHolder.INSTANCE;
     }
     */
 	//end singleton

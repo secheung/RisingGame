@@ -7,14 +7,15 @@ import android.view.MotionEvent;
 public class SurfaceView extends GLSurfaceView{
 
  	private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
-    private WorldRenderer WorldRenderer;
+    private WorldRenderer worldRenderer;
     
     public SurfaceView(Context context){
         super(context);
         
         setEGLContextClientVersion(2);
+
         //WorldRenderer = WorldRenderer.getInstance();
-        WorldRenderer = new WorldRenderer(context);
+        worldRenderer = new WorldRenderer(context);
         setRenderer(WorldRenderer);
         
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
@@ -26,7 +27,7 @@ public class SurfaceView extends GLSurfaceView{
         // and other input controls. In this case, you are only
         // interested in events where the touch position changed.
     	requestRender();
-    	WorldRenderer.passTouchEvents(e);
+    	worldRenderer.passTouchEvents(e);
     
         return true;
     } 

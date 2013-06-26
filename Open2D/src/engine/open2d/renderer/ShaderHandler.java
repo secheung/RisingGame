@@ -15,7 +15,6 @@ public class ShaderHandler {
 	public ShaderHandler(String vShader,String fShader, String...attributes){
 		this.vShader = vShader;
 		this.fShader = fShader;
-		
 		this.attributes = attributes;
 	}
 	

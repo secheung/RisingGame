@@ -28,10 +28,12 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	
 	ArrayList<ShaderHandler> shaders = null;
 	
-
 	//singlton design pattern
-    private WorldRenderer() { }
+    public WorldRenderer(final Context activityContext) { 
+    	this.activityContext = activityContext;
+    }
 
+    /*
     private static class WorldRendererHolder { 
             public static final WorldRenderer INSTANCE = new WorldRenderer();
     }
@@ -39,11 +41,11 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
     public static WorldRenderer getInstance() {
             return WorldRendererHolder.INSTANCE;
     }
+    */
 	//end singleton
     
     
-	public void initSetup(final Context activityContext, ArrayList<ShaderHandler> shaderList){
-		this.activityContext = activityContext;
+	public void initSetup(){
 		
 		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		
@@ -54,7 +56,6 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 		
 	    Matrix.setLookAtM(viewMatrix, 0, 0.0f, 0.0f, -0.5f, 0.0f, 0.0f, -5.0f, 0.0f, 1.0f, 0.0f);
 	    
-	    //build shaders set by users
 	    buildShaders();
 	    
 	    //build textures
@@ -68,6 +69,11 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	    	shader.buildShaderProgram();
 	}
 	
+	@Override
+	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+		initSetup();
+	}
+	
 	public void passTouchEvents(MotionEvent e){}
 
 	@Override
@@ -75,8 +81,5 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {}
-
-	@Override
-	public void onSurfaceCreated(GL10 gl, EGLConfig config) {}
 	
 }

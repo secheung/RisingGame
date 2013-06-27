@@ -16,7 +16,7 @@ public class SurfaceView extends GLSurfaceView{
 
         //WorldRenderer = WorldRenderer.getInstance();
         worldRenderer = new WorldRenderer(context);
-        setRenderer(WorldRenderer);
+        setRenderer(worldRenderer);
         
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
     }

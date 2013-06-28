@@ -50,8 +50,9 @@ public class ShaderTool {
 	private int compileShader(int shaderType, String shaderProgram){
 		int shaderHandle = GLES20.glCreateShader(shaderType);
 
-		if (shaderHandle == 0) 
+		if (shaderHandle == 0){
 			throw new RuntimeException("Error creating shader.");
+		}
 
     	GLES20.glShaderSource(shaderHandle, shaderProgram);
     	GLES20.glCompileShader(shaderHandle);

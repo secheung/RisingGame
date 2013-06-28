@@ -36,7 +36,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	private int viewportWidth;
 	private int viewportHeight;
 
-	Map<String,Shader> shaders = null;
+	LinkedHashMap<String,Shader> shaders;
 	LinkedHashMap<String,Shape> drawObjects;
 
 	//singlton design pattern
@@ -44,6 +44,9 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
     	this.activityContext = activityContext;
     	rendererMatrix = new RendererMatrix();
     	shaderTool = new ShaderTool(activityContext);
+    	
+    	shaders = new LinkedHashMap<String,Shader>();
+    	drawObjects = new LinkedHashMap<String,Shape>();
     }
 
     /*
@@ -65,10 +68,9 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 
     	String vertShader = shaderTool.getShaderFromResource(vertResourceId);
     	String fragShader = shaderTool.getShaderFromResource(fragResourceId);
-
+    	
     	Shader shader = new Shader(vertShader,fragShader,attributes);
-    	shaderTool.buildShaderProgram(shader);
-
+    	
     	shaders.put(ref, shader);
     }
 
@@ -83,11 +85,23 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 
 		rendererMatrix.setLookAt(0, 0.0f, 0.0f, -0.5f, 0.0f, 0.0f, -5.0f, 0.0f, 1.0f, 0.0f);;
 
+    	
 	    //TODO build textures
+		buildWorldShader();
 	}
 
+	private void buildWorldShader(){
+	    if(shaders == null)
+			throw new RuntimeException("no shaders present");
+	    
+	    for(Shader shader : shaders.values())
+	    	shaderTool.buildShaderProgram(shader);
+	}
+	
 	@Override
-	public void onSurfaceCreated(GL10 gl, EGLConfig config) {}
+	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+		//initSetup();
+	}
 
 	public void passTouchEvents(MotionEvent e){}
 

@@ -1,30 +1,44 @@
 package engine.open2d.renderer;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import engine.open2d.shader.Shader;
 import android.opengl.GLES20;
+import android.opengl.Matrix;
 
 public class RendererMatrix { 
 	public float[] modelMatrix = new float[16];
 	public float[] viewMatrix = new float[16];
 	public float[] projectionMatrix = new float[16];
-	
-	public float[] MVMatrix = new float[16];
-	public float[] MVPMatrix = new float[16];
-	
-	//TODO should MOVE TO HANDLE OBJECT that is based on shader program
-	int MVPMatrixHandle;
-    int MVMatrixHandle;
-    int LightPosHandle;
-    int TextureUniformHandle;
-    int PositionHandle;
-    int ColorHandle;
-    int NormalHandle;
-    int TextureCoordinateHandle;
-	
+
+	Map<String,Integer> handles;
+
 	public RendererMatrix(){
-		
+		handles = new HashMap<String,Integer>();
 	}
-	
-	public void setHandles(int shaderProgram){
+
+	public Map<String, Integer> getHandles() {
+		return handles;
+	}
+
+	public void setHandles(Map<String, Integer> handles) {
+		this.handles = handles;
+	}
+
+	public void setHandles(Shader shader){
+		int shaderProgram = shader.getShaderProgram();
+
+		//handles from shader
+		for(String attribute:shader.getAttributes()){
+			handles.put(attribute, GLES20.glGetUniformLocation(shaderProgram, attribute));
+		}
+
+		//handles for matrices
+		handles.put("u_MVMatrix", GLES20.glGetUniformLocation(shaderProgram, "u_MVMatrix"));
+		handles.put("u_MVPMatrix", GLES20.glGetUniformLocation(shaderProgram, "u_MVPMatrix"));
+
+		/*
 		MVPMatrixHandle = GLES20.glGetUniformLocation(shaderProgram, "u_MVPMatrix");
 	    MVMatrixHandle = GLES20.glGetUniformLocation(shaderProgram, "u_MVMatrix");
 	    LightPosHandle = GLES20.glGetAttribLocation(shaderProgram, "a_LightPos");
@@ -33,69 +47,35 @@ public class RendererMatrix {
 	    ColorHandle = GLES20.glGetAttribLocation(shaderProgram, "a_Color");
 	    NormalHandle = GLES20.glGetAttribLocation(shaderProgram, "a_Normal");
 	    TextureCoordinateHandle = GLES20.glGetAttribLocation(shaderProgram, "a_TexCoordinate");
+	    */
 	}
 
-	public int getMVPMatrixHandle() {
-		return MVPMatrixHandle;
+	public void setLookAt(int rmOffset, float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ){
+		Matrix.setLookAtM(viewMatrix, 0, 0.0f, 0.0f, -0.5f, 0.0f, 0.0f, -5.0f, 0.0f, 1.0f, 0.0f);
 	}
 
-	public void setMVPMatrixHandle(int mVPMatrixHandle) {
-		MVPMatrixHandle = mVPMatrixHandle;
+	public void setFrustum(int offset, float left, float right, float bottom, float top, float near, float far){
+		Matrix.frustumM(projectionMatrix, 0, left, right, bottom, top, near, far);
 	}
 
-	public int getMVMatrixHandle() {
-		return MVMatrixHandle;
+	public void translateModelMatrix(float changeX, float changeY, float changeZ){
+		Matrix.setIdentityM(modelMatrix, 0);
+        Matrix.translateM(modelMatrix, 0, changeX, changeY, changeZ);
 	}
 
-	public void setMVMatrixHandle(int mVMatrixHandle) {
-		MVMatrixHandle = mVMatrixHandle;
+	public float[] getMVMatrix(){
+		float[] mvMatrix = new float[16];//TODO WILL THIS CAUSE PROBLEMS?????
+		Matrix.multiplyMM(mvMatrix, 0, viewMatrix, 0, modelMatrix, 0);
+		return mvMatrix;
 	}
 
-	public int getLightPosHandle() {
-		return LightPosHandle;
-	}
+	public float[] getMVPMatrix(){
+		float[] mvMatrix = new float[16];
+		float[] mvpMatrix = new float[16];
+		//TODO TWO MATRIX MULT COULD CAUSE SLOWDOWN
+		Matrix.multiplyMM(mvMatrix, 0, viewMatrix, 0, modelMatrix, 0);
+		Matrix.multiplyMM(mvpMatrix, 0, mvMatrix, 0, projectionMatrix, 0);
 
-	public void setLightPosHandle(int lightPosHandle) {
-		LightPosHandle = lightPosHandle;
-	}
-
-	public int getTextureUniformHandle() {
-		return TextureUniformHandle;
-	}
-
-	public void setTextureUniformHandle(int textureUniformHandle) {
-		TextureUniformHandle = textureUniformHandle;
-	}
-
-	public int getPositionHandle() {
-		return PositionHandle;
-	}
-
-	public void setPositionHandle(int positionHandle) {
-		PositionHandle = positionHandle;
-	}
-
-	public int getColorHandle() {
-		return ColorHandle;
-	}
-
-	public void setColorHandle(int colorHandle) {
-		ColorHandle = colorHandle;
-	}
-
-	public int getNormalHandle() {
-		return NormalHandle;
-	}
-
-	public void setNormalHandle(int normalHandle) {
-		NormalHandle = normalHandle;
-	}
-
-	public int getTextureCoordinateHandle() {
-		return TextureCoordinateHandle;
-	}
-
-	public void setTextureCoordinateHandle(int textureCoordinateHandle) {
-		TextureCoordinateHandle = textureCoordinateHandle;
+		return mvpMatrix;
 	}
 }

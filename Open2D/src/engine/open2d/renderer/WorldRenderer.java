@@ -25,24 +25,25 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 public class WorldRenderer implements GLSurfaceView.Renderer{
+	public final static String WORLD_SHADER = "world_shader";
+
 	private final static int BYTES_PER_FLOAT = 4;
-	
+
 	Context activityContext;
 	RendererMatrix rendererMatrix;
-	
+	ShaderTool shaderTool;
+
 	private int viewportWidth;
 	private int viewportHeight;
-	
-	private int worldShaderProgram;
-	private int lightShaderProgram;
-	
+
 	Map<String,Shader> shaders = null;
 	LinkedHashMap<String,Shape> drawObjects;
-	
+
 	//singlton design pattern
-    public WorldRenderer(final Context activityContext) { 
+    public WorldRenderer(final Context activityContext) {
     	this.activityContext = activityContext;
     	rendererMatrix = new RendererMatrix();
+    	shaderTool = new ShaderTool(activityContext);
     }
 
     /*
@@ -55,52 +56,54 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
     }
     */
 	//end singleton
-    
-    
+
+    public void addDrawShape(String ref, Shape shape){
+    	drawObjects.put(ref, shape);
+    }
+
+    public void addCustomShader(String ref, int vertResourceId, int fragResourceId, String...attributes){
+
+    	String vertShader = shaderTool.getShaderFromResource(vertResourceId);
+    	String fragShader = shaderTool.getShaderFromResource(fragResourceId);
+
+    	Shader shader = new Shader(vertShader,fragShader,attributes);
+    	shaderTool.buildShaderProgram(shader);
+
+    	shaders.put(ref, shader);
+    }
+
 	public void initSetup(){
-		
+
 		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		
+
 		GLES20.glEnable(GLES20.GL_CULL_FACE);
 		GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 		GLES20.glEnable(GLES20.GL_BLEND);
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-		
-	    Matrix.setLookAtM(rendererMatrix.viewMatrix, 0, 0.0f, 0.0f, -0.5f, 0.0f, 0.0f, -5.0f, 0.0f, 1.0f, 0.0f);
-	    
-	    buildShaders();
-	    
-	    //build textures
+
+		rendererMatrix.setLookAt(0, 0.0f, 0.0f, -0.5f, 0.0f, 0.0f, -5.0f, 0.0f, 1.0f, 0.0f);;
+
+	    //TODO build textures
 	}
-	
-	private void buildShaders(){
-		ShaderTool shaderTool = new ShaderTool();
-		
-	    if(shaders.isEmpty())
-			throw new RuntimeException("no shaders present");
-	    
-	    //TODO should organize the shaders better
-	    worldShaderProgram = shaderTool.buildShaderProgram(shaders.get("worldShader"));
-	}
-	
+
 	@Override
-	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-		initSetup();
-	}
-	
+	public void onSurfaceCreated(GL10 gl, EGLConfig config) {}
+
 	public void passTouchEvents(MotionEvent e){}
 
 	@Override
 	public void onDrawFrame(GL10 gl) {
+		int worldShaderProgram = shaders.get(WORLD_SHADER).getShaderProgram();
+
 		GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
 		GLES20.glUseProgram(worldShaderProgram);
-        
-		rendererMatrix.setHandles(worldShaderProgram);
-        
+
+		rendererMatrix.setHandles(shaders.get(WORLD_SHADER));
+
 		for(Shape shape : drawObjects.values()){
 			/*TODO animated textures
 			dataToload = intTextures.get(intObjectIndx)[levelCurrentAnims.get(intObjectIndx)];
-			
+
 			GLES20.glActiveTexture(GLES20.GL_TEXTURE0 + intObjectIndx);
 	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, dataToload);
         	GLES20.glUniform1i(mTextureUniformHandle,intObjectIndx);
@@ -114,36 +117,43 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 		float[] colorData = shape.getColorData();
 		float[] normalData = shape.getNormalData();
 		//TODO Textures
-		
-		
+		//TODO MAKE SO NOT HARDCODED
+		Map<String,Integer> handles = rendererMatrix.getHandles();
+
         FloatBuffer position = ByteBuffer.allocateDirect(positionData.length * BYTES_PER_FLOAT)
         								 .order(ByteOrder.nativeOrder())
         								 .asFloatBuffer();
         position.put(positionData).position(0);
-        GLES20.glVertexAttribPointer(mPositionHandle, Shape.POSITION_DATA_SIZE, GLES20.GL_FLOAT, false, 0, position);
-		GLES20.glEnableVertexAttribArray(mPositionHandle);
-		
-		
+        GLES20.glVertexAttribPointer(handles.get("a_Position"), Shape.POSITION_DATA_SIZE, GLES20.GL_FLOAT, false, 0, position);
+		GLES20.glEnableVertexAttribArray(handles.get("a_Position"));
+
 		FloatBuffer color = ByteBuffer.allocateDirect(colorData.length * BYTES_PER_FLOAT)
 				 					  .order(ByteOrder.nativeOrder())
 				 					  .asFloatBuffer();
 		color.put(colorData).position(0);
-		GLES20.glVertexAttribPointer(mColorHandle, Shape.COLOR_DATA_SIZE, GLES20.GL_FLOAT, false, 0, color);
-		GLES20.glEnableVertexAttribArray(mColorHandle);
-	    
+		GLES20.glVertexAttribPointer(handles.get("a_Color"), Shape.COLOR_DATA_SIZE, GLES20.GL_FLOAT, false, 0, color);
+		GLES20.glEnableVertexAttribArray(handles.get("a_Color"));
+
 		FloatBuffer normal = ByteBuffer.allocateDirect(normalData.length * BYTES_PER_FLOAT)
 									   .order(ByteOrder.nativeOrder())
 									   .asFloatBuffer();
 	    normal.put(normalData).position(0);
-	    GLES20.glVertexAttribPointer(mNormalHandle, Shape.NORMAL_DATA_SIZE, GLES20.GL_FLOAT, false, 0, normal);
-	    GLES20.glEnableVertexAttribArray(mNormalHandle);
-        
+	    GLES20.glVertexAttribPointer(handles.get("a_Normal"), Shape.NORMAL_DATA_SIZE, GLES20.GL_FLOAT, false, 0, normal);
+	    GLES20.glEnableVertexAttribArray(handles.get("a_Normal"));
+
+
+        rendererMatrix.translateModelMatrix(shape.getTranslationX(),shape.getTranslationY(),shape.getTranslationZ());
+	    GLES20.glUniformMatrix4fv(handles.get("u_MVMatrix"), 1, false, rendererMatrix.getMVMatrix(), 0);
+	    GLES20.glUniformMatrix4fv(handles.get("u_MVPMatrix"), 1, false, rendererMatrix.getMVPMatrix(), 0);
+
+	    GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
+
 	}
-	
+
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
 		GLES20.glViewport(0, 0, width, height);
-		
+
 		viewportWidth = width;
 		viewportHeight = height;
 
@@ -155,6 +165,6 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 		final float near = 1.0f;
 		final float far = 10.0f;
 
-		Matrix.frustumM(projectionMatrix, 0, left, right, bottom, top, near, far);
+		rendererMatrix.setFrustum(0, left, right, bottom, top, near, far);
 	}
 }

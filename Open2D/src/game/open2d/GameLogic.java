@@ -18,26 +18,15 @@ public class GameLogic {
 										new String[]{"a_Position","a_Color","a_Normal"}
 									);
 
-		/*
+		
 		float[] positionData = {
 	            // X, Y, Z,
+			7.0f,  3.0f, 0.0f,
 			3.0f,  3.0f, 0.0f,
 			3.0f, -1.0f, 0.0f,
-			7.0f,  3.0f, 0.0f,
 			3.0f, -1.0f, 0.0f,
 			7.0f, -1.0f, 0.0f,
 			7.0f,  3.0f, 0.0f
-		};
-		*/
-
-		float[] positionData = {
-	            // X, Y, Z,
-			 1.0f,  -1.0f, 0.0f,
-			 1.0f,   1.0f, 0.0f,
-			-1.0f,   1.0f, 0.0f,
-			-1.0f,   1.0f, 0.0f,
-			-1.0f,  -1.0f, 0.0f,
-			 1.0f,  -1.0f, 0.0f
 		};
 		
 		float[] colorData = {
@@ -60,6 +49,10 @@ public class GameLogic {
 		};
 
 		Plane plane = new Plane(positionData,colorData,normalData);
+		plane.setTranslationX(-4.0f);
+		plane.setTranslationY(0.0f);
+		plane.setTranslationZ(-7.002f);
+		
 		worldRenderer.addDrawShape("myPlane", plane);
 	}
 }

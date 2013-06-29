@@ -76,7 +76,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 
 	public void initSetup(){
 
-		GLES20.glClearColor(1.0f, 1.0f,1.0f, 0.0f);
+		GLES20.glClearColor(0.0f, 104.0f/255.0f, 55.0f/255.0f, 0.0f);
 
 		GLES20.glEnable(GLES20.GL_CULL_FACE);
 		GLES20.glEnable(GLES20.GL_DEPTH_TEST);
@@ -160,8 +160,8 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	    int mvMatrixHandle = handles.get("u_MVMatrix");
 	    int mvpMatrixHandle = handles.get("u_MVPMatrix");
         rendererMatrix.translateModelMatrix(shape.getTranslationX(),shape.getTranslationY(),shape.getTranslationZ());
-	    GLES20.glUniformMatrix4fv(mvMatrixHandle, 1, false, rendererMatrix.getMVMatrix(), 0);
-	    GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, rendererMatrix.getMVPMatrix(), 0);
+		GLES20.glUniformMatrix4fv(mvMatrixHandle, 1, false, rendererMatrix.getMVMatrix(), 0);
+		GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, rendererMatrix.getMVPMatrix(), 0);
 
 	    GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
 
@@ -174,7 +174,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 		viewportWidth = width;
 		viewportHeight = height;
 
-		final float ratio = (float) width / height;
+		final float ratio = (float) width/height;
 		final float left = -ratio;
 		final float right = ratio;
 		final float bottom = -1.0f;

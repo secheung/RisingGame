@@ -54,7 +54,7 @@ public class ShaderTool {
 			throw new RuntimeException("Error creating shader.");
 		}
 
-    	GLES20.glShaderSource(shaderHandle, shaderProgram);
+		GLES20.glShaderSource(shaderHandle, shaderProgram);
     	GLES20.glCompileShader(shaderHandle);
 
     	// Get the compilation status.

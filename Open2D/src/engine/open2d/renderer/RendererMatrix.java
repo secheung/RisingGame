@@ -31,23 +31,12 @@ public class RendererMatrix {
 
 		//handles from shader
 		for(String attribute:shader.getAttributes()){
-			handles.put(attribute, GLES20.glGetUniformLocation(shaderProgram, attribute));
+			handles.put(attribute, GLES20.glGetAttribLocation(shaderProgram, attribute));
 		}
 
 		//handles for matrices
 		handles.put("u_MVMatrix", GLES20.glGetUniformLocation(shaderProgram, "u_MVMatrix"));
 		handles.put("u_MVPMatrix", GLES20.glGetUniformLocation(shaderProgram, "u_MVPMatrix"));
-
-		/*
-		MVPMatrixHandle = GLES20.glGetUniformLocation(shaderProgram, "u_MVPMatrix");
-	    MVMatrixHandle = GLES20.glGetUniformLocation(shaderProgram, "u_MVMatrix");
-	    LightPosHandle = GLES20.glGetAttribLocation(shaderProgram, "a_LightPos");
-	    TextureUniformHandle = GLES20.glGetUniformLocation(shaderProgram, "u_Texture");
-	    PositionHandle = GLES20.glGetAttribLocation(shaderProgram, "a_Position");
-	    ColorHandle = GLES20.glGetAttribLocation(shaderProgram, "a_Color");
-	    NormalHandle = GLES20.glGetAttribLocation(shaderProgram, "a_Normal");
-	    TextureCoordinateHandle = GLES20.glGetAttribLocation(shaderProgram, "a_TexCoordinate");
-	    */
 	}
 
 	public void setLookAt(int rmOffset, float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ){
@@ -74,7 +63,7 @@ public class RendererMatrix {
 		float[] mvpMatrix = new float[16];
 		//TODO TWO MATRIX MULT COULD CAUSE SLOWDOWN
 		Matrix.multiplyMM(mvMatrix, 0, viewMatrix, 0, modelMatrix, 0);
-		Matrix.multiplyMM(mvpMatrix, 0, mvMatrix, 0, projectionMatrix, 0);
+		Matrix.multiplyMM(mvpMatrix, 0, projectionMatrix, 0, mvMatrix, 0);
 
 		return mvpMatrix;
 	}

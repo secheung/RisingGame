@@ -26,7 +26,7 @@ public class GameSurfaceView extends GLSurfaceView{
 
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
-		//requestRender();
+		requestRender();
 		//worldRenderer.passTouchEvents(e);
 
 		return true;

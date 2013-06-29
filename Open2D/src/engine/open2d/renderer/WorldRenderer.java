@@ -76,16 +76,15 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 
 	public void initSetup(){
 
-		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		GLES20.glClearColor(1.0f, 1.0f,1.0f, 0.0f);
 
 		GLES20.glEnable(GLES20.GL_CULL_FACE);
 		GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 		GLES20.glEnable(GLES20.GL_BLEND);
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
 
-		rendererMatrix.setLookAt(0, 0.0f, 0.0f, -0.5f, 0.0f, 0.0f, -5.0f, 0.0f, 1.0f, 0.0f);;
+		rendererMatrix.setLookAt(0, 0.0f, 0.0f, -0.5f, 0.0f, 0.0f, -5.0f, 0.0f, 1.0f, 0.0f);
 
-    	
 	    //TODO build textures
 		buildWorldShader();
 	}
@@ -100,7 +99,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-		//initSetup();
+		initSetup();
 	}
 
 	public void passTouchEvents(MotionEvent e){}
@@ -134,31 +133,35 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 		//TODO MAKE SO NOT HARDCODED
 		Map<String,Integer> handles = rendererMatrix.getHandles();
 
+		int posHandle = handles.get("a_Position");
         FloatBuffer position = ByteBuffer.allocateDirect(positionData.length * BYTES_PER_FLOAT)
         								 .order(ByteOrder.nativeOrder())
         								 .asFloatBuffer();
         position.put(positionData).position(0);
-        GLES20.glVertexAttribPointer(handles.get("a_Position"), Shape.POSITION_DATA_SIZE, GLES20.GL_FLOAT, false, 0, position);
-		GLES20.glEnableVertexAttribArray(handles.get("a_Position"));
+        GLES20.glVertexAttribPointer(posHandle, Shape.POSITION_DATA_SIZE, GLES20.GL_FLOAT, false, 0, position);
+		GLES20.glEnableVertexAttribArray(posHandle);
 
+		int colorHandle = handles.get("a_Color");
 		FloatBuffer color = ByteBuffer.allocateDirect(colorData.length * BYTES_PER_FLOAT)
 				 					  .order(ByteOrder.nativeOrder())
 				 					  .asFloatBuffer();
 		color.put(colorData).position(0);
-		GLES20.glVertexAttribPointer(handles.get("a_Color"), Shape.COLOR_DATA_SIZE, GLES20.GL_FLOAT, false, 0, color);
-		GLES20.glEnableVertexAttribArray(handles.get("a_Color"));
+		GLES20.glVertexAttribPointer(colorHandle, Shape.COLOR_DATA_SIZE, GLES20.GL_FLOAT, false, 0, color);
+		GLES20.glEnableVertexAttribArray(colorHandle);
 
+		int normalHandle = handles.get("a_Normal");
 		FloatBuffer normal = ByteBuffer.allocateDirect(normalData.length * BYTES_PER_FLOAT)
 									   .order(ByteOrder.nativeOrder())
 									   .asFloatBuffer();
 	    normal.put(normalData).position(0);
-	    GLES20.glVertexAttribPointer(handles.get("a_Normal"), Shape.NORMAL_DATA_SIZE, GLES20.GL_FLOAT, false, 0, normal);
-	    GLES20.glEnableVertexAttribArray(handles.get("a_Normal"));
+	    GLES20.glVertexAttribPointer(normalHandle, Shape.NORMAL_DATA_SIZE, GLES20.GL_FLOAT, false, 0, normal);
+	    GLES20.glEnableVertexAttribArray(normalHandle);
 
-
+	    int mvMatrixHandle = handles.get("u_MVMatrix");
+	    int mvpMatrixHandle = handles.get("u_MVPMatrix");
         rendererMatrix.translateModelMatrix(shape.getTranslationX(),shape.getTranslationY(),shape.getTranslationZ());
-	    GLES20.glUniformMatrix4fv(handles.get("u_MVMatrix"), 1, false, rendererMatrix.getMVMatrix(), 0);
-	    GLES20.glUniformMatrix4fv(handles.get("u_MVPMatrix"), 1, false, rendererMatrix.getMVPMatrix(), 0);
+	    GLES20.glUniformMatrix4fv(mvMatrixHandle, 1, false, rendererMatrix.getMVMatrix(), 0);
+	    GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, rendererMatrix.getMVPMatrix(), 0);
 
 	    GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
 

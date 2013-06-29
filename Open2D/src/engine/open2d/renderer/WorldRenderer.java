@@ -25,6 +25,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 public class WorldRenderer implements GLSurfaceView.Renderer{
+	private final static String LOG_PREFIX = "WORLD_RENDERER";
+	private final static String DRAW_ITEM_EXISTS = "draw item exists in world renderer";
+
 	public final static String WORLD_SHADER = "world_shader";
 
 	private final static int BYTES_PER_FLOAT = 4;
@@ -60,7 +63,12 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
     */
 	//end singleton
 
-    public void addDrawShape(String ref, Shape shape){
+	public void addDrawShape(String ref, Shape shape){
+		if(drawObjects.containsKey(ref)){
+			Log.w(LOG_PREFIX, DRAW_ITEM_EXISTS);
+			return;
+		}
+
     	drawObjects.put(ref, shape);
     }
 
@@ -83,7 +91,10 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 		GLES20.glEnable(GLES20.GL_BLEND);
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
 
-		rendererMatrix.setLookAt(0, 0.0f, 0.0f, -0.5f, 0.0f, 0.0f, -5.0f, 0.0f, 1.0f, 0.0f);
+		rendererMatrix.setLookAt(0,
+								 0.0f, 0.0f, 0.0f,
+								 0.0f, 0.0f, -1.0f,
+								 0.0f, 1.0f, 0.0f);
 
 	    //TODO build textures
 		buildWorldShader();

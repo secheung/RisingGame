@@ -65,8 +65,8 @@ public class RendererMatrix {
 
 	public void setLookAt(int rmOffset, float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ){
 		Matrix.setLookAtM(viewMatrix, rmOffset, eyeX, eyeY, eyeZ, 
-										 centerX, centerY, centerZ,
-										 upX, upY, upZ);
+												centerX, centerY, centerZ,
+												upX, upY, upZ);
 	}
 
 	public void setFrustum(int offset, float left, float right, float bottom, float top, float near, float far){

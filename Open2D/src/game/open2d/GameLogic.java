@@ -68,27 +68,15 @@ public class GameLogic {
 			0.1f, 0.07f,
 			0.1f, 0.0f
 		};
-		
-
-		/*
-		float[] textureData = {
-			0.0f, 1.0f,
-			0.0f, 0.0f,
-			1.0f, 0.0f,
-			1.0f, 0.0f,
-			1.0f, 1.0f,
-			0.0f, 1.0f
-		};
-		*/
 
 		Plane plane = new Plane(positionData,colorData,normalData);
 		plane.addTexture("texture", textureData,R.drawable.stand);
-		plane.setTranslationX(0.0f);
+		plane.setTranslationX(-5.0f);
 		plane.setTranslationY(0.0f);
 		plane.setTranslationZ(-3.01f);
 
 		Plane plane2 = new Plane(positionData,colorData,normalData);
-		plane2.setTranslationX(2.0f);
+		plane2.setTranslationX(-3.0f);
 		plane2.setTranslationY(1.0f);
 		plane2.setTranslationZ(-3.0f);
 		

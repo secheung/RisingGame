@@ -1,13 +1,19 @@
 package engine.open2d.renderer;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
+import engine.open2d.draw.Shape;
 import engine.open2d.shader.Shader;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
 public class RendererTool {
+	private final static int BYTES_PER_FLOAT = 4;
+	
 	public float[] modelMatrix = new float[16];
 	public float[] viewMatrix = new float[16];
 	public float[] projectionMatrix = new float[16];
@@ -64,6 +70,16 @@ public class RendererTool {
 		handles.put("u_Texture", GLES20.glGetUniformLocation(shaderProgram, "u_Texture"));
 	}
 
+	public void enableHandles(String attribute, float[] data, int dataElementSize){
+		int handle = handles.get(attribute);
+        FloatBuffer buffer = ByteBuffer.allocateDirect(data.length * BYTES_PER_FLOAT)
+        								 .order(ByteOrder.nativeOrder())
+        								 .asFloatBuffer();
+        buffer.put(data).position(0);
+        GLES20.glVertexAttribPointer(handle, dataElementSize, GLES20.GL_FLOAT, false, 0, buffer);
+		GLES20.glEnableVertexAttribArray(handle);
+	}
+	
 	public void setLookAt(int rmOffset, float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ){
 		Matrix.setLookAtM(viewMatrix, rmOffset, eyeX, eyeY, eyeZ, 
 												centerX, centerY, centerZ,

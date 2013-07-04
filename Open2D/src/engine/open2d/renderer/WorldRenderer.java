@@ -27,10 +27,8 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	
 	public final static String WORLD_SHADER = "world_shader";
 
-	private final static int BYTES_PER_FLOAT = 4;
-
 	Context activityContext;
-	RendererTool rendererMatrix;
+	RendererTool rendererTool;
 	
 	ShaderTool shaderTool;
 	TextureTool textureTool;
@@ -44,7 +42,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	//singlton design pattern
     public WorldRenderer(final Context activityContext) {
     	this.activityContext = activityContext;
-    	rendererMatrix = new RendererTool();
+    	rendererTool = new RendererTool();
     	shaderTool = new ShaderTool(activityContext);
     	textureTool = new TextureTool(activityContext);
     	
@@ -106,7 +104,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 		GLES20.glEnable(GLES20.GL_BLEND);
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
 
-		rendererMatrix.setLookAt(0,
+		rendererTool.setLookAt(0,
 								 0.0f, 0.0f, 0.0f,
 								 0.0f, 0.0f, -1.0f,
 								 0.0f, 1.0f, 0.0f);
@@ -156,7 +154,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 		GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
 		GLES20.glUseProgram(worldShaderProgram);
 
-		rendererMatrix.setHandles(shaders.get(WORLD_SHADER));
+		rendererTool.setHandles(shaders.get(WORLD_SHADER));
 
 		for(Shape shape : drawObjects.values()){
         	drawShape(shape);
@@ -170,31 +168,11 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 
 		//TODO Textures
 		//TODO MAKE SO NOT HARDCODED
-		Map<String,Integer> handles = rendererMatrix.getHandles();
+		Map<String,Integer> handles = rendererTool.getHandles();
 
-		int posHandle = handles.get("a_Position");
-        FloatBuffer position = ByteBuffer.allocateDirect(positionData.length * BYTES_PER_FLOAT)
-        								 .order(ByteOrder.nativeOrder())
-        								 .asFloatBuffer();
-        position.put(positionData).position(0);
-        GLES20.glVertexAttribPointer(posHandle, Shape.POSITION_DATA_SIZE, GLES20.GL_FLOAT, false, 0, position);
-		GLES20.glEnableVertexAttribArray(posHandle);
-
-		int colorHandle = handles.get("a_Color");
-		FloatBuffer color = ByteBuffer.allocateDirect(colorData.length * BYTES_PER_FLOAT)
-				 					  .order(ByteOrder.nativeOrder())
-				 					  .asFloatBuffer();
-		color.put(colorData).position(0);
-		GLES20.glVertexAttribPointer(colorHandle, Shape.COLOR_DATA_SIZE, GLES20.GL_FLOAT, false, 0, color);
-		GLES20.glEnableVertexAttribArray(colorHandle);
-
-		int normalHandle = handles.get("a_Normal");
-		FloatBuffer normal = ByteBuffer.allocateDirect(normalData.length * BYTES_PER_FLOAT)
-									   .order(ByteOrder.nativeOrder())
-									   .asFloatBuffer();
-	    normal.put(normalData).position(0);
-	    GLES20.glVertexAttribPointer(normalHandle, Shape.NORMAL_DATA_SIZE, GLES20.GL_FLOAT, false, 0, normal);
-	    GLES20.glEnableVertexAttribArray(normalHandle);
+		rendererTool.enableHandles("a_Position", positionData, Shape.POSITION_DATA_SIZE);
+		rendererTool.enableHandles("a_Color", colorData, Shape.COLOR_DATA_SIZE);
+		rendererTool.enableHandles("a_Normal", normalData, Shape.NORMAL_DATA_SIZE);
 
 	    if(!(shape.getTextures() == null || shape.getTextures().isEmpty())){
 	    	
@@ -207,26 +185,20 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	    	
 	    	Texture shapeTexture = shape.getCurrentTexture();
 	    	float[] textureData = shapeTexture.getTextureData();
-			int textureHandle = handles.get("a_TexCoordinate");
-			FloatBuffer texture = ByteBuffer.allocateDirect(textureData.length * BYTES_PER_FLOAT)
-										   	.order(ByteOrder.nativeOrder())
-										   	.asFloatBuffer();
-			texture.put(textureData).position(0);
-		    GLES20.glVertexAttribPointer(textureHandle, Shape.TEXTURE_DATA_SIZE, GLES20.GL_FLOAT, false, 0, texture);
-		    GLES20.glEnableVertexAttribArray(textureHandle);
+	    	rendererTool.enableHandles("a_TexCoordinate", textureData, Shape.TEXTURE_DATA_SIZE);
 	    }
 	    
 	    
 	    int mvMatrixHandle = handles.get("u_MVMatrix");
 	    int mvpMatrixHandle = handles.get("u_MVPMatrix");
-        rendererMatrix.translateModelMatrix(shape.getTranslationX(),shape.getTranslationY(),shape.getTranslationZ());
-		GLES20.glUniformMatrix4fv(mvMatrixHandle, 1, false, rendererMatrix.getMVMatrix(), 0);
-		GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, rendererMatrix.getMVPMatrix(), 0);
+        rendererTool.translateModelMatrix(shape.getTranslationX(),shape.getTranslationY(),shape.getTranslationZ());
+		GLES20.glUniformMatrix4fv(mvMatrixHandle, 1, false, rendererTool.getMVMatrix(), 0);
+		GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, rendererTool.getMVPMatrix(), 0);
 
 	    GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
 
 	}
-
+	
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
 		GLES20.glViewport(0, 0, width, height);
@@ -242,6 +214,6 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 		final float near = 1.0f;
 		final float far = 10.0f;
 
-		rendererMatrix.setFrustum(0, left, right, bottom, top, near, far);
+		rendererTool.setFrustum(0, left, right, bottom, top, near, far);
 	}
 }

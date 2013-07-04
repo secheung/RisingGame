@@ -85,14 +85,14 @@ public class GameLogic {
 		plane.addTexture("texture", textureData,R.drawable.stand);
 		plane.setTranslationX(0.0f);
 		plane.setTranslationY(0.0f);
-		plane.setTranslationZ(-5.01f);
+		plane.setTranslationZ(-3.01f);
 
 		Plane plane2 = new Plane(positionData,colorData,normalData);
 		plane2.setTranslationX(2.0f);
 		plane2.setTranslationY(1.0f);
-		plane2.setTranslationZ(-5.0f);
+		plane2.setTranslationZ(-3.0f);
 		
 		worldRenderer.addDrawShape("myPlane", plane);
-		//worldRenderer.addDrawShape("myPlane2", plane2);
+		worldRenderer.addDrawShape("myPlane2", plane2);
 	}
 }

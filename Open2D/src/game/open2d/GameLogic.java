@@ -13,12 +13,11 @@ public class GameLogic {
 		this.context = context;
 
 		worldRenderer.addCustomShader(	WorldRenderer.WORLD_SHADER,
-										R.raw.vertex_shader,
-										R.raw.fragment_shader,
-										new String[]{"a_Position","a_Color","a_Normal"}
+										R.raw.vertex_shader_texture,
+										R.raw.fragment_shader_texture,
+										new String[]{"a_Position","a_Color","a_Normal","a_TexCoordinate"}
 									);
 
-		/*
 		float[] positionData = {
 	            // X, Y, Z,
 			7.0f,  3.0f, 0.0f,
@@ -28,17 +27,19 @@ public class GameLogic {
 			7.0f, -1.0f, 0.0f,
 			7.0f,  3.0f, 0.0f
 		};
-		*/
+
+		/*
 		float[] positionData = {
 	            // X, Y, Z,
-			1.0f,  -1.0f, 0.0f,
-			1.0f,  1.0f, 0.0f,
-			-1.0f, 1.0f, 0.0f,
-			-1.0f, 1.0f, 0.0f,
-			-1.0f, -1.0f, 0.0f,
-			1.0f,  -1.0f, 0.0f
+			5.0f,  -5.0f, 0.0f,
+			5.0f,  5.0f, 0.0f,
+			-5.0f, 5.0f, 0.0f,
+			-5.0f, 5.0f, 0.0f,
+			-5.0f, -5.0f, 0.0f,
+			5.0f,  -5.0f, 0.0f
 		};
-		
+		*/
+
 		float[] colorData = {
 		    // R, G, B, A
 			1.0f, 0.0f, 0.0f, 1.0f,
@@ -58,7 +59,30 @@ public class GameLogic {
 			0.0f, 0.0f, 1.0f
 		};
 
+		
+		float[] textureData = {
+			0.1f, 0.0f,
+			0.0f, 0.0f,
+			0.0f, 0.07f,
+			0.0f, 0.07f,
+			0.1f, 0.07f,
+			0.1f, 0.0f
+		};
+		
+
+		/*
+		float[] textureData = {
+			0.0f, 1.0f,
+			0.0f, 0.0f,
+			1.0f, 0.0f,
+			1.0f, 0.0f,
+			1.0f, 1.0f,
+			0.0f, 1.0f
+		};
+		*/
+
 		Plane plane = new Plane(positionData,colorData,normalData);
+		plane.addTexture("texture", textureData,R.drawable.stand);
 		plane.setTranslationX(0.0f);
 		plane.setTranslationY(0.0f);
 		plane.setTranslationZ(-5.01f);
@@ -69,6 +93,6 @@ public class GameLogic {
 		plane2.setTranslationZ(-5.0f);
 		
 		worldRenderer.addDrawShape("myPlane", plane);
-		worldRenderer.addDrawShape("myPlane2", plane2);
+		//worldRenderer.addDrawShape("myPlane2", plane2);
 	}
 }

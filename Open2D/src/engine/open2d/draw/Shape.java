@@ -1,10 +1,17 @@
 package engine.open2d.draw;
 
+import java.util.LinkedHashMap;
+
+import engine.open2d.texture.Texture;
+
 public abstract class Shape {
 	public final static int POSITION_DATA_SIZE = 3;
 	public final static int COLOR_DATA_SIZE = 4;
 	public final static int NORMAL_DATA_SIZE = 3;
-
+	public final static int TEXTURE_DATA_SIZE = 2;
+	
+	LinkedHashMap<String,Texture> textures;
+	
     protected float[] positionData;
     protected float[] colorData;
     protected float[] normalData;
@@ -20,6 +27,26 @@ public abstract class Shape {
     protected float scaleX;
     protected float scaleY;
     protected float scaleZ;
+    
+	public LinkedHashMap<String, Texture> getTextures() {
+		return textures;
+	}
+
+	public Texture getCurrentTexture(){
+		//TODO make not hardcode
+		return textures.get("texture");
+	}
+
+	public void addTexture(String ref, float[] texture, int referenceId){
+		if(textures == null)
+			textures = new LinkedHashMap<String,Texture>();
+		
+		textures.put(ref, new Texture(referenceId,texture));
+	}
+
+	public void setTextures(LinkedHashMap<String, Texture> textures) {
+		this.textures = textures;
+	}
 
 	public float[] getPositionData() {
 		return positionData;

@@ -6,7 +6,7 @@ import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import engine.open2d.draw.Shape;
+import engine.open2d.draw.Plane;
 import engine.open2d.shader.Shader;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
@@ -94,6 +94,14 @@ public class RendererTool {
 		Matrix.setIdentityM(modelMatrix, 0);
         Matrix.translateM(modelMatrix, 0, changeX, changeY, changeZ);
 	}
+	
+	//TODO fix this
+	/*
+	public void rotateModelMatrix(float angle, float rotationX, float rotationY, float rotationZ){
+		//Matrix.setIdentityM(modelMatrix, 0);
+        Matrix.rotateM(modelMatrix, 0, angle, rotationX, rotationY, rotationZ);
+	}
+	*/
 
 	public float[] getMVMatrix(){
 		float[] mvMatrix = new float[16];//TODO WILL THIS CAUSE PROBLEMS?????

@@ -1,8 +1,5 @@
 package engine.open2d.renderer;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -14,7 +11,8 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
 import android.view.MotionEvent;
-import engine.open2d.draw.Shape;
+import engine.open2d.draw.Plane;
+import engine.open2d.draw.Plane;
 import engine.open2d.shader.Shader;
 import engine.open2d.shader.ShaderTool;
 import engine.open2d.texture.Texture;
@@ -37,7 +35,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	private int viewportHeight;
 
 	LinkedHashMap<String,Shader> shaders;
-	LinkedHashMap<String,Shape> drawObjects;
+	LinkedHashMap<String,Plane> drawObjects;
 
 	//singlton design pattern
     public WorldRenderer(final Context activityContext) {
@@ -47,7 +45,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
     	textureTool = new TextureTool(activityContext);
     	
     	shaders = new LinkedHashMap<String,Shader>();
-    	drawObjects = new LinkedHashMap<String,Shape>();
+    	drawObjects = new LinkedHashMap<String,Plane>();
     }
 
     /*
@@ -61,7 +59,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
     */
 	//end singleton
 
-	public void addDrawShape(String ref, Shape shape){
+	public void addDrawShape(String ref, Plane shape){
 		if(drawObjects.containsKey(ref)){
 			Log.w(LOG_PREFIX, ITEM_EXISTS_WARNING+" [shape : "+ref+"]");
 			return;
@@ -69,7 +67,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 
     	drawObjects.put(ref, shape);
     }
-
+	
     public void addCustomShader(String ref, int vertResourceId, int fragResourceId, String...attributes){
     	if(shaders.containsKey(ref)){
 			Log.w(LOG_PREFIX, ITEM_EXISTS_WARNING+" [shader: "+ref+"]");
@@ -130,7 +128,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 			return;
 	    }
 		
-	    for(Shape shape : drawObjects.values()){
+	    for(Plane shape : drawObjects.values()){
 	    	LinkedHashMap<String,Texture> textures = shape.getTextures();
 	    	if(!(textures == null || textures.isEmpty())){
 		    	for(Texture texture : textures.values()){
@@ -156,42 +154,45 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 
 		rendererTool.setHandles(shaders.get(WORLD_SHADER));
 
-		for(Shape shape : drawObjects.values()){
+		int count = 0;
+		for(Plane shape : drawObjects.values()){
         	drawShape(shape);
+        	count++;
 		}
 	}
 
-	private void drawShape(Shape shape){
-		float[] positionData = shape.getPositionData();
-		float[] colorData = shape.getColorData();
-		float[] normalData = shape.getNormalData();
+	private void drawShape(Plane plane){
+		float[] positionData = plane.getPositionData();
+		float[] colorData = plane.getColorData();
+		float[] normalData = plane.getNormalData();
 
 		//TODO Textures
 		//TODO MAKE SO NOT HARDCODED
 		Map<String,Integer> handles = rendererTool.getHandles();
 
-		rendererTool.enableHandles("a_Position", positionData, Shape.POSITION_DATA_SIZE);
-		rendererTool.enableHandles("a_Color", colorData, Shape.COLOR_DATA_SIZE);
-		rendererTool.enableHandles("a_Normal", normalData, Shape.NORMAL_DATA_SIZE);
+		rendererTool.enableHandles("a_Position", positionData, Plane.POSITION_DATA_SIZE);
+		rendererTool.enableHandles("a_Color", colorData, Plane.COLOR_DATA_SIZE);
+		rendererTool.enableHandles("a_Normal", normalData, Plane.NORMAL_DATA_SIZE);
 
-	    if(!(shape.getTextures() == null || shape.getTextures().isEmpty())){
+	    if(!(plane.getTextures() == null || plane.getTextures().isEmpty())){
 	    	
 	    	int textureUniformHandle = handles.get("u_Texture");
 	    	
 		    //TODO needs object index on active and uniform
 		    GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, shape.getCurrentTexture().getCompiledTexture());
+	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, plane.getCurrentTexture().getCompiledTexture());
 	    	GLES20.glUniform1i(textureUniformHandle,0);
 	    	
-	    	Texture shapeTexture = shape.getCurrentTexture();
+	    	Texture shapeTexture = plane.getCurrentTexture();
 	    	float[] textureData = shapeTexture.getTextureData();
-	    	rendererTool.enableHandles("a_TexCoordinate", textureData, Shape.TEXTURE_DATA_SIZE);
+	    	rendererTool.enableHandles("a_TexCoordinate", textureData, Plane.TEXTURE_DATA_SIZE);
 	    }
 	    
 	    
 	    int mvMatrixHandle = handles.get("u_MVMatrix");
 	    int mvpMatrixHandle = handles.get("u_MVPMatrix");
-        rendererTool.translateModelMatrix(shape.getTranslationX(),shape.getTranslationY(),shape.getTranslationZ());
+        rendererTool.translateModelMatrix(plane.getTranslationX(),plane.getTranslationY(),plane.getTranslationZ());
+        
 		GLES20.glUniformMatrix4fv(mvMatrixHandle, 1, false, rendererTool.getMVMatrix(), 0);
 		GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, rendererTool.getMVPMatrix(), 0);
 

@@ -154,10 +154,8 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 
 		rendererTool.setHandles(shaders.get(WORLD_SHADER));
 
-		int count = 0;
 		for(Plane shape : drawObjects.values()){
         	drawShape(shape);
-        	count++;
 		}
 	}
 

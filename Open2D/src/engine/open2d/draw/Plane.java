@@ -10,7 +10,7 @@ public class Plane {
 	public final static int NORMAL_DATA_SIZE = 3;
 	public final static int TEXTURE_DATA_SIZE = 2;
 	
-	LinkedHashMap<String,Texture> textures;
+	LinkedHashMap<String,Texture> mTextures;
 	String currentTexture;
 	
     protected float[] positionData = {
@@ -61,8 +61,17 @@ public class Plane {
 		this.normalData = normal;
 	}
     
-	public Plane(float x, float y, float width, float normal){
+	public Plane(float width, float height){
 		float[] box = {
+			 width,  height, -2.0f,
+			 0.0f,   height, -2.0f,
+			 0.0f,   0.0f,   -2.0f,
+			 0.0f,   0.0f,   -2.0f,
+			 width,  0.0f,   -2.0f,
+			 width,  height, -2.0f
+		};
+		/*
+		float[] positionData = {
 	            // X, Y, Z,
 			7.0f,  3.0f, 0.0f,
 			3.0f,  3.0f, 0.0f,
@@ -71,28 +80,30 @@ public class Plane {
 			7.0f, -1.0f, 0.0f,
 			7.0f,  3.0f, 0.0f
 		};
+		*/
+		
 		this.positionData = box;
 	}
 	
 	public LinkedHashMap<String, Texture> getTextures() {
-		return textures;
+		return mTextures;
 	}
 
 	public Texture getCurrentTexture(){
-		return textures.get(currentTexture);
+		return mTextures.get(currentTexture);
 	}
 
 	public void addTexture(String ref, float[] texture, int referenceId){
-		if(textures == null){
-			textures = new LinkedHashMap<String,Texture>();
+		if(mTextures == null){
+			mTextures = new LinkedHashMap<String,Texture>();
 			currentTexture = ref;
 		}
 		
-		textures.put(ref, new Texture(referenceId,texture));
+		mTextures.put(ref, new Texture(referenceId,texture));
 	}
 
 	public void setTextures(LinkedHashMap<String, Texture> textures) {
-		this.textures = textures;
+		this.mTextures = textures;
 	}
 
 	public float[] getPositionData() {

@@ -37,7 +37,7 @@ public class GameLogic {
 		worldRenderer.addDrawShape("myPlane", plane);
 	}
 	
-	public void gameLoop(){
-		
+	public void update(){
+		//worldRenderer.updateDrawObject("myPlane2", row, column);
 	}
 }

@@ -13,6 +13,10 @@ public class Texture {
 	public float[] getTextureCoord() {
 		return textureCoord;
 	}
+	
+	public void setTextureCoord(float[] textureCoord){
+		this.textureCoord = textureCoord;  
+	}
 
 	public int getResourceId() {
 		return resourceId;

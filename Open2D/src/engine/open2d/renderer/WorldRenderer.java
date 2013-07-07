@@ -125,6 +125,10 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		initSetup();
 	}
+	
+	public void updateDrawObject(String ref, int row, int column){
+		
+	}
 
 	public void passTouchEvents(MotionEvent e){}
 

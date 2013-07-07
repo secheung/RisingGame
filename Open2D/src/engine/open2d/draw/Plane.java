@@ -66,12 +66,12 @@ public class Plane {
     
 	public Plane(float frameWidth, float frameHeight, int referenceId, int rows, int columns){
 		float[] box = {
-			 frameWidth, frameHeight, -2.0f,
-			 0.0f,   	 frameHeight, -2.0f,
-			 0.0f,   	 0.0f,   	 -2.0f,
-			 0.0f,   	 0.0f,   	 -2.0f,
-			 frameWidth, 0.0f,   	 -2.0f,
-			 frameWidth, frameHeight, -2.0f
+			 frameWidth, frameHeight,	-2.0f,
+			 0.0f,   	 frameHeight,	-2.0f,
+			 0.0f,   	 0.0f,			-2.0f,
+			 0.0f,   	 0.0f,			-2.0f,
+			 frameWidth, 0.0f,			-2.0f,
+			 frameWidth, frameHeight,	-2.0f
 		};
 		
 		this.positionData = box;
@@ -183,5 +183,21 @@ public class Plane {
 
 	public void setScaleZ(float scaleZ) {
 		this.scaleZ = scaleZ;
+	}
+	
+	public void updateTextureCoord(int row, int column){
+		int currentRow = row;
+		int currentColumn = column;
+		
+		float[] updateCoord = {
+			frameHeight*currentColumn, 				frameWidth*currentRow,
+			frameHeight*currentColumn, 				frameWidth*currentRow + frameWidth,
+			frameHeight*currentColumn + frameHeight, frameWidth*currentRow,
+			frameHeight*currentColumn,				frameWidth*currentRow + frameWidth,
+			frameHeight*currentColumn + frameHeight, frameWidth*currentRow + frameWidth,
+			frameHeight*currentColumn + frameHeight, frameWidth*currentRow
+		};
+		
+		this.texture.setTextureCoord(updateCoord);
 	}
 }

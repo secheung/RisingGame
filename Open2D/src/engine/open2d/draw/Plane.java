@@ -10,7 +10,7 @@ public class Plane {
 	public final static int NORMAL_DATA_SIZE = 3;
 	public final static int TEXTURE_DATA_SIZE = 2;
 	
-	LinkedHashMap<String,Texture> mTextures;
+	Texture texture;
 	String currentTexture;
 	
     protected float[] positionData = {
@@ -55,55 +55,50 @@ public class Plane {
     protected float scaleY;
     protected float scaleZ;
     
+    private float frameWidth;
+    private float frameHeight;
+    
 	public Plane(float[] position, float[] color, float[] normal){
 		this.positionData = position;
 		this.colorData = color;
 		this.normalData = normal;
 	}
     
-	public Plane(float width, float height){
+	public Plane(float frameWidth, float frameHeight, int referenceId, int rows, int columns){
 		float[] box = {
-			 width,  height, -2.0f,
-			 0.0f,   height, -2.0f,
-			 0.0f,   0.0f,   -2.0f,
-			 0.0f,   0.0f,   -2.0f,
-			 width,  0.0f,   -2.0f,
-			 width,  height, -2.0f
+			 frameWidth, frameHeight, -2.0f,
+			 0.0f,   	 frameHeight, -2.0f,
+			 0.0f,   	 0.0f,   	 -2.0f,
+			 0.0f,   	 0.0f,   	 -2.0f,
+			 frameWidth, 0.0f,   	 -2.0f,
+			 frameWidth, frameHeight, -2.0f
 		};
-		/*
-		float[] positionData = {
-	            // X, Y, Z,
-			7.0f,  3.0f, 0.0f,
-			3.0f,  3.0f, 0.0f,
-			3.0f, -1.0f, 0.0f,
-			3.0f, -1.0f, 0.0f,
-			7.0f, -1.0f, 0.0f,
-			7.0f,  3.0f, 0.0f
-		};
-		*/
 		
 		this.positionData = box;
+		
+		prepareTexture(referenceId,rows,columns);
 	}
 	
-	public LinkedHashMap<String, Texture> getTextures() {
-		return mTextures;
-	}
 
-	public Texture getCurrentTexture(){
-		return mTextures.get(currentTexture);
-	}
+	public void prepareTexture(int referenceId, int rows, int columns){
 
-	public void addTexture(String ref, float[] texture, int referenceId){
-		if(mTextures == null){
-			mTextures = new LinkedHashMap<String,Texture>();
-			currentTexture = ref;
-		}
+		frameWidth = 1.0f/rows;
+		frameHeight = 1.0f/columns;
 		
-		mTextures.put(ref, new Texture(referenceId,texture));
+		float[] textureCoord = {
+			frameHeight,0.0f,
+			0.0f, 		0.0f,
+			0.0f, 		frameWidth,
+			0.0f, 		frameWidth,
+			frameHeight,frameWidth,
+			frameHeight,0.0f
+		};
+		
+		texture = new Texture(referenceId, textureCoord);
 	}
 
-	public void setTextures(LinkedHashMap<String, Texture> textures) {
-		this.mTextures = textures;
+	public Texture getTexture() {
+		return texture;
 	}
 
 	public float[] getPositionData() {

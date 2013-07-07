@@ -3,15 +3,15 @@ package engine.open2d.texture;
 public class Texture {
 	private int resourceId;
 	private int compiledTexture;
-	private float[] textureData;
+	private float[] textureCoord;
 	
-	public Texture(int resourceId, float[] texture){
+	public Texture(int resourceId, float[] textureCoord){
 		this.resourceId = resourceId;
-		this.textureData = texture;
+		this.textureCoord = textureCoord;
 	}
 
-	public float[] getTextureData() {
-		return textureData;
+	public float[] getTextureCoord() {
+		return textureCoord;
 	}
 
 	public int getResourceId() {

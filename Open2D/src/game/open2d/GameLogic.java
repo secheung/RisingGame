@@ -18,71 +18,26 @@ public class GameLogic {
 										new String[]{"a_Position","a_Color","a_Normal","a_TexCoordinate"}
 									);
 
-		float[] positionData = {
-	            // X, Y, Z,
-			7.0f,  3.0f, 0.0f,
-			3.0f,  3.0f, 0.0f,
-			3.0f, -1.0f, 0.0f,
-			3.0f, -1.0f, 0.0f,
-			7.0f, -1.0f, 0.0f,
-			7.0f,  3.0f, 0.0f
-		};
-
-		/*
-		float[] positionData = {
-	            // X, Y, Z,
-			5.0f,  -5.0f, 0.0f,
-			5.0f,  5.0f, 0.0f,
-			-5.0f, 5.0f, 0.0f,
-			-5.0f, 5.0f, 0.0f,
-			-5.0f, -5.0f, 0.0f,
-			5.0f,  -5.0f, 0.0f
-		};
-		*/
-
-		float[] colorData = {
-		    // R, G, B, A
-			1.0f, 0.0f, 0.0f, 1.0f,
-			0.0f, 1.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f, 1.0f,
-			0.0f, 0.0f, 1.0f, 1.0f,
-			0.0f, 0.0f, 0.0f, 1.0f,
-			1.0f, 0.0f, 0.0f, 1.0f
-		};
-
-		float[] normalData = {
-			0.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f
-		};
-
-		
-		float[] textureData = {
-			0.1f, 0.0f,
-			0.0f, 0.0f,
-			0.0f, 0.07f,
-			0.0f, 0.07f,
-			0.1f, 0.07f,
-			0.1f, 0.0f
-		};
-
-		Plane plane = new Plane(positionData,colorData,normalData);
-		plane.addTexture("texture", textureData,R.drawable.stand);
-		plane.setTranslationX(0.0f);
+		//Plane plane = new Plane(positionData,colorData,normalData);
+		//plane.addTexture(textureData,R.drawable.stand);
+		Plane plane = new Plane(2.5f, 3.5f, R.drawable.stand, 14, 10);
+		plane.setTranslationX(-1.0f);
 		plane.setTranslationY(0.0f);
-		plane.setTranslationZ(-3.01f);
+		plane.setTranslationZ(-1.5f);
 
 		//Plane plane2 = new Plane(positionData,colorData,normalData);
-		Plane plane2 = new Plane(2.5f,3.5f);
-		plane2.addTexture("texture2", textureData, R.drawable.stand);
+		Plane plane2 = new Plane(2.5f, 3.5f, R.drawable.stand, 14, 10);
+		//Plane plane2 = new Plane(2.5f, 3.5f, R.drawable.computer_look_back, 1, 1);
+		//plane2.addTexture("texture2", textureData, R.drawable.stand);
 		plane2.setTranslationX(0.0f);
 		plane2.setTranslationY(0.0f);
 		plane2.setTranslationZ(-1.7f);
 		
-		worldRenderer.addDrawShape("myPlane", plane);
 		worldRenderer.addDrawShape("myPlane2", plane2);
+		worldRenderer.addDrawShape("myPlane", plane);
+	}
+	
+	public void gameLoop(){
+		
 	}
 }

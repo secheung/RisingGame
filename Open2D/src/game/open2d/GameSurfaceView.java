@@ -3,6 +3,7 @@ package game.open2d;
 import engine.open2d.renderer.WorldRenderer;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 import android.view.MotionEvent;
 
 public class GameSurfaceView extends GLSurfaceView{
@@ -26,6 +27,7 @@ public class GameSurfaceView extends GLSurfaceView{
 
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
+		gameLogic.update();
 		requestRender();
 		//worldRenderer.passTouchEvents(e);
 

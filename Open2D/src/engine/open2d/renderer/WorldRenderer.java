@@ -36,7 +36,6 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	LinkedHashMap<String,Shader> shaders;
 	LinkedHashMap<String,Plane> drawObjects;
 
-	//singlton design pattern
     public WorldRenderer(final Context activityContext) {
     	this.activityContext = activityContext;
     	rendererTool = new RendererTool();
@@ -46,17 +45,6 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
     	shaders = new LinkedHashMap<String,Shader>();
     	drawObjects = new LinkedHashMap<String,Plane>();
     }
-
-    /*
-    private static class WorldRendererHolder { 
-    	public static final WorldRenderer INSTANCE = new WorldRenderer();
-    }
-
-    public static WorldRenderer getInstance() {
-    	return WorldRendererHolder.INSTANCE;
-    }
-    */
-	//end singleton
 
 	public void addDrawShape(String ref, Plane shape){
 		if(drawObjects.containsKey(ref)){
@@ -95,7 +83,6 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 								0.0f, 0.0f, -1.0f,
 								0.0f, 1.0f, 0.0f);
 
-	    //TODO build textures
 		buildShaders();
 		buildObjectTextures();
 	}
@@ -126,8 +113,14 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 		initSetup();
 	}
 	
-	public void updateDrawObject(String ref, int row, int column){
+	public void drawObject(String ref){
+		Plane drawObj = drawObjects.get(ref);
 		
+		if(drawObj == null)
+			Log.w(LOG_PREFIX, NO_ITEM_EXISTS_WARNING+" drawable objects for "+ref);
+		
+		drawObj.update();
+		drawObj.setDraw(true);
 	}
 
 	public void passTouchEvents(MotionEvent e){}
@@ -143,7 +136,9 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 
 		//TODO order planes according to z value
 		for(Plane plane : drawObjects.values()){
-        	drawShape(plane);
+			if(plane.isDrawEnabled()){
+				drawShape(plane);
+			}
 		}
 	}
 

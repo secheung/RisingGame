@@ -1,7 +1,7 @@
 package engine.open2d.draw;
 
-import java.util.LinkedHashMap;
-
+import android.util.Log;
+import engine.open2d.texture.AnimatedTexture;
 import engine.open2d.texture.Texture;
 
 public class Plane {
@@ -12,6 +12,8 @@ public class Plane {
 	
 	Texture texture;
 	String currentTexture;
+	
+	private boolean draw;
 	
     protected float[] positionData = {
             // X, Y, Z,
@@ -54,49 +56,57 @@ public class Plane {
     protected float scaleX;
     protected float scaleY;
     protected float scaleZ;
-    
-    private float frameWidth;
-    private float frameHeight;
-    
-	public Plane(float[] position, float[] color, float[] normal){
-		this.positionData = position;
-		this.colorData = color;
-		this.normalData = normal;
+
+    public Plane(	int referenceId, 
+    				float planeWidth, float planeHeight,
+    				float x, float y, float z){
+    	
+    	initPlane(planeWidth, planeHeight, x,y,z);
+		texture = new Texture(referenceId);
 	}
-    
-	public Plane(float frameWidth, float frameHeight, int referenceId, int rows, int columns){
+
+	public Plane(	int referenceId, 
+					float planeWidth, float planeHeight,
+					float x, float y, float z,
+					int rows, int columns){
+		
+		initPlane(planeWidth, planeHeight, x,y,z);
+		texture = new AnimatedTexture(referenceId, rows, columns);
+	}
+
+	private void initPlane(	float planeWidth, float planeHeight,
+						float x, float y, float z){
 		float[] box = {
-			 frameWidth, frameHeight,	-2.0f,
-			 0.0f,   	 frameHeight,	-2.0f,
-			 0.0f,   	 0.0f,			-2.0f,
-			 0.0f,   	 0.0f,			-2.0f,
-			 frameWidth, 0.0f,			-2.0f,
-			 frameWidth, frameHeight,	-2.0f
+				planeWidth,  planeHeight,	-2.0f,
+				0.0f,   	 planeHeight,	-2.0f,
+				0.0f,   	 0.0f,			-2.0f,
+				0.0f,   	 0.0f,			-2.0f,
+				planeWidth,  0.0f,			-2.0f,
+				planeWidth,  planeHeight,	-2.0f
 		};
+		positionData = box;
+
+		setTranslationX(x);
+		setTranslationY(y);
+		setTranslationZ(z);
 		
-		this.positionData = box;
-		
-		prepareTexture(referenceId,rows,columns);
+		draw = false;
 	}
 	
-
-	public void prepareTexture(int referenceId, int rows, int columns){
-
-		frameWidth = 1.0f/rows;
-		frameHeight = 1.0f/columns;
-		
-		float[] textureCoord = {
-			frameHeight,0.0f,
-			0.0f, 		0.0f,
-			0.0f, 		frameWidth,
-			0.0f, 		frameWidth,
-			frameHeight,frameWidth,
-			frameHeight,0.0f
-		};
-		
-		texture = new Texture(referenceId, textureCoord);
+	public void update(){
+		if(texture instanceof AnimatedTexture){
+			((AnimatedTexture) texture).incrementFrame();
+		}
 	}
-
+	
+	public void setDraw(boolean enable){
+		draw = enable;
+	}
+	
+	public boolean isDrawEnabled(){
+		return draw;
+	}
+	
 	public Texture getTexture() {
 		return texture;
 	}
@@ -183,21 +193,5 @@ public class Plane {
 
 	public void setScaleZ(float scaleZ) {
 		this.scaleZ = scaleZ;
-	}
-	
-	public void updateTextureCoord(int row, int column){
-		int currentRow = row;
-		int currentColumn = column;
-		
-		float[] updateCoord = {
-			frameHeight*currentColumn, 				frameWidth*currentRow,
-			frameHeight*currentColumn, 				frameWidth*currentRow + frameWidth,
-			frameHeight*currentColumn + frameHeight, frameWidth*currentRow,
-			frameHeight*currentColumn,				frameWidth*currentRow + frameWidth,
-			frameHeight*currentColumn + frameHeight, frameWidth*currentRow + frameWidth,
-			frameHeight*currentColumn + frameHeight, frameWidth*currentRow
-		};
-		
-		this.texture.setTextureCoord(updateCoord);
 	}
 }

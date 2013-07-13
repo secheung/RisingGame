@@ -4,7 +4,8 @@ import android.content.Context;
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
 
-public class GameLogic {
+public class GameLogic{
+	
 	WorldRenderer worldRenderer;
 	Context context;
 
@@ -18,26 +19,22 @@ public class GameLogic {
 										new String[]{"a_Position","a_Color","a_Normal","a_TexCoordinate"}
 									);
 
-		//Plane plane = new Plane(positionData,colorData,normalData);
-		//plane.addTexture(textureData,R.drawable.stand);
-		Plane plane = new Plane(2.5f, 3.5f, R.drawable.stand, 14, 10);
-		plane.setTranslationX(-1.0f);
-		plane.setTranslationY(0.0f);
-		plane.setTranslationZ(-1.5f);
-
-		//Plane plane2 = new Plane(positionData,colorData,normalData);
-		Plane plane2 = new Plane(2.5f, 3.5f, R.drawable.stand, 14, 10);
-		//Plane plane2 = new Plane(2.5f, 3.5f, R.drawable.computer_look_back, 1, 1);
-		//plane2.addTexture("texture2", textureData, R.drawable.stand);
-		plane2.setTranslationX(0.0f);
-		plane2.setTranslationY(0.0f);
-		plane2.setTranslationZ(-1.7f);
+		Plane plane = new Plane(R.drawable.stand, 2.5f, 3.5f, -1.0f, 0.0f, -1.5f, 14, 10);
+		Plane plane2 = new Plane(R.drawable.computer_look_back, 2.5f, 3.5f, 0.0f, 0.0f, -1.7f);
+		Plane plane3 = new Plane(R.drawable.walk, 2.5f, 3.5f, -1.5f, 0.0f, -1.8f, 9, 6);
 		
+		worldRenderer.addDrawShape("myPlane3", plane3);
 		worldRenderer.addDrawShape("myPlane2", plane2);
 		worldRenderer.addDrawShape("myPlane", plane);
+		
+		worldRenderer.drawObject("myPlane");
+		worldRenderer.drawObject("myPlane2");
+		worldRenderer.drawObject("myPlane3");
 	}
 	
 	public void update(){
-		//worldRenderer.updateDrawObject("myPlane2", row, column);
+		worldRenderer.drawObject("myPlane");
+		worldRenderer.drawObject("myPlane2");
+		worldRenderer.drawObject("myPlane3");
 	}
 }

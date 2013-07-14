@@ -30,9 +30,6 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	ShaderTool shaderTool;
 	TextureTool textureTool;
 
-	private int viewportWidth;
-	private int viewportHeight;
-
 	LinkedHashMap<String,Shader> shaders;
 	LinkedHashMap<String,Plane> drawObjects;
 
@@ -52,6 +49,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 			return;
 		}
 
+		shape.name = ref;
     	drawObjects.put(ref, shape);
     }
 	
@@ -123,7 +121,32 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 		drawObj.setDraw(true);
 	}
 
-	public void passTouchEvents(MotionEvent e){}
+	public void passTouchEvents(MotionEvent e){
+		float x = e.getX();
+		float y = rendererTool.getViewportHeight() - e.getY();
+		float closestdepth = -1;
+		Plane objSelected=null;
+
+//		Log.d(LOG_PREFIX, ""+x);
+//		Log.d(LOG_PREFIX, ""+y);
+		
+		for(Plane drawObj : drawObjects.values()){
+			if(!drawObj.isDrawEnabled()){
+				continue;
+			}
+
+			float[] projectedPoints = rendererTool.screenProjection(drawObj);
+			if(x > projectedPoints[0] && x < projectedPoints[0]+projectedPoints[2] && y > projectedPoints[1] && y < projectedPoints[1]+projectedPoints[3]){
+				if(projectedPoints[4] >= closestdepth){
+					closestdepth = projectedPoints[4];
+					objSelected = drawObj;
+				}
+			}
+		}
+		
+		if(objSelected != null)
+			Log.d(LOG_PREFIX, objSelected.name);
+	}
 
 	@Override
 	public void onDrawFrame(GL10 gl) {
@@ -184,9 +207,9 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
 		GLES20.glViewport(0, 0, width, height);
 
-		viewportWidth = width;
-		viewportHeight = height;
-
+		rendererTool.setViewportWidth(width);
+		rendererTool.setViewportHeight(height);
+		
 		final float ratio = (float) width/height;
 		final float left = -ratio;
 		final float right = ratio;

@@ -1,10 +1,11 @@
 package game.open2d;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
 
-public class GameLogic{
+public class GameLogic extends AsyncTask<Void, Void, Void>{
 	
 	WorldRenderer worldRenderer;
 	Context context;
@@ -22,19 +23,38 @@ public class GameLogic{
 		Plane plane = new Plane(R.drawable.stand, 2.5f, 3.5f, -1.0f, 0.0f, -1.5f, 14, 10);
 		Plane plane2 = new Plane(R.drawable.computer_look_back, 2.5f, 3.5f, 0.0f, 0.0f, -1.7f);
 		Plane plane3 = new Plane(R.drawable.walk, 2.5f, 3.5f, -1.5f, 0.0f, -1.8f, 9, 6);
+		Plane plane4 = new Plane(R.drawable.walk, 2.5f, 3.5f, -4.0f, 0.0f, -1.8f, 9, 6);
 		
+		//worldRenderer.addDrawShape("myPlane4", plane4);
 		worldRenderer.addDrawShape("myPlane3", plane3);
 		worldRenderer.addDrawShape("myPlane2", plane2);
 		worldRenderer.addDrawShape("myPlane", plane);
-		
-		worldRenderer.drawObject("myPlane");
-		worldRenderer.drawObject("myPlane2");
-		worldRenderer.drawObject("myPlane3");
 	}
 	
 	public void update(){
 		worldRenderer.drawObject("myPlane");
-		worldRenderer.drawObject("myPlane2");
+		//worldRenderer.drawObject("myPlane2");
 		worldRenderer.drawObject("myPlane3");
+		//worldRenderer.drawObject("myPlane4");
+	}
+
+	@Override
+	protected Void doInBackground(Void... params) {
+		//TODO fix up later - find method for manual renders
+	    int TICKS_PER_SECOND = 30;
+	    int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
+
+	    long next_game_tick = System.currentTimeMillis();
+
+	    boolean game_is_running = true;
+	    while( game_is_running ) {
+	        while( System.currentTimeMillis() > next_game_tick) {
+	            update();
+
+	            next_game_tick += SKIP_TICKS;
+	        }
+	    }
+	    
+	    return null;
 	}
 }

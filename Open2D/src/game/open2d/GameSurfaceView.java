@@ -20,16 +20,18 @@ public class GameSurfaceView extends GLSurfaceView{
 		//WorldRenderer = WorldRenderer.getInstance();
 		worldRenderer = new WorldRenderer(context);
 		setRenderer(worldRenderer);
-		setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+		setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 		
 		gameLogic = new GameLogic(context,worldRenderer);
+		gameLogic.execute();
+		
+		
     }
 
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
-		gameLogic.update();
-		requestRender();
-		//worldRenderer.passTouchEvents(e);
+		//requestRender();
+		worldRenderer.passTouchEvents(e);
 
 		return true;
 	}

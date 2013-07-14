@@ -11,7 +11,9 @@ public class Plane {
 	public final static int TEXTURE_DATA_SIZE = 2;
 	
 	Texture texture;
-	String currentTexture;
+	public String name;
+	
+	public float projectedData;
 	
 	private boolean draw;
 	

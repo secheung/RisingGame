@@ -9,15 +9,19 @@ import java.util.Map;
 import engine.open2d.draw.Plane;
 import engine.open2d.shader.Shader;
 import android.opengl.GLES20;
+import android.opengl.GLU;
 import android.opengl.Matrix;
 
 public class RendererTool {
 	private final static int BYTES_PER_FLOAT = 4;
 	
-	public float[] modelMatrix = new float[16];
-	public float[] viewMatrix = new float[16];
-	public float[] projectionMatrix = new float[16];
+	private float[] modelMatrix = new float[16];
+	private float[] viewMatrix = new float[16];
+	private float[] projectionMatrix = new float[16];
 
+	private int viewportWidth;
+	private int viewportHeight;
+	
 	Map<String,Integer> handles;
 
 	public RendererTool(){
@@ -52,10 +56,26 @@ public class RendererTool {
 		return handles;
 	}
 
+	public int getViewportWidth() {
+		return viewportWidth;
+	}
+
+	public void setViewportWidth(int viewportWidth) {
+		this.viewportWidth = viewportWidth;
+	}
+
+	public int getViewportHeight() {
+		return viewportHeight;
+	}
+
+	public void setViewportHeight(int viewportHeight) {
+		this.viewportHeight = viewportHeight;
+	}
+	
 	public void setHandles(Map<String, Integer> handles) {
 		this.handles = handles;
 	}
-
+	
 	public void setHandles(Shader shader){
 		int shaderProgram = shader.getShaderProgram();
 
@@ -78,6 +98,50 @@ public class RendererTool {
         buffer.put(data).position(0);
         GLES20.glVertexAttribPointer(handle, dataElementSize, GLES20.GL_FLOAT, false, 0, buffer);
 		GLES20.glEnableVertexAttribArray(handle);
+	}
+	
+	public float[] screenProjection(Plane plane){
+		int[] viewport = {0,0,viewportWidth,viewportHeight};
+		
+		float[] pos1 = new float[3];
+		float[] pos2 = new float[3];
+		float[] pos3 = new float[3];
+		
+		translateModelMatrix(plane.getTranslationX(), plane.getTranslationY(), plane.getTranslationZ());
+		float[] posData = plane.getPositionData();
+		
+		float[] modelView = getMVMatrix();
+		
+		GLU.gluProject(		posData[0], posData[1], posData[2],
+							modelView, 0,
+							projectionMatrix, 0,
+							viewport, 0,
+							pos1, 0);
+		
+		GLU.gluProject(		posData[3], posData[4], posData[5],
+							modelView, 0,
+							projectionMatrix, 0,
+							viewport, 0,
+							pos2, 0);
+		
+		GLU.gluProject(		posData[6], posData[7], posData[8],
+							modelView, 0,
+							projectionMatrix, 0,
+							viewport, 0,
+							pos3, 0);
+
+//		float width = pos3[0] - pos1[0];
+//		float height = pos1[1] - pos2[1];
+//		float depth = pos3[2];
+//		float[] set = {pos1[0],pos1[1],width,height,depth};
+		
+		float width = pos1[0] - pos3[0];
+		float height = pos1[1] - pos3[1];
+		float depth = pos3[2];
+		float[] set = {pos3[0],pos3[1],width,height,depth};		
+		
+		return set;
+		
 	}
 	
 	public void setLookAt(int rmOffset, float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX, float upY, float upZ){

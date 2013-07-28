@@ -36,26 +36,26 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	}
 	
 	public void update(){
-		if(index == 1){
-			worldRenderer.drawObject("myPlane");
-			worldRenderer.drawObject("myPlane3");
-			
-			worldRenderer.undrawObject("myPlane2");
-			worldRenderer.undrawObject("myPlane4");
-		}else{
-			worldRenderer.drawObject("myPlane2");
-			worldRenderer.drawObject("myPlane4");
-			
-			worldRenderer.undrawObject("myPlane");
-			worldRenderer.undrawObject("myPlane3");
-		}
+//		if(index == 1){
+//			worldRenderer.drawObject("myPlane");
+//			worldRenderer.drawObject("myPlane3");
+//			
+//			worldRenderer.undrawObject("myPlane2");
+//			worldRenderer.undrawObject("myPlane4");
+//		}else{
+//			worldRenderer.drawObject("myPlane2");
+//			worldRenderer.drawObject("myPlane4");
+//			
+//			worldRenderer.undrawObject("myPlane");
+//			worldRenderer.undrawObject("myPlane3");
+//		}
 //		
 //		index++;
 //		
 //		if(index > 20)
 //			index = 0;
 		
-//		worldRenderer.drawObject("myPlane4");
+		worldRenderer.drawObject("myPlane");
 	}
 
 	public void passTouchEvents(MotionEvent e){

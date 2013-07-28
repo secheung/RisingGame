@@ -103,26 +103,49 @@ public class RendererTool {
 	
 	public float[] screenUnProjection(float x, float y, float z){
 		float[] modelView = getMVMatrix();
-		float[] position = new float[4];
+		float[] projectedPos = new float[4];
 		int[] viewport = new int[4];
 		
 		GLES20.glGetIntegerv(GLES20.GL_VIEWPORT, viewport, 0);
-		float realY = viewport[3] - (int) y - 1;
+		float realY = viewportHeight - (int) y;
 		
-		GLU.gluUnProject(x, realY, z,
-						modelView, 0,
-						projectionMatrix, 0,
-						viewport, 0,
-						position, 0);
+		float[] invertedMatrix = new float[16];
+		float[] transformMatrix = new float[16];
+		float[] normalizedInPoint = new float[4];
 		
-		position[0] /= position[3];
-		position[1] /= position[3];
-		position[2] /= position[3];
-		position[3] /= position[3];
+		normalizedInPoint[0] = (float) (x * 2.0f / viewportWidth - 1.0);
+		normalizedInPoint[1] = (float) (realY * 2.0f / viewportHeight - 1.0);
+		normalizedInPoint[2] = - 1.0f;
+		normalizedInPoint[3] = 1.0f;
 		
-		Log.d("test", position[0] + " : " + position[1] + " : " + position[2]+ " : " + position[3]);
+		Matrix.multiplyMM(	transformMatrix, 0,
+							projectionMatrix, 0,
+							modelView, 0);
 		
-		return position;
+		Matrix.invertM(	invertedMatrix, 0,
+						transformMatrix, 0);
+		
+		Matrix.multiplyMV(	projectedPos, 0,
+							invertedMatrix, 0,
+							normalizedInPoint, 0);
+		
+		if (projectedPos[3] == 0.0){
+			// Avoid /0 error.
+			Log.e("World coords", "ERROR!");
+			return null;
+		}
+
+		// Divide by the 3rd component to find
+		// out the real position.
+		
+		projectedPos[0] = projectedPos[0] / projectedPos[3];
+		projectedPos[1] = projectedPos[1] / projectedPos[3];
+		projectedPos[2] = projectedPos[2] / projectedPos[3];
+
+		
+		Log.d("test", projectedPos[0] + " : " + projectedPos[1] + " : " + projectedPos[2]+ " : " + projectedPos[3]);
+		
+		return projectedPos;
 	}
 	
 	public float[] screenProjection(Plane plane){

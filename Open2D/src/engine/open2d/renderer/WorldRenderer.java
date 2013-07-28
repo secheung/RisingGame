@@ -111,14 +111,32 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 		initSetup();
 	}
 	
+	//TODO add in coord parameter
+//	public void drawObject(String ref, float x, float y, float z){
 	public void drawObject(String ref){
 		Plane drawObj = drawObjects.get(ref);
 		
 		if(drawObj == null)
 			Log.w(LOG_PREFIX, NO_ITEM_EXISTS_WARNING+" drawable objects for "+ref);
 		
+//		drawObj.setTranslationX(x);
+//		drawObj.setTranslationY(y);
+//		drawObj.setTranslationZ(z);
+		
 		drawObj.update();
 		drawObj.setDraw(true);
+	}
+	
+	public void undrawObject(String ref){
+		Plane drawObj = drawObjects.get(ref);
+		
+		if(drawObj == null){
+			Log.w(LOG_PREFIX, NO_ITEM_EXISTS_WARNING+" drawable objects for "+ref);
+			return;
+		}
+		
+		
+		drawObj.setDraw(false);
 	}
 
 	public void passTouchEvents(MotionEvent e){
@@ -127,15 +145,15 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 		float closestdepth = -1;
 		Plane objSelected=null;
 
-//		Log.d(LOG_PREFIX, ""+x);
-//		Log.d(LOG_PREFIX, ""+y);
-		
 		for(Plane drawObj : drawObjects.values()){
 			if(!drawObj.isDrawEnabled()){
 				continue;
 			}
 
 			float[] projectedPoints = rendererTool.screenProjection(drawObj);
+			float[] unprojectedPoints = rendererTool.screenUnProjection(e.getX(),e.getY(),-2.0f);
+			//float[] unprojectedPoints2 = rendererTool.screenUnProjection(e.getX(),e.getY(),-10.0f);
+
 			if(x > projectedPoints[0] && x < projectedPoints[0]+projectedPoints[2] && y > projectedPoints[1] && y < projectedPoints[1]+projectedPoints[3]){
 				if(projectedPoints[4] >= closestdepth){
 					closestdepth = projectedPoints[4];
@@ -143,9 +161,10 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 				}
 			}
 		}
+//		if(objSelected != null)
+//			Log.d(LOG_PREFIX, objSelected.name);
 		
-		if(objSelected != null)
-			Log.d(LOG_PREFIX, objSelected.name);
+		
 	}
 
 	@Override

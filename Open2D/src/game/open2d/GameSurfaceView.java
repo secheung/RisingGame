@@ -24,14 +24,13 @@ public class GameSurfaceView extends GLSurfaceView{
 		
 		gameLogic = new GameLogic(context,worldRenderer);
 		gameLogic.execute();
-		
-		
     }
 
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
 		//requestRender();
 		worldRenderer.passTouchEvents(e);
+		gameLogic.passTouchEvents(e);
 
 		return true;
 	}

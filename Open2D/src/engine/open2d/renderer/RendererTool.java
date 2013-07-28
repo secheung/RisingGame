@@ -11,6 +11,7 @@ import engine.open2d.shader.Shader;
 import android.opengl.GLES20;
 import android.opengl.GLU;
 import android.opengl.Matrix;
+import android.util.Log;
 
 public class RendererTool {
 	private final static int BYTES_PER_FLOAT = 4;
@@ -100,6 +101,30 @@ public class RendererTool {
 		GLES20.glEnableVertexAttribArray(handle);
 	}
 	
+	public float[] screenUnProjection(float x, float y, float z){
+		float[] modelView = getMVMatrix();
+		float[] position = new float[4];
+		int[] viewport = new int[4];
+		
+		GLES20.glGetIntegerv(GLES20.GL_VIEWPORT, viewport, 0);
+		float realY = viewport[3] - (int) y - 1;
+		
+		GLU.gluUnProject(x, realY, z,
+						modelView, 0,
+						projectionMatrix, 0,
+						viewport, 0,
+						position, 0);
+		
+		position[0] /= position[3];
+		position[1] /= position[3];
+		position[2] /= position[3];
+		position[3] /= position[3];
+		
+		Log.d("test", position[0] + " : " + position[1] + " : " + position[2]+ " : " + position[3]);
+		
+		return position;
+	}
+	
 	public float[] screenProjection(Plane plane){
 		int[] viewport = {0,0,viewportWidth,viewportHeight};
 		
@@ -138,7 +163,7 @@ public class RendererTool {
 		float width = pos1[0] - pos3[0];
 		float height = pos1[1] - pos3[1];
 		float depth = pos3[2];
-		float[] set = {pos3[0],pos3[1],width,height,depth};		
+		float[] set = {pos3[0],pos3[1],width,height,depth};
 		
 		return set;
 		

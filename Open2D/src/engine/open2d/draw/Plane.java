@@ -10,6 +10,8 @@ public class Plane {
 	public final static int NORMAL_DATA_SIZE = 3;
 	public final static int TEXTURE_DATA_SIZE = 2;
 	
+	private final static float DEFAULT_Z_DISTANCE = -2.0f;
+	
 	Texture texture;
 	public String name;
 	
@@ -79,12 +81,12 @@ public class Plane {
 	private void initPlane(	float planeWidth, float planeHeight,
 						float x, float y, float z){
 		float[] box = {
-				planeWidth,  planeHeight,	-2.0f,
-				0.0f,   	 planeHeight,	-2.0f,
-				0.0f,   	 0.0f,			-2.0f,
-				0.0f,   	 0.0f,			-2.0f,
-				planeWidth,  0.0f,			-2.0f,
-				planeWidth,  planeHeight,	-2.0f
+				planeWidth,  planeHeight,	DEFAULT_Z_DISTANCE,
+				0.0f,   	 planeHeight,	DEFAULT_Z_DISTANCE,
+				0.0f,   	 0.0f,			DEFAULT_Z_DISTANCE,
+				0.0f,   	 0.0f,			DEFAULT_Z_DISTANCE,
+				planeWidth,  0.0f,			DEFAULT_Z_DISTANCE,
+				planeWidth,  planeHeight,	DEFAULT_Z_DISTANCE
 		};
 		positionData = box;
 

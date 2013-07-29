@@ -11,7 +11,10 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	WorldRenderer worldRenderer;
 	Context context;
 
-	int index = 0;
+	float index = 0.0f;
+	float x1 = 0.5f;
+	float y1 = 0.0f;
+	float z1 = -3.0f;
 	
 	public GameLogic(Context context, WorldRenderer worldRenderer){
 		this.worldRenderer = worldRenderer;
@@ -23,7 +26,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 										new String[]{"a_Position","a_Color","a_Normal","a_TexCoordinate"}
 									);
 
-		Plane plane = new Plane(R.drawable.stand, 2.5f, 3.5f, 0.0f, 0.0f, -1.0f, 14, 10);
+		Plane plane = new Plane(R.drawable.stand, 2.5f, 3.5f, x1, y1, z1, 14, 10);
 //		Plane plane = new Plane(R.drawable.stand, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 14, 10);
 		Plane plane2 = new Plane(R.drawable.computer_look_back, 2.5f, 3.5f, 0.0f, 0.0f, -1.7f);
 		Plane plane3 = new Plane(R.drawable.walk, 2.5f, 3.5f, -1.5f, 0.0f, -1.8f, 9, 6);
@@ -54,17 +57,19 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 //		
 //		if(index > 20)
 //			index = 0;
-		
-		worldRenderer.drawObject("myPlane");
+
+		worldRenderer.drawObject("myPlane",x1,y1,z1);
 	}
 
 	public void passTouchEvents(MotionEvent e){
-		if(e.getAction() == MotionEvent.ACTION_DOWN)
+		if(e.getAction() == MotionEvent.ACTION_DOWN){
 			if(index == 0){
 				index = 1;
 			} else {
 				index = 0;
 			}
+//			x1 = x1 + 0.1f;
+		}
 	}
 	
 	@Override

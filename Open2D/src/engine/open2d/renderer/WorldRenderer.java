@@ -112,16 +112,15 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	}
 	
 	//TODO add in coord parameter
-//	public void drawObject(String ref, float x, float y, float z){
-	public void drawObject(String ref){
+	public void drawObject(String ref, float x, float y, float z){
 		Plane drawObj = drawObjects.get(ref);
 		
 		if(drawObj == null)
 			Log.w(LOG_PREFIX, NO_ITEM_EXISTS_WARNING+" drawable objects for "+ref);
 		
-//		drawObj.setTranslationX(x);
-//		drawObj.setTranslationY(y);
-//		drawObj.setTranslationZ(z);
+		drawObj.setTranslationX(x);
+		drawObj.setTranslationY(y);
+		drawObj.setTranslationZ(z);
 		
 		drawObj.update();
 		drawObj.setDraw(true);
@@ -151,7 +150,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 			}
 
 			float[] projectedPoints = rendererTool.screenProjection(drawObj);
-			float[] unprojectedPoints = rendererTool.screenUnProjection(e.getX(),e.getY(),-2.0f);
+			float[] unprojectedPoints = rendererTool.screenUnProjection(e.getX(),e.getY(),drawObj.getTranslationZ());
 			//float[] unprojectedPoints2 = rendererTool.screenUnProjection(e.getX(),e.getY(),-10.0f);
 
 			if(x > projectedPoints[0] && x < projectedPoints[0]+projectedPoints[2] && y > projectedPoints[1] && y < projectedPoints[1]+projectedPoints[3]){
@@ -213,7 +212,8 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 
 	    int mvMatrixHandle = handles.get("u_MVMatrix");
 	    int mvpMatrixHandle = handles.get("u_MVPMatrix");
-        rendererTool.translateModelMatrix(plane.getTranslationX(),plane.getTranslationY(),plane.getTranslationZ());
+        
+	    rendererTool.translateModelMatrix(plane.getTranslationX(),plane.getTranslationY(),plane.getTranslationZ());
         
 		GLES20.glUniformMatrix4fv(mvMatrixHandle, 1, false, rendererTool.getMVMatrix(), 0);
 		GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, rendererTool.getMVPMatrix(), 0);

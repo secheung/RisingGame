@@ -115,7 +115,7 @@ public class RendererTool {
 		
 		normalizedInPoint[0] = (float) (x * 2.0f / viewportWidth - 1.0);
 		normalizedInPoint[1] = (float) (realY * 2.0f / viewportHeight - 1.0);
-		normalizedInPoint[2] = - 1.0f;
+		normalizedInPoint[2] = -1.0f;
 		normalizedInPoint[3] = 1.0f;
 		
 		Matrix.multiplyMM(	transformMatrix, 0,
@@ -204,7 +204,7 @@ public class RendererTool {
 
 	public void translateModelMatrix(float changeX, float changeY, float changeZ){
 		Matrix.setIdentityM(modelMatrix, 0);
-        Matrix.translateM(modelMatrix, 0, changeX, changeY, changeZ);
+		Matrix.translateM(modelMatrix, 0, changeX, changeY, changeZ);
 	}
 	
 	//TODO fix this

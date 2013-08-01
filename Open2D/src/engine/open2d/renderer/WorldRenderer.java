@@ -167,8 +167,8 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 //			Log.d(LOG_PREFIX, objSelected.name);
 		
 		
-	}
-
+	} 
+	
 	@Override
 	public void onDrawFrame(GL10 gl) {
 		int worldShaderProgram = shaders.get(WORLD_SHADER).getShaderProgram();
@@ -225,8 +225,11 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 
 	}
 	
-	public void zoomCamera(float x, float y, float zoom){
-		
+	public void setCamera(float x, float y, float z){
+		rendererTool.setLookAt(	0,
+								x, y, z,
+								x, y, z-1.0f,
+								0.0f, 1.0f, 0.0f);
 	}
 	
 	@Override

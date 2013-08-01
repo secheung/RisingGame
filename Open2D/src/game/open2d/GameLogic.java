@@ -14,11 +14,15 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	float index = 0.0f;
 	float x1 = 0.0f;
 	float y1 = 0.0f;
-	float z1 = -2f;
+	float z1 = -4.0f;
 	
 	float x2 = -3.5f;
 	float y2 = 0.0f;
-	float z2 = -1.8f;
+	float z2 = -7.0f;
+	
+	float camX = 0.0f;
+	float camY = 0.0f;
+	float camZ = 0.0f;
 	
 	public GameLogic(Context context, WorldRenderer worldRenderer){
 		this.worldRenderer = worldRenderer;
@@ -44,37 +48,31 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	}
 	
 	public void update(){
-//		if(index == 1){
-//			worldRenderer.drawObject("myPlane");
-//			worldRenderer.drawObject("myPlane3");
-//			
-//			worldRenderer.undrawObject("myPlane2");
-//			worldRenderer.undrawObject("myPlane4");
-//		}else{
-//			worldRenderer.drawObject("myPlane2");
-//			worldRenderer.drawObject("myPlane4");
-//			
-//			worldRenderer.undrawObject("myPlane");
-//			worldRenderer.undrawObject("myPlane3");
-//		}
-//		
-//		index++;
-//		
-//		if(index > 20)
-//			index = 0;
+
+		if(camZ < -3.0f)
+			index = 0;
+		else if(camZ > 0.0f)
+			index = 1;
 		
-		worldRenderer.drawObject("myPlane3",x2,y2,z2);
+		if(index == 1){
+			camX -= 0.1f;
+//			camY -= 0.1f;
+			camZ -= 0.1f;
+		} else if(index == 0) {
+			camX += 0.1f;
+//			camY += 0.1f;
+			camZ += 0.1f;
+		}
+		
+			
+		worldRenderer.setCamera(camX, camY, camZ);
+		
 		worldRenderer.drawObject("myPlane",x1,y1,z1);
 	}
 
 	public void passTouchEvents(MotionEvent e){
 		if(e.getAction() == MotionEvent.ACTION_DOWN){
-			if(index == 0){
-				index = 1;
-			} else {
-				index = 0;
-			}
-//			x1 = x1 + 0.1f;
+			
 		}
 	}
 	

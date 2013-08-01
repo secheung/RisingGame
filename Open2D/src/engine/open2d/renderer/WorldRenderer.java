@@ -159,6 +159,9 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 					objSelected = drawObj;
 				}
 			}
+			
+//			drawObj.setTranslationX(unprojectedPoints[0]);
+//			drawObj.setTranslationY(unprojectedPoints[1]);
 		}
 //		if(objSelected != null)
 //			Log.d(LOG_PREFIX, objSelected.name);
@@ -220,6 +223,10 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 
 	    GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
 
+	}
+	
+	public void zoomCamera(float x, float y, float zoom){
+		
 	}
 	
 	@Override

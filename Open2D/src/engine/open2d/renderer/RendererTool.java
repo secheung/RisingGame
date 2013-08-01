@@ -113,14 +113,21 @@ public class RendererTool {
 		float[] transformMatrix = new float[16];
 		float[] normalizedInPoint = new float[4];
 		
+		float near = 1.0f;
+		float far = 10.0f;
+		
+		z=z-2.0f;
 		normalizedInPoint[0] = (float) (x * 2.0f / viewportWidth - 1.0);
 		normalizedInPoint[1] = (float) (realY * 2.0f / viewportHeight - 1.0);
-		normalizedInPoint[2] = -1.0f;
+//		normalizedInPoint[2] = 0.7f;
+//		normalizedInPoint[2] = 0.97f;
+//		normalizedInPoint[2] = -0.2f*(-((far+near)/(far-near))*-2.390909f/z + ((-2*far*near)/(far-near)));
+		normalizedInPoint[2] = ((-(far+near)/(far-near))*z + ((-2*far*near)/(far-near)))/(-z);
 		normalizedInPoint[3] = 1.0f;
 		
 		Matrix.multiplyMM(	transformMatrix, 0,
 							projectionMatrix, 0,
-							modelView, 0);
+							viewMatrix, 0);
 		
 		Matrix.invertM(	invertedMatrix, 0,
 						transformMatrix, 0);

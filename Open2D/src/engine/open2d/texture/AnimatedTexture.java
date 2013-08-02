@@ -20,6 +20,7 @@ public class AnimatedTexture extends Texture{
     private int columns;
     private int totalFrames;
     private int currentFrame;
+    private int frameIncrement;
 	
 	public AnimatedTexture(int resourceId, int rows, int columns){
 		super(resourceId);
@@ -30,6 +31,7 @@ public class AnimatedTexture extends Texture{
 		this.frameHeight = 1.0f/columns;
 		this.totalFrames = rows*columns;
 		this.currentFrame = 1;
+		this.frameIncrement= 1;
 		
 		float[] textureCoord = {
 			frameHeight,0.0f,
@@ -44,7 +46,7 @@ public class AnimatedTexture extends Texture{
 	}
 	
 	public void incrementFrame(){
-		currentFrame++;
+		currentFrame += frameIncrement;
 		if(currentFrame >= totalFrames){
 			currentFrame = 1;
 		} else if(currentFrame <= 0) {

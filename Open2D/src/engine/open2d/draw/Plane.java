@@ -15,8 +15,6 @@ public class Plane {
 	Texture texture;
 	public String name;
 	
-	public float projectedData;
-	
 	private boolean draw;
 	
     protected float[] positionData = {
@@ -47,7 +45,7 @@ public class Plane {
 		0.0f, 0.0f, 1.0f,
 		0.0f, 0.0f, 1.0f,
 		0.0f, 0.0f, 1.0f
-	};;
+	};
 
     protected float translationX;
     protected float translationY;

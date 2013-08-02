@@ -134,13 +134,15 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 			return;
 		}
 		
-		
 		drawObj.setDraw(false);
 	}
 
 	public void passTouchEvents(MotionEvent e){
-		float x = e.getX();
-		float y = rendererTool.getViewportHeight() - e.getY();
+	} 
+	
+	public Plane getSelectedObjection(float xCoord ,float yCoord){
+		float x = xCoord;
+		float y = rendererTool.getViewportHeight() - yCoord;
 		float closestdepth = -1;
 		Plane objSelected=null;
 
@@ -150,8 +152,6 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 			}
 
 			float[] projectedPoints = rendererTool.screenProjection(drawObj);
-			float[] unprojectedPoints = rendererTool.screenUnProjection(e.getX(),e.getY(),drawObj.getTranslationZ());
-			//float[] unprojectedPoints2 = rendererTool.screenUnProjection(e.getX(),e.getY(),-10.0f);
 
 			if(x > projectedPoints[0] && x < projectedPoints[0]+projectedPoints[2] && y > projectedPoints[1] && y < projectedPoints[1]+projectedPoints[3]){
 				if(projectedPoints[4] >= closestdepth){
@@ -159,15 +159,15 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 					objSelected = drawObj;
 				}
 			}
-			
-//			drawObj.setTranslationX(unprojectedPoints[0]);
-//			drawObj.setTranslationY(unprojectedPoints[1]);
 		}
-//		if(objSelected != null)
-//			Log.d(LOG_PREFIX, objSelected.name);
 		
-		
-	} 
+		return objSelected;
+	}
+	
+	public float[] getUnprojectedPoints(float x, float y, String drawObj){
+		Plane drawObject = drawObjects.get(drawObj);
+		return rendererTool.screenUnProjection(x,y,drawObject.getTranslationZ());
+	}
 	
 	@Override
 	public void onDrawFrame(GL10 gl) {

@@ -48,31 +48,17 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	}
 	
 	public void update(){
-
-		if(camZ < -3.0f)
-			index = 0;
-		else if(camZ > 0.0f)
-			index = 1;
-		
-		if(index == 1){
-			camX -= 0.1f;
-//			camY -= 0.1f;
-			camZ -= 0.1f;
-		} else if(index == 0) {
-			camX += 0.1f;
-//			camY += 0.1f;
-			camZ += 0.1f;
-		}
-		
-			
 		worldRenderer.setCamera(camX, camY, camZ);
-		
 		worldRenderer.drawObject("myPlane",x1,y1,z1);
 	}
 
 	public void passTouchEvents(MotionEvent e){
 		if(e.getAction() == MotionEvent.ACTION_DOWN){
-			
+			float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), "myPlane");
+			if(x1 < unprojectedPoints[0])
+				x1 += 1.0f;
+			else if(x1 > unprojectedPoints[0])
+				x1 -= 1.0f;
 		}
 	}
 	

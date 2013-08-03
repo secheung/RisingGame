@@ -14,41 +14,41 @@ public class Plane extends DrawObject{
 	
 	Texture texture;
 	
-    protected float[] positionData = {
-        // X, Y, Z,
-		1.0f,  1.0f, 0.0f,
-		1.0f,  1.0f, 0.0f,
-		1.0f, -1.0f, 0.0f,
-		1.0f, -1.0f, 0.0f,
-		1.0f, -1.0f, 0.0f,
-		1.0f,  1.0f, 0.0f
-	};
-    
-    protected float[] colorData = {
-	    // R, G, B, A
-		1.0f, 0.0f, 0.0f, 1.0f,
-		0.0f, 1.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 1.0f, 1.0f,
-		0.0f, 0.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 0.0f, 1.0f
-	};
-
-		
-    protected float[] normalData= {
-		0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f,
-		0.0f, 0.0f, 1.0f
-	};
+//    protected float[] positionData = {
+//        // X, Y, Z,
+//		1.0f,  1.0f, 0.0f,
+//		1.0f,  1.0f, 0.0f,
+//		1.0f, -1.0f, 0.0f,
+//		1.0f, -1.0f, 0.0f,
+//		1.0f, -1.0f, 0.0f,
+//		1.0f,  1.0f, 0.0f
+//	};
+//    
+//    protected float[] colorData = {
+//	    // R, G, B, A
+//		1.0f, 0.0f, 0.0f, 1.0f,
+//		0.0f, 1.0f, 0.0f, 1.0f,
+//		0.0f, 0.0f, 1.0f, 1.0f,
+//		0.0f, 0.0f, 1.0f, 1.0f,
+//		0.0f, 0.0f, 0.0f, 1.0f,
+//		1.0f, 0.0f, 0.0f, 1.0f
+//	};
+//
+//		
+//    protected float[] normalData= {
+//		0.0f, 0.0f, 1.0f,
+//		0.0f, 0.0f, 1.0f,
+//		0.0f, 0.0f, 1.0f,
+//		0.0f, 0.0f, 1.0f,
+//		0.0f, 0.0f, 1.0f,
+//		0.0f, 0.0f, 1.0f
+//	};
 
     public Plane(	int referenceId, 
     				float planeWidth, float planeHeight,
     				float x, float y, float z){
     	drawObjectInit(x,y,z);
-		planeInit(planeWidth, planeHeight);
+		planeInit();
 		texture = new Texture(referenceId);
 	}
 
@@ -70,6 +70,8 @@ public class Plane extends DrawObject{
 	}
 	
 	private void planeInit(	float planeWidth, float planeHeight){
+		planeInit();
+		
 		float[] box = {
 				planeWidth,  planeHeight,	DEFAULT_Z_DISTANCE,
 				0.0f,   	 planeHeight,	DEFAULT_Z_DISTANCE,
@@ -79,6 +81,42 @@ public class Plane extends DrawObject{
 				planeWidth,  planeHeight,	DEFAULT_Z_DISTANCE
 		};
 		positionData = box;
+	}
+	
+	private void planeInit(){
+		float[] positionData = {
+		    // X, Y, Z,
+			1.0f,  1.0f, 0.0f,
+			1.0f,  1.0f, 0.0f,
+			1.0f, -1.0f, 0.0f,
+			1.0f, -1.0f, 0.0f,
+			1.0f, -1.0f, 0.0f,
+			1.0f,  1.0f, 0.0f
+		};
+		
+		float[] colorData = {
+		    // R, G, B, A
+			1.0f, 0.0f, 0.0f, 1.0f,
+			0.0f, 1.0f, 0.0f, 1.0f,
+			0.0f, 0.0f, 1.0f, 1.0f,
+			0.0f, 0.0f, 1.0f, 1.0f,
+			0.0f, 0.0f, 0.0f, 1.0f,
+			1.0f, 0.0f, 0.0f, 1.0f
+		};
+		
+			
+		float[] normalData= {
+			0.0f, 0.0f, 1.0f,
+			0.0f, 0.0f, 1.0f,
+			0.0f, 0.0f, 1.0f,
+			0.0f, 0.0f, 1.0f,
+			0.0f, 0.0f, 1.0f,
+			0.0f, 0.0f, 1.0f
+		};
+		
+		this.positionData = positionData;
+		this.colorData = colorData;
+		this.normalData = normalData;
 	}
 	
 	public void update(){

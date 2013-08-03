@@ -202,11 +202,11 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 		//TODO MAKE SO NOT HARDCODED
 		Map<String,Integer> handles = rendererTool.getHandles();
 
-		rendererTool.enableHandles("a_Position", positionData, Plane.POSITION_DATA_SIZE);
-		rendererTool.enableHandles("a_Color", colorData, Plane.COLOR_DATA_SIZE);
-		rendererTool.enableHandles("a_Normal", normalData, Plane.NORMAL_DATA_SIZE);
-
 		if(drawObject instanceof Plane){
+			rendererTool.enableHandles("a_Position", positionData, Plane.POSITION_DATA_SIZE);
+			rendererTool.enableHandles("a_Color", colorData, Plane.COLOR_DATA_SIZE);
+			rendererTool.enableHandles("a_Normal", normalData, Plane.NORMAL_DATA_SIZE);
+			
 			Plane plane = (Plane)drawObject;
 		    if(!(plane.getTexture() == null)){
 	

@@ -13,42 +13,12 @@ public class Plane extends DrawObject{
 	private final static float DEFAULT_Z_DISTANCE = -2.0f;
 	
 	Texture texture;
-	
-//    protected float[] positionData = {
-//        // X, Y, Z,
-//		1.0f,  1.0f, 0.0f,
-//		1.0f,  1.0f, 0.0f,
-//		1.0f, -1.0f, 0.0f,
-//		1.0f, -1.0f, 0.0f,
-//		1.0f, -1.0f, 0.0f,
-//		1.0f,  1.0f, 0.0f
-//	};
-//    
-//    protected float[] colorData = {
-//	    // R, G, B, A
-//		1.0f, 0.0f, 0.0f, 1.0f,
-//		0.0f, 1.0f, 0.0f, 1.0f,
-//		0.0f, 0.0f, 1.0f, 1.0f,
-//		0.0f, 0.0f, 1.0f, 1.0f,
-//		0.0f, 0.0f, 0.0f, 1.0f,
-//		1.0f, 0.0f, 0.0f, 1.0f
-//	};
-//
-//		
-//    protected float[] normalData= {
-//		0.0f, 0.0f, 1.0f,
-//		0.0f, 0.0f, 1.0f,
-//		0.0f, 0.0f, 1.0f,
-//		0.0f, 0.0f, 1.0f,
-//		0.0f, 0.0f, 1.0f,
-//		0.0f, 0.0f, 1.0f
-//	};
 
     public Plane(	int referenceId, 
     				float planeWidth, float planeHeight,
     				float x, float y, float z){
     	drawObjectInit(x,y,z);
-		planeInit();
+		planeInit(planeWidth, planeHeight);
 		texture = new Texture(referenceId);
 	}
 
@@ -71,7 +41,6 @@ public class Plane extends DrawObject{
 	
 	private void planeInit(	float planeWidth, float planeHeight){
 		planeInit();
-		
 		float[] box = {
 				planeWidth,  planeHeight,	DEFAULT_Z_DISTANCE,
 				0.0f,   	 planeHeight,	DEFAULT_Z_DISTANCE,

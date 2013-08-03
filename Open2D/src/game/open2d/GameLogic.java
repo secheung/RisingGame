@@ -34,8 +34,8 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 										new String[]{"a_Position","a_Color","a_Normal","a_TexCoordinate"}
 									);
 
-//		Plane plane = new Plane(R.drawable.stand, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 14, 10);
-		Plane plane = new Plane(R.drawable.rising_stance, 3.5f, 3.5f, x1, y1, z1, 11, 3);
+		Plane plane = new Plane(R.drawable.stand, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 14, 10);
+//		Plane plane = new Plane(R.drawable.rising_stance, 3.5f, 3.5f, x1, y1, z1, 11, 3);
 		Plane plane2 = new Plane(R.drawable.stand, 2.5f, 3.5f, x1, y1, z1, 14, 10);
 //		Plane plane2 = new Plane(R.drawable.computer_look_back, 2.5f, 3.5f, 0.0f, 0.0f, -1.7f);
 		Plane plane3 = new Plane(R.drawable.walk, 2.5f, 3.5f, x2, y2, z2, 9, 6);

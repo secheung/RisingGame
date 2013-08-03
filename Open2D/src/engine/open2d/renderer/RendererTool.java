@@ -155,7 +155,7 @@ public class RendererTool {
 		return projectedPos;
 	}
 	
-	public float[] screenProjection(Plane plane){
+	public float[] screenProjectPlane(Plane plane){
 		int[] viewport = {0,0,viewportWidth,viewportHeight};
 		
 		float[] pos1 = new float[3];

@@ -11,6 +11,7 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
 import android.view.MotionEvent;
+import engine.open2d.draw.DrawObject;
 import engine.open2d.draw.Plane;
 import engine.open2d.shader.Shader;
 import engine.open2d.shader.ShaderTool;
@@ -31,7 +32,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	TextureTool textureTool;
 
 	LinkedHashMap<String,Shader> shaders;
-	LinkedHashMap<String,Plane> drawObjects;
+	LinkedHashMap<String,DrawObject> drawObjects;
 
     public WorldRenderer(final Context activityContext) {
     	this.activityContext = activityContext;
@@ -40,16 +41,16 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
     	textureTool = new TextureTool(activityContext);
     	
     	shaders = new LinkedHashMap<String,Shader>();
-    	drawObjects = new LinkedHashMap<String,Plane>();
+    	drawObjects = new LinkedHashMap<String,DrawObject>();
     }
 
-	public void addDrawShape(String ref, Plane shape){
+	public void addDrawShape(String ref, DrawObject shape){
 		if(drawObjects.containsKey(ref)){
 			Log.w(LOG_PREFIX, ITEM_EXISTS_WARNING+" [shape : "+ref+"]");
 			return;
 		}
 
-		shape.name = ref;
+		shape.refName = ref;
     	drawObjects.put(ref, shape);
     }
 	
@@ -101,8 +102,8 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 			return;
 	    }
 		
-	    for(Plane shape : drawObjects.values()){
-    		textureTool.loadTexture(shape.getTexture());
+	    for(DrawObject shape : drawObjects.values()){
+    		textureTool.loadTexture(((Plane)shape).getTexture());
 	    }
 	}
 	
@@ -111,9 +112,15 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 		initSetup();
 	}
 	
-	//TODO add in coord parameter
+	public void drawObject(DrawObject drawObject){
+//		Plane drawObj = drawObjects.get(drawObject.getRefName());
+		
+		drawObject.update();
+		drawObject.setDraw(true);
+	}
+	
 	public void drawObject(String ref, float x, float y, float z){
-		Plane drawObj = drawObjects.get(ref);
+		Plane drawObj = (Plane)drawObjects.get(ref);
 		
 		if(drawObj == null)
 			Log.w(LOG_PREFIX, NO_ITEM_EXISTS_WARNING+" drawable objects for "+ref);
@@ -127,7 +134,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	}
 	
 	public void undrawObject(String ref){
-		Plane drawObj = drawObjects.get(ref);
+		Plane drawObj = (Plane)drawObjects.get(ref);
 		
 		if(drawObj == null){
 			Log.w(LOG_PREFIX, NO_ITEM_EXISTS_WARNING+" drawable objects for "+ref);
@@ -146,17 +153,17 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 		float closestdepth = -1;
 		Plane objSelected=null;
 
-		for(Plane drawObj : drawObjects.values()){
+		for(DrawObject drawObj : drawObjects.values()){
 			if(!drawObj.isDrawEnabled()){
 				continue;
 			}
 
-			float[] projectedPoints = rendererTool.screenProjection(drawObj);
+			float[] projectedPoints = rendererTool.screenProjectPlane((Plane)drawObj);
 
 			if(x > projectedPoints[0] && x < projectedPoints[0]+projectedPoints[2] && y > projectedPoints[1] && y < projectedPoints[1]+projectedPoints[3]){
 				if(projectedPoints[4] >= closestdepth){
 					closestdepth = projectedPoints[4];
-					objSelected = drawObj;
+					objSelected = (Plane)drawObj;
 				}
 			}
 		}
@@ -165,7 +172,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	}
 	
 	public float[] getUnprojectedPoints(float x, float y, String drawObj){
-		Plane drawObject = drawObjects.get(drawObj);
+		Plane drawObject = (Plane)drawObjects.get(drawObj);
 		return rendererTool.screenUnProjection(x,y,drawObject.getTranslationZ());
 	}
 	
@@ -179,17 +186,17 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 		rendererTool.setHandles(shaders.get(WORLD_SHADER));
 
 		//TODO order planes according to z value
-		for(Plane plane : drawObjects.values()){
-			if(plane.isDrawEnabled()){
-				drawShape(plane);
+		for(DrawObject drawObject : drawObjects.values()){
+			if(drawObject.isDrawEnabled()){
+				drawShape(drawObject);
 			}
 		}
 	}
 
-	private void drawShape(Plane plane){
-		float[] positionData = plane.getPositionData();
-		float[] colorData = plane.getColorData();
-		float[] normalData = plane.getNormalData();
+	private void drawShape(DrawObject drawObject){
+		float[] positionData = drawObject.getPositionData();
+		float[] colorData = drawObject.getColorData();
+		float[] normalData = drawObject.getNormalData();
 
 		//TODO Textures
 		//TODO MAKE SO NOT HARDCODED
@@ -199,24 +206,27 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 		rendererTool.enableHandles("a_Color", colorData, Plane.COLOR_DATA_SIZE);
 		rendererTool.enableHandles("a_Normal", normalData, Plane.NORMAL_DATA_SIZE);
 
-	    if(!(plane.getTexture() == null)){
-
-	    	int textureUniformHandle = handles.get("u_Texture");
-
-		    //TODO needs object index on active and uniform
-		    GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-	        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, plane.getTexture().getCompiledTexture());
-	    	GLES20.glUniform1i(textureUniformHandle,0);
-	    	
-	    	Texture shapeTexture = plane.getTexture();
-	    	float[] textureData = shapeTexture.getTextureCoord();
-	    	rendererTool.enableHandles("a_TexCoordinate", textureData, Plane.TEXTURE_DATA_SIZE);
+		if(drawObject instanceof Plane){
+			Plane plane = (Plane)drawObject;
+		    if(!(plane.getTexture() == null)){
+	
+		    	int textureUniformHandle = handles.get("u_Texture");
+	
+			    //TODO needs object index on active and uniform
+			    GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+		        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, plane.getTexture().getCompiledTexture());
+		    	GLES20.glUniform1i(textureUniformHandle,0);
+		    	
+		    	Texture shapeTexture = plane.getTexture();
+		    	float[] textureData = shapeTexture.getTextureCoord();
+		    	rendererTool.enableHandles("a_TexCoordinate", textureData, Plane.TEXTURE_DATA_SIZE);
+		    }
 	    }
 
 	    int mvMatrixHandle = handles.get("u_MVMatrix");
 	    int mvpMatrixHandle = handles.get("u_MVPMatrix");
         
-	    rendererTool.translateModelMatrix(plane.getTranslationX(),plane.getTranslationY(),plane.getTranslationZ());
+	    rendererTool.translateModelMatrix(drawObject.getTranslationX(),drawObject.getTranslationY(),drawObject.getTranslationZ());
         
 		GLES20.glUniformMatrix4fv(mvMatrixHandle, 1, false, rendererTool.getMVMatrix(), 0);
 		GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false, rendererTool.getMVPMatrix(), 0);

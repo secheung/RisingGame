@@ -14,7 +14,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	float index = 0.0f;
 	float x1 = 0.0f;
 	float y1 = 0.0f;
-	float z1 = -4.0f;
+	float z1 = -1.0f;
 	
 	float x2 = -3.5f;
 	float y2 = 0.0f;
@@ -34,10 +34,10 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 										new String[]{"a_Position","a_Color","a_Normal","a_TexCoordinate"}
 									);
 
-//		Plane plane = new Plane(R.drawable.computer_look_back, 2.5f, 3.5f, x1, y1, z1, 1, 1);
-		Plane plane = new Plane(R.drawable.stand, 2.5f, 3.5f, x1, y1, z1, 14, 10);
 //		Plane plane = new Plane(R.drawable.stand, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 14, 10);
-		Plane plane2 = new Plane(R.drawable.computer_look_back, 2.5f, 3.5f, 0.0f, 0.0f, -1.7f);
+		Plane plane = new Plane(R.drawable.rising_stance, 3.5f, 3.5f, x1, y1, z1, 11, 3);
+		Plane plane2 = new Plane(R.drawable.stand, 2.5f, 3.5f, x1, y1, z1, 14, 10);
+//		Plane plane2 = new Plane(R.drawable.computer_look_back, 2.5f, 3.5f, 0.0f, 0.0f, -1.7f);
 		Plane plane3 = new Plane(R.drawable.walk, 2.5f, 3.5f, x2, y2, z2, 9, 6);
 		Plane plane4 = new Plane(R.drawable.walk, 2.5f, 3.5f, -4.0f, 0.0f, -1.8f, 9, 6);
 //		
@@ -50,6 +50,11 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	public void update(){
 		worldRenderer.setCamera(camX, camY, camZ);
 		worldRenderer.drawObject("myPlane",x1,y1,z1);
+		worldRenderer.drawObject("myPlane2",x1-1,y1,z1-1);
+		worldRenderer.drawObject("myPlane3",x1-2,y1,z1-2);
+		worldRenderer.drawObject("myPlane4",x1-3,y1,z1-3);
+		
+		
 	}
 
 	public void passTouchEvents(MotionEvent e){

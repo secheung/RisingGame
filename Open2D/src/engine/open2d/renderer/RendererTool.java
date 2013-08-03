@@ -220,6 +220,10 @@ public class RendererTool {
 		//Matrix.setIdentityM(modelMatrix, 0);
         Matrix.rotateM(modelMatrix, 0, angle, rotationX, rotationY, rotationZ);
 	}
+	
+	public void scaleModelMatrix(float scaleX, float scaleY, float scaleZ){
+        Matrix.scaleM(modelMatrix, 0, scaleX, scaleY, scaleZ);
+	}
 	*/
 
 	public float[] getMVMatrix(){

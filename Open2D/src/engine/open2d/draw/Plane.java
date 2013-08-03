@@ -78,6 +78,14 @@ public class Plane {
 
 	private void initPlane(	float planeWidth, float planeHeight,
 						float x, float y, float z){
+//		float[] box = {
+//				planeWidth,  planeHeight,	DEFAULT_Z_DISTANCE,
+//				0.0f,   	 planeHeight,	DEFAULT_Z_DISTANCE,
+//				0.0f,   	 0.0f,			DEFAULT_Z_DISTANCE,
+//				0.0f,   	 0.0f,			DEFAULT_Z_DISTANCE,
+//				planeWidth,  0.0f,			DEFAULT_Z_DISTANCE,
+//				planeWidth,  planeHeight,	DEFAULT_Z_DISTANCE
+//		};
 		float[] box = {
 				planeWidth,  planeHeight,	DEFAULT_Z_DISTANCE,
 				0.0f,   	 planeHeight,	DEFAULT_Z_DISTANCE,

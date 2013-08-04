@@ -10,8 +10,18 @@ public class Texture {
 										1.0f, 1.0f,
 										1.0f, 0.0f	};
 	
+	protected boolean flipped = false;
+	
 	public Texture(int resourceId){
 		this.resourceId = resourceId;
+	}
+
+	public boolean isFlipped() {
+		return flipped;
+	}
+
+	public void setFlipped(boolean flipped) {
+		this.flipped = flipped;
 	}
 
 	public float[] getTextureCoord() {

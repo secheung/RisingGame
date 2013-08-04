@@ -36,7 +36,7 @@ public class Plane extends DrawObject{
 		setTranslationX(x);
 		setTranslationY(y);
 		setTranslationZ(z);
-		draw = false;
+		drawEnabled = false;
 	}
 	
 	private void planeInit(	float planeWidth, float planeHeight){
@@ -93,6 +93,14 @@ public class Plane extends DrawObject{
 			((AnimatedTexture) texture).incrementFrame();
 		}
 	}
+	
+	public void flipTexture(boolean flip){
+		texture.setFlipped(flip);
+	}
+	
+	public boolean isFlipped(){
+		return texture.isFlipped();
+	}	
 	
 	public Texture getTexture() {
 		return texture;

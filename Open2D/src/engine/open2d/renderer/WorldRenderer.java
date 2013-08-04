@@ -113,35 +113,15 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	}
 	
 	public void drawObject(DrawObject drawObject){
-//		Plane drawObj = drawObjects.get(drawObject.getRefName());
-		
 		drawObject.update();
-		drawObject.setDraw(true);
 	}
 	
-	public void drawObject(String ref, float x, float y, float z){
-		Plane drawObj = (Plane)drawObjects.get(ref);
-		
-		if(drawObj == null)
-			Log.w(LOG_PREFIX, NO_ITEM_EXISTS_WARNING+" drawable objects for "+ref);
-		
+	public void drawObject(DrawObject drawObj, float x, float y, float z){
 		drawObj.setTranslationX(x);
 		drawObj.setTranslationY(y);
 		drawObj.setTranslationZ(z);
 		
 		drawObj.update();
-		drawObj.setDraw(true);
-	}
-	
-	public void undrawObject(String ref){
-		Plane drawObj = (Plane)drawObjects.get(ref);
-		
-		if(drawObj == null){
-			Log.w(LOG_PREFIX, NO_ITEM_EXISTS_WARNING+" drawable objects for "+ref);
-			return;
-		}
-		
-		drawObj.setDraw(false);
 	}
 
 	public void passTouchEvents(MotionEvent e){

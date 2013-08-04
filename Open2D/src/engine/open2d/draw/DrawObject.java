@@ -5,7 +5,7 @@ public abstract class DrawObject {
 	protected float[] colorData;
 	protected float[] normalData;
 	
-	protected boolean draw;
+	protected boolean drawEnabled;
 	public String refName;
 	
     protected float translationX;
@@ -23,14 +23,26 @@ public abstract class DrawObject {
     protected abstract void drawObjectInit(float x, float y, float z);
     public abstract void update();
     
-	public void setDraw(boolean enable){
-		draw = enable;
+	public void enable(){
+		drawEnabled = true;
+	}
+
+	public void disable(){
+		drawEnabled = false;
 	}
 	
 	public boolean isDrawEnabled(){
-		return draw;
+		return drawEnabled;
 	}
     
+	public String getRefName() {
+		return refName;
+	}
+	
+	public void setRefName(String refName) {
+		this.refName = refName;
+	}
+	
 	public float[] getPositionData() {
 		return positionData;
 	}

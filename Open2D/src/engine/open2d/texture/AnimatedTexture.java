@@ -53,25 +53,27 @@ public class AnimatedTexture extends Texture{
 		int row = ((int)frame / columns);
 		int column = ((int)frame % columns);
 		
-//		float[] texCoord = {
-//				frameHeight*column + frameHeight,	frameWidth*row,
-//				frameHeight*column,					frameWidth*row,
-//				frameHeight*column,					frameWidth*row + frameWidth,
-//				frameHeight*column,					frameWidth*row + frameWidth,
-//				frameHeight*column + frameHeight,	frameWidth*row + frameWidth,
-//				frameHeight*column + frameHeight,	frameWidth*row
-//				
-//		};
-		
-		float[] texCoord = {
+		if(!flipped){
+			float[] texCoord = {
+					frameHeight*column + frameHeight,	frameWidth*row,
+					frameHeight*column,					frameWidth*row,
+					frameHeight*column,					frameWidth*row + frameWidth,
+					frameHeight*column,					frameWidth*row + frameWidth,
+					frameHeight*column + frameHeight,	frameWidth*row + frameWidth,
+					frameHeight*column + frameHeight,	frameWidth*row
+			};
+			textureCoord = texCoord;
+		} else {
+			float[] texCoord = {
 				frameHeight*column,					frameWidth*row,
 				frameHeight*column + frameHeight,	frameWidth*row,
 				frameHeight*column + frameHeight,	frameWidth*row + frameWidth,
 				frameHeight*column + frameHeight,	frameWidth*row + frameWidth,
 				frameHeight*column,					frameWidth*row + frameWidth,
 				frameHeight*column,					frameWidth*row
-		};
+			};
+			textureCoord = texCoord;
+		}
 		
-		textureCoord = texCoord;
 	}
 }

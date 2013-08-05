@@ -41,13 +41,13 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 									);
 
 		plane = new Plane(R.drawable.stand, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 14, 10);
-		plane = new Plane(R.drawable.stance, 3.5f, 3.5f, x1, y1, z1, 4, 7);
+		plane = new Plane(R.drawable.rising_stance, 3.5f, 3.5f, x1, y1, z1, 4, 7);
 		plane2 = new Plane(R.drawable.stand, 2.5f, 3.5f, x1, y1, z1, 14, 10);
 //		plane2 = new Plane(R.drawable.computer_look_back, 2.5f, 3.5f, 0.0f, 0.0f, -1.7f);
 		plane3 = new Plane(R.drawable.walk, 2.5f, 3.5f, x2, y2, z2, 9, 6);
 		plane4 = new Plane(R.drawable.walk, 2.5f, 3.5f, -4.0f, 0.0f, -1.8f, 9, 6);
 
-//		asdf;//should consider alt load method
+//		should consider alt load method
 		worldRenderer.addDrawShape("myPlane4", plane4);
 		worldRenderer.addDrawShape("myPlane3", plane3);
 		worldRenderer.addDrawShape("myPlane2", plane2);
@@ -77,18 +77,13 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 
 	public void passTouchEvents(MotionEvent e){
 		if(e.getAction() == MotionEvent.ACTION_DOWN){
-			Plane selected = worldRenderer.getSelectedObjection(e.getX(), e.getY());
-			float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), "myPlane");
-	
-			selected.flipTexture(!selected.isFlipped());
+			Plane selected = worldRenderer.getSelectedPlane(e.getX(), e.getY());
+			float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), selected);
 			
-//			if(x1 < unprojectedPoints[0])
-//				x1 += 1.0f;
-//			else if(x1 > unprojectedPoints[0])
-//				x1 -= 1.0f;
-			
-			if(selected != null)
+			if(selected != null){
+				selected.flipTexture(!selected.isFlipped());
 				Log.d("Open2D", selected.getRefName());
+			}
 		}
 	}
 	

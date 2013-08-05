@@ -102,7 +102,7 @@ public class RendererTool {
 	}
 	
 	public float[] screenUnProjection(float x, float y, float z){
-		float[] modelView = getMVMatrix();
+//		float[] modelView = getMVMatrix();  // use model view if want to include translation applied to models
 		float[] projectedPos = new float[4];
 		int[] viewport = new int[4];
 		
@@ -119,9 +119,6 @@ public class RendererTool {
 		z=z-2.0f;
 		normalizedInPoint[0] = (float) (x * 2.0f / viewportWidth - 1.0);
 		normalizedInPoint[1] = (float) (realY * 2.0f / viewportHeight - 1.0);
-//		normalizedInPoint[2] = 0.7f;
-//		normalizedInPoint[2] = 0.97f;
-//		normalizedInPoint[2] = -0.2f*(-((far+near)/(far-near))*-2.390909f/z + ((-2*far*near)/(far-near)));
 		normalizedInPoint[2] = ((-(far+near)/(far-near))*z + ((-2*far*near)/(far-near)))/(-z);
 		normalizedInPoint[3] = 1.0f;
 		
@@ -137,13 +134,10 @@ public class RendererTool {
 							normalizedInPoint, 0);
 		
 		if (projectedPos[3] == 0.0){
-			// Avoid /0 error.
 			Log.e("World coords", "ERROR!");
 			return null;
 		}
 
-		// Divide by the 3rd component to find
-		// out the real position.
 		
 		projectedPos[0] = projectedPos[0] / projectedPos[3];
 		projectedPos[1] = projectedPos[1] / projectedPos[3];
@@ -184,11 +178,6 @@ public class RendererTool {
 							projectionMatrix, 0,
 							viewport, 0,
 							pos3, 0);
-
-//		float width = pos3[0] - pos1[0];
-//		float height = pos1[1] - pos2[1];
-//		float depth = pos3[2];
-//		float[] set = {pos1[0],pos1[1],width,height,depth};
 		
 		float width = pos1[0] - pos3[0];
 		float height = pos1[1] - pos3[1];

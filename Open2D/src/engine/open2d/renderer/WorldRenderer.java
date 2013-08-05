@@ -127,7 +127,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	public void passTouchEvents(MotionEvent e){
 	} 
 	
-	public Plane getSelectedObjection(float xCoord ,float yCoord){
+	public Plane getSelectedPlane(float xCoord ,float yCoord){
 		float x = xCoord;
 		float y = rendererTool.getViewportHeight() - yCoord;
 		float closestdepth = -1;
@@ -151,9 +151,8 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 		return objSelected;
 	}
 	
-	public float[] getUnprojectedPoints(float x, float y, String drawObj){
-		Plane drawObject = (Plane)drawObjects.get(drawObj);
-		return rendererTool.screenUnProjection(x,y,drawObject.getTranslationZ());
+	public float[] getUnprojectedPoints(float x, float y, DrawObject drawObj){
+		return rendererTool.screenUnProjection(x,y,drawObj.getTranslationZ());
 	}
 	
 	@Override

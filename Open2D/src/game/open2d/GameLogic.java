@@ -44,7 +44,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 										new String[]{"a_Position","a_Color","a_Normal","a_TexCoordinate"}
 									);
 
-		plane = new Plane(R.drawable.stand, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 14, 10);
+//		plane = new Plane(R.drawable.stand, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 14, 10);
 		plane = new Plane(R.drawable.rising_stance, 3.5f, 3.5f, x1, y1, z1, 4, 7);
 		plane2 = new Plane(R.drawable.stand, 2.5f, 3.5f, x1, y1, z1, 14, 10);
 //		plane2 = new Plane(R.drawable.computer_look_back, 2.5f, 3.5f, 0.0f, 0.0f, -1.7f);
@@ -53,7 +53,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		plane5 = new Plane(R.drawable.walk, 2.5f, 3.5f, -4.0f, 0.0f, -1.8f, 9, 6);
 		plane6 = new Plane(R.drawable.walk, 2.5f, 3.5f, -4.0f, 0.0f, -1.8f, 9, 6);
 		plane7 = new Plane(R.drawable.walk, 2.5f, 3.5f, -4.0f, 0.0f, -1.8f, 9, 6);
-		plane8 = new Plane(R.drawable.walk, 2.5f, 3.5f, -4.0f, 0.0f, -1.8f, 9, 6);
+		plane8 = new Plane(R.drawable.stand, 2.5f, 3.5f, 1.0f, 0.0f, -1.8f, 14, 10);
 
 //		should consider alt load method
 		worldRenderer.addDrawShape("myPlane8", plane8);
@@ -94,7 +94,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		worldRenderer.drawObject(plane7,x1-12,y1,z1-3);
 		
 		plane8.enable();
-		worldRenderer.drawObject(plane8,x1-14,y1,z1-3);
+		worldRenderer.drawObject(plane8,1.0f,y1,z1-3);
 		
 	}
 

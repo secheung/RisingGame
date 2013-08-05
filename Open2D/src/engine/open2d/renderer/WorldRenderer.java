@@ -11,6 +11,7 @@ import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
+import android.util.SparseIntArray;
 import android.view.MotionEvent;
 import engine.open2d.draw.DrawObject;
 import engine.open2d.draw.Plane;
@@ -34,7 +35,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 
 	LinkedHashMap<String,Shader> shaders;
 	LinkedHashMap<String,DrawObject> drawObjects;
-	HashMap<Integer,Integer> textureMap;
+	SparseIntArray textureMap;
 
     public WorldRenderer(final Context activityContext) {
     	this.activityContext = activityContext;
@@ -44,7 +45,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
     	
     	shaders = new LinkedHashMap<String,Shader>();
     	drawObjects = new LinkedHashMap<String,DrawObject>();
-    	textureMap = new HashMap<Integer,Integer>();
+    	textureMap = new SparseIntArray();
     }
 
 	public void addDrawShape(String ref, DrawObject shape){
@@ -191,6 +192,10 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 			rendererTool.enableHandles("a_Normal", normalData, Plane.NORMAL_DATA_SIZE);
 			
 			Plane plane = (Plane)drawObject;
+			if(textureMap.get(plane.getTexture().getResourceId()) == 0){
+				Log.w(LOG_PREFIX,"the plane " + plane.getRefName() + " was not preloaded during properly");
+				return;
+			}
 		    if(!(plane.getTexture() == null)){
 	
 		    	int textureUniformHandle = handles.get("u_Texture");

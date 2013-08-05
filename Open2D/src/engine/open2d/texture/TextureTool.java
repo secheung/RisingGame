@@ -13,7 +13,7 @@ public class TextureTool {
 		this.context = context;
 	}
 	
-	public void loadTexture(Texture texture){
+	public Integer loadTexture(Texture texture){
 		Bitmap imgSpriteSheet = BitmapFactory.decodeResource(context.getResources(),texture.getResourceId());
 
 		int[] textureHandle = new int[1];
@@ -38,7 +38,7 @@ public class TextureTool {
 		GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, imgSpriteSheet, 0);
 
 		imgSpriteSheet.recycle();
-
-		texture.setCompiledTexture(textureHandle[0]);
+		
+		return textureHandle[0];
 	}
 }

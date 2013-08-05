@@ -29,6 +29,10 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	Plane plane2;
 	Plane plane3;
 	Plane plane4;
+	Plane plane5;
+	Plane plane6;
+	Plane plane7;
+	Plane plane8;
 	
 	public GameLogic(Context context, WorldRenderer worldRenderer){
 		this.worldRenderer = worldRenderer;
@@ -46,8 +50,16 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 //		plane2 = new Plane(R.drawable.computer_look_back, 2.5f, 3.5f, 0.0f, 0.0f, -1.7f);
 		plane3 = new Plane(R.drawable.walk, 2.5f, 3.5f, x2, y2, z2, 9, 6);
 		plane4 = new Plane(R.drawable.walk, 2.5f, 3.5f, -4.0f, 0.0f, -1.8f, 9, 6);
+		plane5 = new Plane(R.drawable.walk, 2.5f, 3.5f, -4.0f, 0.0f, -1.8f, 9, 6);
+		plane6 = new Plane(R.drawable.walk, 2.5f, 3.5f, -4.0f, 0.0f, -1.8f, 9, 6);
+		plane7 = new Plane(R.drawable.walk, 2.5f, 3.5f, -4.0f, 0.0f, -1.8f, 9, 6);
+		plane8 = new Plane(R.drawable.walk, 2.5f, 3.5f, -4.0f, 0.0f, -1.8f, 9, 6);
 
 //		should consider alt load method
+		worldRenderer.addDrawShape("myPlane8", plane8);
+		worldRenderer.addDrawShape("myPlane7", plane7);
+		worldRenderer.addDrawShape("myPlane6", plane6);
+		worldRenderer.addDrawShape("myPlane5", plane5);
 		worldRenderer.addDrawShape("myPlane4", plane4);
 		worldRenderer.addDrawShape("myPlane3", plane3);
 		worldRenderer.addDrawShape("myPlane2", plane2);
@@ -64,23 +76,34 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		worldRenderer.drawObject(plane);
 		
 		plane2.enable();
-		worldRenderer.drawObject(plane2,x1-1,y1,z1-1);
+		worldRenderer.drawObject(plane2,x1-2,y1,z1-1);
 		
 		plane3.enable();
-		worldRenderer.drawObject(plane3,x1-2,y1,z1-2);
+		worldRenderer.drawObject(plane3,x1-4,y1,z1-2);
 		
 		plane4.enable();
-		worldRenderer.drawObject(plane4,x1-3,y1,z1-3);
+		worldRenderer.drawObject(plane4,x1-6,y1,z1-3);
+
+		plane5.enable();
+		worldRenderer.drawObject(plane5,x1-8,y1,z1-3);
 		
+		plane6.enable();
+		worldRenderer.drawObject(plane6,x1-10,y1,z1-3);
+		
+		plane7.enable();
+		worldRenderer.drawObject(plane7,x1-12,y1,z1-3);
+		
+		plane8.enable();
+		worldRenderer.drawObject(plane8,x1-14,y1,z1-3);
 		
 	}
 
 	public void passTouchEvents(MotionEvent e){
 		if(e.getAction() == MotionEvent.ACTION_DOWN){
 			Plane selected = worldRenderer.getSelectedPlane(e.getX(), e.getY());
-			float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), selected);
 			
 			if(selected != null){
+				float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), selected);
 				selected.flipTexture(!selected.isFlipped());
 				Log.d("Open2D", selected.getRefName());
 			}

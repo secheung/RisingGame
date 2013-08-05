@@ -1,5 +1,6 @@
 package engine.open2d.renderer;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -33,6 +34,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 
 	LinkedHashMap<String,Shader> shaders;
 	LinkedHashMap<String,DrawObject> drawObjects;
+	HashMap<Integer,Integer> textureMap;
 
     public WorldRenderer(final Context activityContext) {
     	this.activityContext = activityContext;
@@ -42,6 +44,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
     	
     	shaders = new LinkedHashMap<String,Shader>();
     	drawObjects = new LinkedHashMap<String,DrawObject>();
+    	textureMap = new HashMap<Integer,Integer>();
     }
 
 	public void addDrawShape(String ref, DrawObject shape){
@@ -103,7 +106,8 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	    }
 		
 	    for(DrawObject shape : drawObjects.values()){
-    		textureTool.loadTexture(((Plane)shape).getTexture());
+	    	Texture texture = ((Plane)shape).getTexture();
+    		textureMap.put(texture.getResourceId(), textureTool.loadTexture(texture));
 	    }
 	}
 	
@@ -193,7 +197,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	
 			    //TODO needs object index on active and uniform
 			    GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-		        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, plane.getTexture().getCompiledTexture());
+		        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureMap.get(plane.getTexture().getResourceId()));
 		    	GLES20.glUniform1i(textureUniformHandle,0);
 		    	
 		    	Texture shapeTexture = plane.getTexture();

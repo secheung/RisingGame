@@ -2,7 +2,6 @@ package engine.open2d.texture;
 
 public class Texture {
 	protected int resourceId;
-	protected int compiledTexture;
 	protected float[] textureCoord = {	1.0f, 0.0f,
 										0.0f, 0.0f,
 										0.0f, 1.0f,
@@ -38,13 +37,5 @@ public class Texture {
 
 	public void setResourceId(int resourceId) {
 		this.resourceId = resourceId;
-	}
-
-	public int getCompiledTexture() {
-		return compiledTexture;
-	}
-
-	public void setCompiledTexture(int compiledTexture) {
-		this.compiledTexture = compiledTexture;
 	}
 }

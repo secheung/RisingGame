@@ -1,5 +1,6 @@
 package game.open2d;
 
+import object.Player;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -34,6 +35,8 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	Plane plane7;
 	Plane plane8;
 	
+	Player player;
+	
 	public GameLogic(Context context, WorldRenderer worldRenderer){
 		this.worldRenderer = worldRenderer;
 		this.context = context;
@@ -44,57 +47,59 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 										new String[]{"a_Position","a_Color","a_Normal","a_TexCoordinate"}
 									);
 
-//		plane = new Plane(R.drawable.stand, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 14, 10);
-		plane = new Plane(R.drawable.rising_stance, 3.5f, 3.5f, x1, y1, z1, 4, 7);
-		plane2 = new Plane(R.drawable.stand, 2.5f, 3.5f, x1, y1, z1, 14, 10);
-//		plane2 = new Plane(R.drawable.computer_look_back, 2.5f, 3.5f, 0.0f, 0.0f, -1.7f);
-		plane3 = new Plane(R.drawable.walk, 2.5f, 3.5f, x2, y2, z2, 9, 6);
-		plane4 = new Plane(R.drawable.walk, 2.5f, 3.5f, -4.0f, 0.0f, -1.8f, 9, 6);
-		plane5 = new Plane(R.drawable.walk, 2.5f, 3.5f, -4.0f, 0.0f, -1.8f, 9, 6);
-		plane6 = new Plane(R.drawable.walk, 2.5f, 3.5f, -4.0f, 0.0f, -1.8f, 9, 6);
-		plane7 = new Plane(R.drawable.walk, 2.5f, 3.5f, -4.0f, 0.0f, -1.8f, 9, 6);
-		plane8 = new Plane(R.drawable.stand, 2.5f, 3.5f, 1.0f, 0.0f, -1.8f, 14, 10);
+		plane = new Plane(R.drawable.rising_stance, "plane", 3.5f, 3.5f, x1, y1, z1, 4, 7);
+		plane2 = new Plane(R.drawable.stand, "plane2", 2.5f, 3.5f, x1, y1, z1, 14, 10);
+		plane3 = new Plane(R.drawable.walk, "plane3", 2.5f, 3.5f, x2, y2, z2, 9, 6);
+		plane4 = new Plane(R.drawable.walk, "plane4", 2.5f, 3.5f, -4.0f, 0.0f, -1.8f, 9, 6);
+		plane5 = new Plane(R.drawable.walk, "plane5", 2.5f, 3.5f, -4.0f, 0.0f, -1.8f, 9, 6);
+		plane6 = new Plane(R.drawable.walk, "plane6", 2.5f, 3.5f, -4.0f, 0.0f, -1.8f, 9, 6);
+		plane7 = new Plane(R.drawable.walk, "plane7", 2.5f, 3.5f, -4.0f, 0.0f, -1.8f, 9, 6);
+		plane8 = new Plane(R.drawable.stand, "plane8", 2.5f, 3.5f, 1.0f, 0.0f, -1.8f, 14, 10);
 
 //		should consider alt load method
-		worldRenderer.addDrawShape("myPlane8", plane8);
-		worldRenderer.addDrawShape("myPlane7", plane7);
-		worldRenderer.addDrawShape("myPlane6", plane6);
-		worldRenderer.addDrawShape("myPlane5", plane5);
-		worldRenderer.addDrawShape("myPlane4", plane4);
-		worldRenderer.addDrawShape("myPlane3", plane3);
-		worldRenderer.addDrawShape("myPlane2", plane2);
-		worldRenderer.addDrawShape("myPlane", plane);
+		worldRenderer.addDrawShape(plane8);
+		worldRenderer.addDrawShape(plane7);
+		worldRenderer.addDrawShape(plane6);
+		worldRenderer.addDrawShape(plane5);
+		worldRenderer.addDrawShape(plane4);
+		worldRenderer.addDrawShape(plane3);
+		worldRenderer.addDrawShape(plane2);
+		worldRenderer.addDrawShape(plane);
+		
+		player = new Player(0.0f, 0.0f, 3.5f, 3.5f);
+		player.loadAnimIntoRenderer(worldRenderer);
+		
 	}
 	
 	public void update(){
 		worldRenderer.setCamera(camX, camY, camZ);
-		
-		plane.setTranslationX(x1);
-		plane.setTranslationY(y1);
-		plane.setTranslationZ(z1);
-		plane.enable();
-		worldRenderer.drawObject(plane);
-		
-		plane2.enable();
-		worldRenderer.drawObject(plane2,x1-2,y1,z1-1);
-		
-		plane3.enable();
-		worldRenderer.drawObject(plane3,x1-4,y1,z1-2);
-		
-		plane4.enable();
-		worldRenderer.drawObject(plane4,x1-6,y1,z1-3);
-
-		plane5.enable();
-		worldRenderer.drawObject(plane5,x1-8,y1,z1-3);
-		
-		plane6.enable();
-		worldRenderer.drawObject(plane6,x1-10,y1,z1-3);
-		
-		plane7.enable();
-		worldRenderer.drawObject(plane7,x1-12,y1,z1-3);
-		
-		plane8.enable();
-		worldRenderer.drawObject(plane8,1.0f,y1,z1-3);
+		worldRenderer.drawObject(player.getDisplay(), player.getX(), player.getY(), player.getZ());
+//		plane.setTranslationX(x1);
+//		plane.setTranslationY(y1);
+//		plane.setTranslationZ(z1);
+//		plane.enable();
+//		worldRenderer.drawObject(plane);
+//		
+//		plane2.enable();
+//		worldRenderer.drawObject(plane2,x1-2,y1,z1-1);
+//		
+//		plane3.enable();
+//		worldRenderer.drawObject(plane3,x1-4,y1,z1-2);
+//		
+//		plane4.enable();
+//		worldRenderer.drawObject(plane4,x1-6,y1,z1-3);
+//
+//		plane5.enable();
+//		worldRenderer.drawObject(plane5,x1-8,y1,z1-3);
+//		
+//		plane6.enable();
+//		worldRenderer.drawObject(plane6,x1-10,y1,z1-3);
+//		
+//		plane7.enable();
+//		worldRenderer.drawObject(plane7,x1-12,y1,z1-3);
+//		
+//		plane8.enable();
+//		worldRenderer.drawObject(plane8,1.0f,y1,z1-3);
 		
 	}
 

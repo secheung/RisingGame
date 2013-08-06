@@ -48,14 +48,13 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
     	textureMap = new SparseIntArray();
     }
 
-	public void addDrawShape(String ref, DrawObject shape){
-		if(drawObjects.containsKey(ref)){
-			Log.w(LOG_PREFIX, ITEM_EXISTS_WARNING+" [shape : "+ref+"]");
+	public void addDrawShape(DrawObject shape){
+		if(drawObjects.containsKey(shape.name)){
+			Log.w(LOG_PREFIX, ITEM_EXISTS_WARNING+" [shape : "+shape.name+"]");
 			return;
 		}
 
-		shape.refName = ref;
-    	drawObjects.put(ref, shape);
+    	drawObjects.put(shape.name, shape);
     }
 	
     public void addCustomShader(String ref, int vertResourceId, int fragResourceId, String...attributes){
@@ -192,12 +191,12 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 			rendererTool.enableHandles("a_Normal", normalData, Plane.NORMAL_DATA_SIZE);
 			
 			Plane plane = (Plane)drawObject;
-			if(textureMap.get(plane.getTexture().getResourceId()) == 0){
-				Log.w(LOG_PREFIX,"the plane " + plane.getRefName() + " was not preloaded during properly");
-				return;
-			}
 		    if(!(plane.getTexture() == null)){
-	
+				if(textureMap.get(plane.getTexture().getResourceId()) == 0){
+					Log.w(LOG_PREFIX,"the plane " + plane.getRefName() + " was not preloaded during properly");
+					return;
+				}
+		    	
 		    	int textureUniformHandle = handles.get("u_Texture");
 	
 			    //TODO needs object index on active and uniform

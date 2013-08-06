@@ -14,25 +14,26 @@ public class Plane extends DrawObject{
 	
 	Texture texture;
 
-    public Plane(	int referenceId, 
+    public Plane(	int referenceId, String name,
     				float planeWidth, float planeHeight,
     				float x, float y, float z){
-    	drawObjectInit(x,y,z);
+    	drawObjectInit(name,x,y,z);
 		planeInit(planeWidth, planeHeight);
 		texture = new Texture(referenceId);
 	}
 
-	public Plane(	int referenceId, 
+	public Plane(	int referenceId, String name,
 					float planeWidth, float planeHeight,
 					float x, float y, float z,
 					int rows, int columns){
 		
-		drawObjectInit(x,y,z);
+		drawObjectInit(name,x,y,z);
 		planeInit(planeWidth, planeHeight);
 		texture = new AnimatedTexture(referenceId, rows, columns);
 	}
 
-	protected void drawObjectInit(float x, float y, float z){
+	protected void drawObjectInit(String name, float x, float y, float z){
+		this.name = name;
 		setTranslationX(x);
 		setTranslationY(y);
 		setTranslationZ(z);

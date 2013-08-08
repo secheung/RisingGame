@@ -142,6 +142,7 @@ public class RendererTool {
 		projectedPos[0] = projectedPos[0] / projectedPos[3];
 		projectedPos[1] = projectedPos[1] / projectedPos[3];
 		projectedPos[2] = projectedPos[2] / projectedPos[3];
+		projectedPos[3] = projectedPos[3] / projectedPos[3];
 
 		
 		Log.d("test", projectedPos[0] + " : " + projectedPos[1] + " : " + projectedPos[2]+ " : " + projectedPos[3]);

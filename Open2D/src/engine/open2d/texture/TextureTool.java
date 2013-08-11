@@ -1,5 +1,8 @@
 package engine.open2d.texture;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,9 +17,11 @@ public class TextureTool {
 	}
 	
 	public Integer loadTexture(Texture texture){
+		int[] textureHandle = new int[1];
+		
+//		Bitmap imgSpriteSheet = BitmapFactory.decodeStream(context.getResources().openRawResource(texture.getResourceId()));
 		Bitmap imgSpriteSheet = BitmapFactory.decodeResource(context.getResources(),texture.getResourceId());
 
-		int[] textureHandle = new int[1];
 
 		GLES20.glDeleteTextures(1,textureHandle,0);
 		GLES20.glGenTextures(1, textureHandle, 0);

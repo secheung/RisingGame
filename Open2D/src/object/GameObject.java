@@ -1,12 +1,15 @@
 package object;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import android.view.MotionEvent;
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
 
 public abstract class GameObject {
+	public interface GameObjectState{};
+	
 	public static enum Direction{
 		LEFT,
 		RIGHT,
@@ -24,10 +27,20 @@ public abstract class GameObject {
 	protected float height;
 	
 	protected Plane display;
-	protected HashMap<String, Plane> animations;
+	protected HashMap<GameObjectState, Plane> animations;
 	protected String name;
 	
-	public abstract void update();
+	protected LinkedHashMap<String,GameObject> gameObjects;
+	
+	public GameObject(LinkedHashMap<String,GameObject> gameObjects, float x, float y, float width, float height){
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		
+		this.gameObjects = gameObjects;
+	}
+	
 	public abstract void updateState();
 	public abstract void updateLogic();
 	public abstract void updateDisplay();
@@ -44,12 +57,26 @@ public abstract class GameObject {
 		}
 	}
 	
-	public void switchAnimation(String animToSwitch){
+	public void switchAnimation(GameObjectState animToSwitch){
 		display.disable();
 		display = animations.get(animToSwitch);
 		display.enable();
 	}
 	
+	public void update() {
+		updateState();
+		updateLogic();
+		updateDisplay();
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public Plane getDisplay(){
 		return display;
 	}
@@ -76,6 +103,22 @@ public abstract class GameObject {
 
 	public void setZ(float z) {
 		this.z = z;
+	}
+
+	public float getWidth() {
+		return width;
+	}
+
+	public void setWidth(float width) {
+		this.width = width;
+	}
+
+	public float getHeight() {
+		return height;
+	}
+
+	public void setHeight(float height) {
+		this.height = height;
 	}
 	
 }

@@ -184,7 +184,7 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 		//TODO Textures
 		//TODO MAKE SO NOT HARDCODED
 		Map<String,Integer> handles = rendererTool.getHandles();
-
+		
 		if(drawObject instanceof Plane){
 			rendererTool.enableHandles("a_Position", positionData, Plane.POSITION_DATA_SIZE);
 			rendererTool.enableHandles("a_Color", colorData, Plane.COLOR_DATA_SIZE);

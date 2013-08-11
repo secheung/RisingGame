@@ -2,6 +2,7 @@ package game.open2d;
 
 import java.util.LinkedHashMap;
 
+import object.Enemy;
 import object.GameObject;
 import object.Player;
 import android.content.Context;
@@ -22,8 +23,6 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	
 	LinkedHashMap<String,GameObject> gameObjects;
 	
-	
-	
 	public GameLogic(Context context, WorldRenderer worldRenderer){
 		this.worldRenderer = worldRenderer;
 		this.context = context;
@@ -36,10 +35,14 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		
 		gameObjects = new LinkedHashMap<String,GameObject>();
 		
-		Player player = new Player(0.0f, 0.0f, 3.5f, 3.5f);
+		Player player = new Player(gameObjects, 3.0f, -1.0f, 3.5f, 3.5f);
 		player.loadAnimIntoRenderer(worldRenderer);
 		
-		gameObjects.put("player", player);
+		Enemy enemy0 = new Enemy(gameObjects, player, 0, -3.7f, -1.0f, 3.5f, 3.5f);
+		enemy0.loadAnimIntoRenderer(worldRenderer);
+		
+		gameObjects.put(player.getName(), player);
+		gameObjects.put(enemy0.getName(), enemy0);
 	}
 	
 	public void update(){

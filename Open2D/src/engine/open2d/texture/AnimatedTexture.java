@@ -6,13 +6,12 @@ import android.util.Log;
 public class AnimatedTexture extends Texture{
 	public enum Playback{
 		PLAY,
-		REVERSE,
-		ONCE,
-		BOUNCE
+		REVERSE
 	}
 	
 	int frameRate;
 	Playback playback;
+	boolean played;
 	
     private float frameWidth;
     private float frameHeight;
@@ -32,10 +31,18 @@ public class AnimatedTexture extends Texture{
 		this.totalFrames = rows*columns;
 		this.currentFrame = 1;
 		this.frameIncrement= 1;
+		
+		playback = Playback.PLAY;
+		played = false;
 	}
 	
 	public void incrementFrame(){
-		currentFrame += frameIncrement;
+		if(playback == Playback.PLAY){
+			currentFrame += frameIncrement;
+		} else if(playback == Playback.REVERSE){
+			currentFrame -= frameIncrement;
+		}
+		
 		if(currentFrame >= totalFrames){
 			currentFrame = 1;
 		} else if(currentFrame <= 0) {

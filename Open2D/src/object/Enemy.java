@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 
 import object.GameObject.Direction;
 import object.GameObject.GameObjectState;
+import object.Player.PlayerState;
 
 public class Enemy extends GameObject {
 	static enum EnemyState implements GameObjectState{
@@ -37,7 +38,7 @@ public class Enemy extends GameObject {
 		this.z = -1.9f;
 		this.playerRef = player;
 		animations = new HashMap<GameObjectState, Plane>();
-		animations.put(EnemyState.STAND, new Plane(R.drawable.enemy_stance2, name+"_"+EnemyState.STAND.getName(), width, height, x, y, z, 4, 7));
+		animations.put(EnemyState.STAND, new Plane(R.drawable.enemy_stance, name+"_"+EnemyState.STAND.getName(), width, height, x, y, z, 4, 7));
 //		animations.put(EnemyState.RUN, new Plane(R.drawable.rising_run, Enemy.NAME+"_"+EnemyState.RUN.getName(), width, height, x, y, z, 11, 3));
 		
 		display = animations.get(EnemyState.STAND);
@@ -50,6 +51,10 @@ public class Enemy extends GameObject {
 			direction = Direction.RIGHT;
 		} else if(playerRef.getX() < this.x){
 			direction = Direction.LEFT;
+		}
+		
+		if(playerRef.getPlayerState() == PlayerState.FINISH){
+			display.disable();
 		}
 	}
 

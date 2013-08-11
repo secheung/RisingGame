@@ -47,7 +47,6 @@ public abstract class GameObject {
 	public abstract void passTouchEvent(float[] unprojectedPoint);
 	
 	public void draw(WorldRenderer worldRenderer){
-		display.enable();
 		worldRenderer.drawObject(display, x, y, z);
 	}
 	

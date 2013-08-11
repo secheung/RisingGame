@@ -47,11 +47,19 @@ public class Player extends GameObject{
 		this.z = -2.0f;
 		
 		animations = new HashMap<GameObjectState, Plane>();
-		animations.put(PlayerState.STAND, new Plane(R.drawable.rising_stance2, name+"_"+PlayerState.STAND.getName(), width, height, x, y, z, 4, 7));
-		animations.put(PlayerState.RUN, new Plane(R.drawable.rising_run2, name+"_"+PlayerState.RUN.getName(), width, height, x, y, z, 11, 3));
+		animations.put(PlayerState.STAND, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.STAND.getName(), width, height, x, y, z, 4, 7));
+		animations.put(PlayerState.RUN, new Plane(R.drawable.rising_run, name+"_"+PlayerState.RUN.getName(), width, height, x, y, z, 11, 3));
 		animations.put(PlayerState.FINISH, new Plane(R.drawable.finish1, name+"_"+PlayerState.FINISH.getName(), width, height, x, y, z, 8, 5));
 		
 		this.display = animations.get(PlayerState.STAND);
+	}
+
+	public PlayerState getPlayerState() {
+		return playerState;
+	}
+
+	public void setPlayerState(PlayerState playerState) {
+		this.playerState = playerState;
 	}
 
 	@Override
@@ -79,7 +87,7 @@ public class Player extends GameObject{
 		for(GameObject gameObject : gameObjects.values()){
 			if(gameObject instanceof Enemy){
 				Enemy enemy = (Enemy)gameObject;
-				if(GameTools.boxColDetect(this, enemy)){
+				if(GameTools.boxColDetect(this, enemy, 1.0f)){
 					playerState = PlayerState.FINISH;
 				}
 			}

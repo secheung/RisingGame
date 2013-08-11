@@ -23,4 +23,22 @@ public class GameTools {
 		return true;
 	}
 	
+	public static boolean boxColDetect(GameObject object1, GameObject object2, float buffer){
+		float left1 = object1.getX() + buffer;
+		float right1 = object1.getX() + object1.getWidth() - buffer;
+		float top1 = object1.getY() + object1.getHeight() - buffer;
+		float bottom1 = object1.getY() + buffer;
+		
+		float left2 = object2.getX() + buffer;
+		float right2 = object2.getX() + object2.getWidth() - buffer;
+		float top2 = object2.getY() + object2.getHeight() - buffer;
+		float bottom2 = object2.getY() + buffer;
+		
+		if (bottom1 > top2) return false;
+		if (top1 < bottom2) return false;
+		if (right1 < left2) return false;
+		if (left1 > right2) return false;
+		
+		return true;
+	}
 }

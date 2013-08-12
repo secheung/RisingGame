@@ -3,6 +3,7 @@ package engine.open2d.draw;
 import android.util.Log;
 import engine.open2d.texture.AnimatedTexture;
 import engine.open2d.texture.Texture;
+import engine.open2d.texture.AnimatedTexture.Playback;
 
 public class Plane extends DrawObject{
 	public final static int POSITION_DATA_SIZE = 3;
@@ -101,7 +102,49 @@ public class Plane extends DrawObject{
 	
 	public boolean isFlipped(){
 		return texture.isFlipped();
-	}	
+	}
+	
+	public Playback getPlayback() {
+		if(texture instanceof AnimatedTexture){
+			return ((AnimatedTexture)texture).getPlayback();
+		} else {
+			Log.w("World Renderer","this texture is not an animated texture");
+			return null;
+		}
+	}
+
+	public void setPlayback(Playback playback) {
+		if(texture instanceof AnimatedTexture){
+			((AnimatedTexture)texture).setPlayback(playback);
+		} else {
+			Log.w("World Renderer","this texture is not an animated texture");
+		}
+	}
+
+	public boolean isPlayed() {
+		if(texture instanceof AnimatedTexture){
+			return ((AnimatedTexture)texture).isPlayed();
+		} else {
+			Log.w("World Renderer","this texture is not an animated texture");
+			return false;
+		}
+	}
+	
+	public void setFrame(int frame){
+		if(texture instanceof AnimatedTexture){
+			((AnimatedTexture)texture).setFrame(frame);
+		} else {
+			Log.w("World Renderer","this texture is not an animated texture");
+		}
+	}
+	
+	public void resetAnimation(){
+		if(texture instanceof AnimatedTexture){
+			((AnimatedTexture)texture).resetAnimation();
+		} else {
+			Log.w("World Renderer","this texture is not an animated texture");
+		}
+	}
 	
 	public Texture getTexture() {
 		return texture;

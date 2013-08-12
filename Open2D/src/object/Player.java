@@ -3,8 +3,10 @@ package object;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import object.GameObject.Direction;
 import android.view.MotionEvent;
 import engine.open2d.draw.Plane;
+import engine.open2d.renderer.WorldRenderer;
 import game.open2d.GameTools;
 import game.open2d.R;
 
@@ -31,6 +33,7 @@ public class Player extends GameObject{
 	
 	private static float WALK_SPEED = 0.2f;
 	private static float BUFFER = 0.4f;
+	private static float COLLISION_BUFFER = 1.0f;
 	
 	private PlayerState playerState;
 	private float moveToX;
@@ -49,6 +52,7 @@ public class Player extends GameObject{
 		animations = new HashMap<GameObjectState, Plane>();
 		animations.put(PlayerState.STAND, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.STAND.getName(), width, height, x, y, z, 4, 7));
 		animations.put(PlayerState.RUN, new Plane(R.drawable.rising_run, name+"_"+PlayerState.RUN.getName(), width, height, x, y, z, 11, 3));
+		animations.put(PlayerState.STRIKE, new Plane(R.drawable.rising_strike1, name+"_"+PlayerState.STRIKE.getName(), width, height, x, y, z, 3, 3));
 		animations.put(PlayerState.FINISH, new Plane(R.drawable.finish1, name+"_"+PlayerState.FINISH.getName(), width, height, x, y, z, 8, 5));
 		
 		this.display = animations.get(PlayerState.STAND);
@@ -63,31 +67,40 @@ public class Player extends GameObject{
 	}
 
 	@Override
-	public void passTouchEvent(float[] unprojectedPoint){
-		moveToX = unprojectedPoint[0];
-		moveToY = unprojectedPoint[1];
+	public void passTouchEvent(MotionEvent e, WorldRenderer worldRenderer){
+		Plane selectedPlane = worldRenderer.getSelectedPlane(e.getX(), e.getY());
+		float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), display);
+		
+		moveToX = unprojectedPoints[0];
+		moveToY = unprojectedPoints[1];
+		
+		if(animations.containsValue(selectedPlane)){
+			selected = true;
+		}
 	}
 
 	@Override
 	public void updateState() {
 		float checkX = x+width/2;
 		
-		if(moveToX > checkX){
-			direction = Direction.RIGHT;
-			playerState = PlayerState.RUN;
-		} else if(moveToX < checkX) {
-			direction = Direction.LEFT;
-			playerState = PlayerState.RUN;
-		}
-		
-		if(moveToX > checkX - Player.BUFFER && moveToX < checkX + Player.BUFFER) {
-			playerState = PlayerState.STAND;
+		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
+			if(moveToX > checkX){
+				direction = Direction.RIGHT;
+				playerState = PlayerState.RUN;
+			} else if(moveToX < checkX) {
+				direction = Direction.LEFT;
+				playerState = PlayerState.RUN;
+			}
+
+			if(moveToX > checkX - Player.BUFFER && moveToX < checkX + Player.BUFFER) {
+				playerState = PlayerState.STAND;
+			}
 		}
 		
 		for(GameObject gameObject : gameObjects.values()){
 			if(gameObject instanceof Enemy){
 				Enemy enemy = (Enemy)gameObject;
-				if(GameTools.boxColDetect(this, enemy, 1.0f)){
+				if(GameTools.boxColDetect(this, enemy, COLLISION_BUFFER) && enemy.selected){
 					playerState = PlayerState.FINISH;
 				}
 			}
@@ -105,7 +118,7 @@ public class Player extends GameObject{
 				x -= WALK_SPEED;
 		}
 	}
-
+	
 	@Override
 	public void updateDisplay() {
 		if(direction==Direction.RIGHT){
@@ -114,6 +127,20 @@ public class Player extends GameObject{
 			display.flipTexture(true);
 		}
 		
-		switchAnimation(playerState);
+		if(playerState == PlayerState.FINISH){
+			switchAnimationResetFrame(playerState);
+		} else {
+			switchAnimation(playerState);
+		}
 	}
+		
+	@Override
+	public void updateAfterDisplay() {
+		if(display.isPlayed() && playerState==PlayerState.FINISH){
+			display.resetAnimation();
+			playerState = PlayerState.STAND;
+		}
+	}
+
+
 }

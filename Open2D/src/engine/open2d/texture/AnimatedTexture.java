@@ -9,7 +9,6 @@ public class AnimatedTexture extends Texture{
 		REVERSE
 	}
 	
-	int frameRate;
 	Playback playback;
 	boolean played;
 	
@@ -19,7 +18,7 @@ public class AnimatedTexture extends Texture{
     private int columns;
     private int totalFrames;
     private int currentFrame;
-    private int frameIncrement;
+    private int frameRate;
 	
 	public AnimatedTexture(int resourceId, int rows, int columns){
 		super(resourceId);
@@ -30,7 +29,7 @@ public class AnimatedTexture extends Texture{
 		this.frameHeight = 1.0f/columns;
 		this.totalFrames = rows*columns;
 		this.currentFrame = 1;
-		this.frameIncrement= 1;
+		this.frameRate= 1;
 		
 		playback = Playback.PLAY;
 		played = false;
@@ -38,13 +37,14 @@ public class AnimatedTexture extends Texture{
 	
 	public void incrementFrame(){
 		if(playback == Playback.PLAY){
-			currentFrame += frameIncrement;
+			currentFrame += frameRate;
 		} else if(playback == Playback.REVERSE){
-			currentFrame -= frameIncrement;
+			currentFrame -= frameRate;
 		}
 		
 		if(currentFrame >= totalFrames){
 			currentFrame = 1;
+			played = true;
 		} else if(currentFrame <= 0) {
 			currentFrame = totalFrames - 1;
 		}
@@ -55,6 +55,28 @@ public class AnimatedTexture extends Texture{
 		updateTextureCoord(frame);
 	}
 	
+	public void resetAnimation(){
+		currentFrame = 1;
+		played = false;
+		frameRate = 1;
+	}
+	
+	public Playback getPlayback() {
+		return playback;
+	}
+
+	public void setPlayback(Playback playback) {
+		this.playback = playback;
+	}
+
+	public boolean isPlayed() {
+		return played;
+	}
+
+	public void setPlayed(boolean played) {
+		this.played = played;
+	}
+
 	private void updateTextureCoord(int frame){
 		
 		int row = ((int)frame / columns);

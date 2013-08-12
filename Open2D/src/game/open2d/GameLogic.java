@@ -5,11 +5,10 @@ import java.util.LinkedHashMap;
 import object.Enemy;
 import object.GameObject;
 import object.Player;
+import object.Enemy.EnemyState;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.MotionEvent;
-import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
 
 public class GameLogic extends AsyncTask<Void, Void, Void>{
@@ -20,6 +19,8 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	float camX = 0.0f;
 	float camY = 0.0f;
 	float camZ = 0.0f;
+	
+	int enemyLimit = 2;
 	
 	LinkedHashMap<String,GameObject> gameObjects;
 	
@@ -46,8 +47,19 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	}
 	
 	public void update(){
+		if(gameObjects.size() < enemyLimit){
+			Enemy enemy0 = new Enemy(gameObjects, (Player)gameObjects.get("player"), 0, 3.7f, -1.0f, 3.5f, 3.5f);
+			gameObjects.put(enemy0.getName(), enemy0);
+		}
+		
 		for(GameObject gameObject : gameObjects.values()){
 			gameObject.update();
+			if(gameObject instanceof Enemy){
+				Enemy enemy = (Enemy)gameObject;
+				if(enemy.getEnemyState() == EnemyState.DEAD){
+					gameObjects.remove(gameObject.getName());
+				}
+			}
 		}
 	}
 	
@@ -60,18 +72,9 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	}
 
 	public void passTouchEvents(MotionEvent e){
-		for(GameObject gameObject : gameObjects.values()){
-			float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), gameObject.getDisplay());
-			gameObject.passTouchEvent(unprojectedPoints);
-		}
-		
 		if(e.getAction() == MotionEvent.ACTION_DOWN){
-			
-			Plane selected = worldRenderer.getSelectedPlane(e.getX(), e.getY());
-			
-			if(selected != null){
-				selected.flipTexture(!selected.isFlipped());
-				Log.d("Open2D", selected.getRefName());
+			for(GameObject gameObject : gameObjects.values()){
+				gameObject.passTouchEvent(e, worldRenderer);
 			}
 		}
 	}

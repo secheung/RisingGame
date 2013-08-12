@@ -14,7 +14,7 @@ public class Texture {
 	public Texture(int resourceId){
 		this.resourceId = resourceId;
 	}
-
+	
 	public boolean isFlipped() {
 		return flipped;
 	}

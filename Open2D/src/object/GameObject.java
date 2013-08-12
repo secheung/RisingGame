@@ -29,6 +29,7 @@ public abstract class GameObject {
 	protected Plane display;
 	protected HashMap<GameObjectState, Plane> animations;
 	protected String name;
+	public boolean selected;
 	
 	protected LinkedHashMap<String,GameObject> gameObjects;
 	
@@ -44,7 +45,8 @@ public abstract class GameObject {
 	public abstract void updateState();
 	public abstract void updateLogic();
 	public abstract void updateDisplay();
-	public abstract void passTouchEvent(float[] unprojectedPoint);
+	public abstract void updateAfterDisplay();
+	public abstract void passTouchEvent(MotionEvent e, WorldRenderer worldRenderer);
 	
 	public void draw(WorldRenderer worldRenderer){
 		worldRenderer.drawObject(display, x, y, z);
@@ -62,10 +64,18 @@ public abstract class GameObject {
 		display.enable();
 	}
 	
+	public void switchAnimationResetFrame(GameObjectState animToSwitch){
+		display.disable();
+		display = animations.get(animToSwitch);
+		display.setFrame(1);
+		display.enable();
+	}
+	
 	public void update() {
 		updateState();
 		updateLogic();
 		updateDisplay();
+		updateAfterDisplay();
 	}
 	
 	public String getName() {

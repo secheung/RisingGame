@@ -3,15 +3,20 @@ package game.open2d;
 import java.util.LinkedHashMap;
 
 import object.Enemy;
+import object.Enemy.EnemyState;
+import object.Player.PlayerState;
 import object.GameObject;
 import object.Player;
-import object.Enemy.EnemyState;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.view.MotionEvent;
 import engine.open2d.renderer.WorldRenderer;
 
 public class GameLogic extends AsyncTask<Void, Void, Void>{
+	public static float CAM_X_CHANGE = 0.65f;
+	public static float CAM_Y_CHANGE = 0.65f;
+	public static float CAM_Z_CHANGE = 0.65f;
+	public static float CAM_BUFFER = 0.3f;
 	
 	WorldRenderer worldRenderer;
 	Context context;
@@ -48,7 +53,8 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	
 	public void update(){
 		if(gameObjects.size() < enemyLimit){
-			Enemy enemy0 = new Enemy(gameObjects, (Player)gameObjects.get("player"), 0, 3.7f, -1.0f, 3.5f, 3.5f);
+			Enemy enemy0 = new Enemy(gameObjects, (Player)gameObjects.get("player"), 0, (float)(3.7f*Math.random()-7.4f*Math.random()), -1.0f, 3.5f, 3.5f);
+			enemy0.loadAnimIntoRenderer(worldRenderer);
 			gameObjects.put(enemy0.getName(), enemy0);
 		}
 		
@@ -57,6 +63,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 			if(gameObject instanceof Enemy){
 				Enemy enemy = (Enemy)gameObject;
 				if(enemy.getEnemyState() == EnemyState.DEAD){
+					gameObject.unloadAnimFromRenderer(worldRenderer);
 					gameObjects.remove(gameObject.getName());
 				}
 			}
@@ -65,12 +72,52 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	
 	public void draw(){
 		worldRenderer.setCamera(camX, camY, camZ);
-		
+		Player player = null;
 		for(GameObject gameObject : gameObjects.values()){
 			gameObject.draw(worldRenderer);
+			if(gameObject instanceof Player){
+				player = (Player)gameObject;
+			}
+		}
+		
+		if(player.getPlayerState() == PlayerState.FINISH){
+			finishCamZoom(player);
+		} else {
+			camX = 0.0f;
+			camY = 0.0f;
+			camZ = 0.0f;
 		}
 	}
 
+	public void finishCamZoom(Player player){
+		float checkX = player.getX()+player.getWidth()/2;
+		float checkY = player.getY()+player.getHeight()/2; 
+		float checkZ = player.getZ();
+		
+		if(checkX + CAM_BUFFER > camX && checkX - CAM_BUFFER < camX){
+			camX = checkX;
+		} else if(checkX > camX){
+			camX += CAM_X_CHANGE;
+		} else if (checkX < camX){
+			camX -= CAM_X_CHANGE;
+		}
+		
+		if(checkY + CAM_BUFFER > camY && checkY - CAM_BUFFER < camY){
+			camY = checkY;
+		} else if(checkY > camY){
+			camY += CAM_Y_CHANGE;
+		} else if (checkY - CAM_BUFFER < camY){
+			camY -= CAM_Y_CHANGE;
+		}
+		
+//		if(checkZ + CAM_BUFFER > camZ){
+//			camZ += CAM_Z_CHANGE;
+//		} else
+		if (checkZ < camZ){
+			camZ -= CAM_Z_CHANGE;
+		}
+	}
+	
 	public void passTouchEvents(MotionEvent e){
 		if(e.getAction() == MotionEvent.ACTION_DOWN){
 			for(GameObject gameObject : gameObjects.values()){

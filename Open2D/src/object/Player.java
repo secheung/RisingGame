@@ -11,7 +11,7 @@ import game.open2d.GameTools;
 import game.open2d.R;
 
 public class Player extends GameObject{
-	static enum PlayerState implements GameObjectState{
+	public static enum PlayerState implements GameObjectState{
 		STAND("stand"),
 		STRIKE("strike"),
 		FINISH("finish"),
@@ -109,8 +109,6 @@ public class Player extends GameObject{
 	
 	@Override
 	public void updateLogic() {
-		float checkX = x+width/2;
-		
 		if(playerState == PlayerState.RUN){
 			if(direction == Direction.RIGHT)
 				x += WALK_SPEED;
@@ -127,11 +125,7 @@ public class Player extends GameObject{
 			display.flipTexture(true);
 		}
 		
-		if(playerState == PlayerState.FINISH){
-			switchAnimationResetFrame(playerState);
-		} else {
-			switchAnimation(playerState);
-		}
+		switchAnimation(playerState);
 	}
 		
 	@Override

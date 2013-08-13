@@ -58,18 +58,24 @@ public abstract class GameObject {
 		}
 	}
 	
+	public void unloadAnimFromRenderer(WorldRenderer worldRenderer){
+		for(Plane animation : animations.values()){
+			worldRenderer.removeDrawShape(animation);
+		}
+	}
+	
 	public void switchAnimation(GameObjectState animToSwitch){
 		display.disable();
 		display = animations.get(animToSwitch);
 		display.enable();
 	}
 	
-	public void switchAnimationResetFrame(GameObjectState animToSwitch){
-		display.disable();
-		display = animations.get(animToSwitch);
-		display.setFrame(1);
-		display.enable();
-	}
+//	public void switchAnimationResetFrame(GameObjectState animToSwitch){
+//		display.disable();
+//		display = animations.get(animToSwitch);
+//		display.setFrame(1);
+//		display.enable();
+//	}
 	
 	public void update() {
 		updateState();

@@ -57,6 +57,10 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
     	drawObjects.put(shape.name, shape);
     }
 	
+	public void removeDrawShape(DrawObject shape){
+		drawObjects.remove(shape.name);
+	}
+	
     public void addCustomShader(String ref, int vertResourceId, int fragResourceId, String...attributes){
     	if(shaders.containsKey(ref)){
 			Log.w(LOG_PREFIX, ITEM_EXISTS_WARNING+" [shader: "+ref+"]");

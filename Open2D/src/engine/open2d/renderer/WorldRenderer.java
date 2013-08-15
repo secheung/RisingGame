@@ -145,7 +145,10 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 			if(!drawObj.isDrawEnabled()){
 				continue;
 			}
-
+			if(!drawObj.isUnprojectEnabled()){
+				continue;
+			}
+			
 			float[] projectedPoints = rendererTool.screenProjectPlane((Plane)drawObj);
 
 			if(x > projectedPoints[0] && x < projectedPoints[0]+projectedPoints[2] && y > projectedPoints[1] && y < projectedPoints[1]+projectedPoints[3]){

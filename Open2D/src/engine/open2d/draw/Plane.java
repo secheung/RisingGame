@@ -39,6 +39,7 @@ public class Plane extends DrawObject{
 		setTranslationY(y);
 		setTranslationZ(z);
 		drawEnabled = false;
+		unprojectEnabled = true;
 	}
 	
 	private void planeInit(	float planeWidth, float planeHeight){

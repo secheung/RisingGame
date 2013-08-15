@@ -6,6 +6,7 @@ public abstract class DrawObject {
 	protected float[] normalData;
 	
 	protected boolean drawEnabled;
+	protected boolean unprojectEnabled;
 	public String name;
 	
     protected float translationX;
@@ -23,16 +24,28 @@ public abstract class DrawObject {
     protected abstract void drawObjectInit(String name, float x, float y, float z);
     public abstract void update();
     
-	public void enable(){
+	public void drawEnable(){
 		drawEnabled = true;
 	}
 
-	public void disable(){
+	public void drawDisable(){
 		drawEnabled = false;
 	}
-	
+
 	public boolean isDrawEnabled(){
 		return drawEnabled;
+	}
+	
+	public void unprojectEnable(){
+		unprojectEnabled = true;
+	}
+
+	public void unprojectDisable(){
+		unprojectEnabled = false;
+	}
+
+	public boolean isUnprojectEnabled(){
+		return unprojectEnabled;
 	}
     
 	public String getRefName() {

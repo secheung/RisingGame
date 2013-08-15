@@ -16,7 +16,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	public static float CAM_X_CHANGE = 0.65f;
 	public static float CAM_Y_CHANGE = 0.65f;
 	public static float CAM_Z_CHANGE = 0.65f;
-	public static float CAM_BUFFER = 0.3f;
+	public static float CAM_BUFFER = 1.0f;
 	
 	WorldRenderer worldRenderer;
 	Context context;
@@ -81,14 +81,55 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		}
 		
 		if(player.getPlayerState() == PlayerState.FINISH){
-			finishCamZoom(player);
+//			finishCamZoom(player);
+			camZoomTo(	player.getX()+player.getWidth()/2,
+						player.getY()+player.getHeight()/2,
+						player.getZ(),
+						0.7f
+					);
 		} else {
-			camX = 0.0f;
-			camY = 0.0f;
-			camZ = 0.0f;
+			camZoomTo(	0.0f,
+						0.0f,
+						0.0f,
+						0.7f
+				);
 		}
 	}
 
+	public void camZoomTo(float x, float y, float z, float buffer){
+		if(x > camX){
+			camX += CAM_X_CHANGE;
+		} else if (x < camX){
+			camX -= CAM_X_CHANGE;
+		}
+		
+		if(camX < x + buffer && camX > x - buffer){
+			camX = x;
+		}
+		
+		if(y > camY){
+			camY += CAM_Y_CHANGE;
+		} else if (y < camY){
+			camY -= y;
+		}
+		
+		if(camY < y + buffer&& camY > y - buffer){
+			camY = y;
+		}
+		
+		if(z > camZ){
+			camZ += CAM_Z_CHANGE;
+		} else if (z < camZ){
+			camZ -= CAM_Z_CHANGE;
+		}
+		
+		if(camZ < z + buffer&& camZ > z - buffer){
+			camZ = z;
+		}
+		
+		
+	}
+	
 	public void finishCamZoom(Player player){
 		float checkX = player.getX()+player.getWidth()/2;
 		float checkY = player.getY()+player.getHeight()/2; 
@@ -121,9 +162,13 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	public void passTouchEvents(MotionEvent e){
 		if(e.getAction() == MotionEvent.ACTION_DOWN){
 			for(GameObject gameObject : gameObjects.values()){
-				gameObject.passTouchEvent(e, worldRenderer);
+				if(gameObject instanceof Enemy)
+					gameObject.passTouchEvent(e, worldRenderer);
 			}
 		}
+		
+		Player player = (Player) gameObjects.get(Player.OBJNAME);
+		player.passTouchEvent(e, worldRenderer);
 	}
 	
 	@Override

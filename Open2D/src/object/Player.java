@@ -119,8 +119,10 @@ public class Player extends GameObject{
 		Plane selectedPlane = worldRenderer.getSelectedPlane(e.getX(), e.getY());
 		float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), display);
 		
-		moveToX = unprojectedPoints[0];
-		moveToY = unprojectedPoints[1];
+		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
+			moveToX = unprojectedPoints[0];
+			moveToY = unprojectedPoints[1];
+		}
 		
 		display.unprojectDisable();
 //		if(animations.containsValue(selectedPlane)){

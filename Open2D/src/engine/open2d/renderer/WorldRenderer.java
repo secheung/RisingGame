@@ -1,6 +1,5 @@
 package engine.open2d.renderer;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -33,9 +32,9 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 	ShaderTool shaderTool;
 	TextureTool textureTool;
 
-	LinkedHashMap<String,Shader> shaders;
-	LinkedHashMap<String,DrawObject> drawObjects;
-	SparseIntArray textureMap;
+	private LinkedHashMap<String,Shader> shaders;
+	private LinkedHashMap<String,DrawObject> drawObjects;
+	private SparseIntArray textureMap;
 
     public WorldRenderer(final Context activityContext) {
     	this.activityContext = activityContext;
@@ -54,11 +53,15 @@ public class WorldRenderer implements GLSurfaceView.Renderer{
 			return;
 		}
 
-    	drawObjects.put(shape.name, shape);
+		synchronized(drawObjects){
+			drawObjects.put(shape.name, shape);
+		}
     }
 	
 	public void removeDrawShape(DrawObject shape){
-		drawObjects.remove(shape.name);
+		synchronized(drawObjects){
+			drawObjects.remove(shape.name);
+		}
 	}
 	
     public void addCustomShader(String ref, int vertResourceId, int fragResourceId, String...attributes){

@@ -33,7 +33,7 @@ public class Enemy extends GameObject {
 	}
 	
 	private static String OBJNAME = "enemy";
-	private static float STRIKE_SPEED = 0.05f;
+	private static float STRIKE_SPEED = 0.1f;
 	
 	Player playerRef;
 	EnemyState enemyState;
@@ -42,7 +42,7 @@ public class Enemy extends GameObject {
 	public Enemy(LinkedHashMap<String,GameObject> gameObjects, Player player, int index, float x, float y, float width, float height){
 		super(gameObjects,x,y,width,height);
 		this.name = OBJNAME+index;
-		this.z = -1.9f;
+		this.z = -0.9f;
 		this.playerRef = player;
 		animations = new HashMap<GameObjectState, Plane>();
 		animations.put(EnemyState.STAND, new Plane(R.drawable.enemy_stance, name+"_"+EnemyState.STAND.getName(), width, height, x, y, z, 4, 7));
@@ -50,7 +50,7 @@ public class Enemy extends GameObject {
 		animations.put(EnemyState.DEAD, new Plane(R.drawable.enemy_stance, name+"_"+EnemyState.DEAD.getName(), width, height, x, y, z, 4, 7));
 		animations.put(EnemyState.STRUCK1, new Plane(R.drawable.enemy_struck1, name+"_"+EnemyState.STRUCK1.getName(), width, height, x, y, z, 2, 7));
 		
-		struck = 2;
+		struck = 3;
 		
 		display = animations.get(EnemyState.STAND);
 		enemyState = EnemyState.STAND;
@@ -67,18 +67,24 @@ public class Enemy extends GameObject {
 		
 		if(playerRef.getPlayerState() == PlayerState.FINISH){
 			enemyState = EnemyState.DEAD;
-			selected = false;
 		} else if(playerRef.getPlayerState() == PlayerState.STRIKE1){
 			enemyState = EnemyState.STRUCK1;
-			selected = false;
 		} else if(playerRef.getPlayerState() == PlayerState.STRIKE2){
 			enemyState = EnemyState.STRUCK1;
-			selected = false;
+		} else if(playerRef.getPlayerState() == PlayerState.STRIKE3){
+			enemyState = EnemyState.STRUCK1;
 		}
 	}
 
 	@Override
 	public void updateLogic() {
+//		if(enemyState == EnemyState.STRUCK1){
+//			if(direction == Direction.RIGHT)
+//				x -= STRIKE_SPEED;
+//			else if(direction == Direction.LEFT)
+//				x += STRIKE_SPEED;
+			selected = false;
+//		}
 	}
 
 	@Override

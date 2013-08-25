@@ -84,7 +84,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 //			finishCamZoom(player);
 			camZoomTo(	player.getX()+player.getWidth()/2,
 						player.getY()+player.getHeight()/2,
-						player.getZ(),
+						player.getZ()-0.5f,
 						0.7f
 					);
 		} else {

@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
+import engine.open2d.texture.AnimatedTexture.Playback;
+import game.open2d.GameLogic.LogicPlayState;
 import game.open2d.GameTools;
 import game.open2d.R;
 
@@ -139,38 +141,15 @@ public class Player extends GameObject{
 
 	@Override
 	public void updateState() {
-		float checkX = x+width/2;
-		
-		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
-			if(moveToX > checkX){
-				direction = Direction.RIGHT;
-				playerState = PlayerState.RUN;
-			} else if(moveToX < checkX) {
-				direction = Direction.LEFT;
-				playerState = PlayerState.RUN;
+		if(logicPlayState == logicPlayState.PLAY){
+			
+			if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
+				executeMovement();
 			}
-
-			if(moveToX > checkX - Player.BUFFER && moveToX < checkX + Player.BUFFER) {
-				playerState = PlayerState.STAND;
-			}
-		}
-		
-		for(GameObject gameObject : gameObjects.values()){
-			if(gameObject instanceof Enemy){
-				Enemy enemy = (Enemy)gameObject;
-				if(GameTools.boxColDetect(this, enemy, COLLISION_BUFFER) && enemy.selected){
-					playerState = PlayerState.getStrike((int)(PlayerState.STRIKE_NUMBERS*Math.random()));
-					struckEnemy = enemy;
-					
-					if(enemy.getStruck() <= 0){
-						playerState = PlayerState.FINISH;
-					}
-					
-					if(x -  enemy.getX() < 0){
-						direction = Direction.RIGHT;
-					} else if(x -  enemy.getX() > 0) {
-						direction = Direction.LEFT;
-					}
+			
+			for(GameObject gameObject : gameObjects.values()){
+				if(gameObject instanceof Enemy){
+					executeEnemyInteraction((Enemy)gameObject);
 				}
 			}
 		}
@@ -232,5 +211,35 @@ public class Player extends GameObject{
 		}
 	}
 
+	private void executeMovement(){
+		float checkX = x+width/2;
+		if(moveToX > checkX){
+			direction = Direction.RIGHT;
+			playerState = PlayerState.RUN;
+		} else if(moveToX < checkX) {
+			direction = Direction.LEFT;
+			playerState = PlayerState.RUN;
+		}
 
+		if(moveToX > checkX - Player.BUFFER && moveToX < checkX + Player.BUFFER) {
+			playerState = PlayerState.STAND;
+		}
+	}
+	
+	private void executeEnemyInteraction(Enemy enemy){
+		if(GameTools.boxColDetect(this, enemy, COLLISION_BUFFER) && enemy.selected){
+			playerState = PlayerState.getStrike((int)(PlayerState.STRIKE_NUMBERS*Math.random()));
+			struckEnemy = enemy;
+			
+			if(enemy.getStruck() <= 0){
+				playerState = PlayerState.FINISH;
+			}
+			
+			if(x -  enemy.getX() < 0){
+				direction = Direction.RIGHT;
+			} else if(x -  enemy.getX() > 0) {
+				direction = Direction.LEFT;
+			}
+		}
+	}
 }

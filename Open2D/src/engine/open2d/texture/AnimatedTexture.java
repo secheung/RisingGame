@@ -6,6 +6,7 @@ import android.util.Log;
 public class AnimatedTexture extends Texture{
 	public enum Playback{
 		PLAY,
+		PAUSE,
 		REVERSE
 	}
 	

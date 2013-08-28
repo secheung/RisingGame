@@ -17,9 +17,9 @@ public class Player extends GameObject{
 		RUN("run",0f,0f,0f),
 		DODGE("dodge",0f,0f,0f),
 		DEAD("dead",0f,0f,0f),
-		STRIKE1("strike1",-1.1f,0f,0f),
-		STRIKE2("strike2",-1.25f,0f,0f),
-		STRIKE3("strike3",-1.25f,0f,0f),
+		STRIKE1("strike1",-1.0f,0f,0f),
+		STRIKE2("strike2",-1.0f,0f,0f),
+		STRIKE3("strike3",-1.0f,0f,0f),
 		FINISH("finish",0f,0f,0f);
 		
 		private static int STRIKE_NUMBERS = 3;
@@ -124,11 +124,11 @@ public class Player extends GameObject{
 		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
 			moveToX = unprojectedPoints[0];
 			moveToY = unprojectedPoints[1];
-		} if(	playerState == PlayerState.STRIKE1 ||
+		} else if(	playerState == PlayerState.STRIKE1 ||
 				playerState == PlayerState.STRIKE2 ||
 				playerState == PlayerState.STRIKE3){
-			moveToX = playerState.getOffSnapX();
-			moveToY = playerState.getOffSnapY();
+//			moveToX = x;
+//			moveToY = y;
 		}
 		
 		display.unprojectDisable();
@@ -154,6 +154,7 @@ public class Player extends GameObject{
 				playerState = PlayerState.STAND;
 			}
 		}
+		
 		for(GameObject gameObject : gameObjects.values()){
 			if(gameObject instanceof Enemy){
 				Enemy enemy = (Enemy)gameObject;
@@ -191,9 +192,11 @@ public class Player extends GameObject{
 			if(struckEnemy.getX() < x) {
 				direction = Direction.LEFT;
 				x = struckEnemy.getX()-playerState.getOffSnapX();
+				moveToX = x+width/2;
 			} else if(struckEnemy.getX() > x){
 				direction = Direction.RIGHT;
 				x = struckEnemy.getX()+playerState.getOffSnapX();
+				moveToX = x+width/2;
 			}
 			
 //			if(direction == Direction.RIGHT)

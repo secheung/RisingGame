@@ -81,6 +81,7 @@ public class Player extends GameObject{
 	private static float STRIKE_SPEED = 0.1f;
 	private static float BUFFER = 0.4f;
 	private static float COLLISION_BUFFER = 1.0f;
+	private static float CANCEL_STRIKE_FRAMES = 8;
 	
 	private Enemy struckEnemy;
 	private PlayerState playerState;
@@ -125,17 +126,9 @@ public class Player extends GameObject{
 		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
 			moveToX = unprojectedPoints[0];
 			moveToY = unprojectedPoints[1];
-		} else if(	playerState == PlayerState.STRIKE1 ||
-				playerState == PlayerState.STRIKE2 ||
-				playerState == PlayerState.STRIKE3){
-//			moveToX = x;
-//			moveToY = y;
 		}
 		
 		display.unprojectDisable();
-//		if(animations.containsValue(selectedPlane)){
-//			selected = true;
-//		}
 	}
 
 	@Override
@@ -143,12 +136,12 @@ public class Player extends GameObject{
 		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
 			executeMovement();
 		}
-		
 		for(GameObject gameObject : gameObjects.values()){
 			if(gameObject instanceof Enemy){
 				executeEnemyInteraction((Enemy)gameObject);
 			}
 		}
+		
 	}
 	
 	@Override
@@ -160,10 +153,7 @@ public class Player extends GameObject{
 				x -= WALK_SPEED;
 		}
 		
-		if(	playerState == PlayerState.STRIKE1 ||
-			playerState == PlayerState.STRIKE2 ||
-			playerState == PlayerState.STRIKE3){
-			
+		if(	isStrikeState()){
 			if(struckEnemy.getX() < x) {
 				direction = Direction.LEFT;
 				x = struckEnemy.getX()-playerState.getOffSnapX();
@@ -197,9 +187,7 @@ public class Player extends GameObject{
 	public void updateAfterDisplay() {
 		if(display.isPlayed()){
 			if(	playerState==PlayerState.FINISH ||
-				playerState==PlayerState.STRIKE1||
-				playerState==PlayerState.STRIKE2||
-				playerState==PlayerState.STRIKE3){
+				isStrikeState()){
 				
 				display.resetAnimation();
 				playerState = PlayerState.STAND;
@@ -223,6 +211,10 @@ public class Player extends GameObject{
 	}
 	
 	private void executeEnemyInteraction(Enemy enemy){
+		if(		isStrikeState() &&
+				display.getFrame() > display.getTotalFrame()-CANCEL_STRIKE_FRAMES){
+			
+		}
 		if(GameTools.boxColDetect(this, enemy, COLLISION_BUFFER) && enemy.selected){
 			playerState = PlayerState.getStrike((int)(PlayerState.STRIKE_NUMBERS*Math.random()));
 			struckEnemy = enemy;
@@ -237,5 +229,11 @@ public class Player extends GameObject{
 				direction = Direction.LEFT;
 			}
 		}
+	}
+	
+	public boolean isStrikeState(){
+		return (playerState==PlayerState.STRIKE1||
+				playerState==PlayerState.STRIKE2||
+				playerState==PlayerState.STRIKE3);
 	}
 }

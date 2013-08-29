@@ -139,6 +139,24 @@ public class Plane extends DrawObject{
 		}
 	}
 	
+	public int getFrame(){
+		if(texture instanceof AnimatedTexture){
+			return ((AnimatedTexture)texture).getFrame();
+		} else {
+			Log.w("World Renderer","this texture is not an animated texture");
+			return 0;
+		}
+	}
+
+	public int getTotalFrame(){
+		if(texture instanceof AnimatedTexture){
+			return ((AnimatedTexture)texture).getTotalFrames();
+		} else {
+			Log.w("World Renderer","this texture is not an animated texture");
+			return 0;
+		}
+	}
+	
 	public void resetAnimation(){
 		if(texture instanceof AnimatedTexture){
 			((AnimatedTexture)texture).resetAnimation();

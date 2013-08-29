@@ -53,7 +53,20 @@ public class AnimatedTexture extends Texture{
 	}
 	
 	public void setFrame(int frame){
+		if(currentFrame >= totalFrames || currentFrame <= 0){
+			Log.w("Animated Texture", "set frame is out of animated bounds");
+			return;
+		}
+		currentFrame = frame;
 		updateTextureCoord(frame);
+	}
+	
+	public int getFrame(){
+		return currentFrame;
+	}
+	
+	public int getTotalFrames(){
+		return totalFrames;
 	}
 	
 	public void resetAnimation(){

@@ -9,7 +9,6 @@ import android.view.MotionEvent;
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
 import engine.open2d.texture.AnimatedTexture.Playback;
-import game.open2d.GameLogic.LogicPlayState;
 import game.open2d.GameTools;
 import game.open2d.R;
 
@@ -141,16 +140,13 @@ public class Player extends GameObject{
 
 	@Override
 	public void updateState() {
-		if(logicPlayState == logicPlayState.PLAY){
-			
-			if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
-				executeMovement();
-			}
-			
-			for(GameObject gameObject : gameObjects.values()){
-				if(gameObject instanceof Enemy){
-					executeEnemyInteraction((Enemy)gameObject);
-				}
+		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
+			executeMovement();
+		}
+		
+		for(GameObject gameObject : gameObjects.values()){
+			if(gameObject instanceof Enemy){
+				executeEnemyInteraction((Enemy)gameObject);
 			}
 		}
 	}

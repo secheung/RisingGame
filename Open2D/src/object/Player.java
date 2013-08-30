@@ -169,13 +169,13 @@ public class Player extends GameObject{
 	
 	@Override
 	public void updateDisplay() {
+		switchAnimation(playerState);
+		
 		if(direction==Direction.RIGHT){
 			display.flipTexture(false);
 		} else if(direction==Direction.LEFT){
 			display.flipTexture(true);
 		}
-		
-		switchAnimation(playerState);
 	}
 		
 	@Override

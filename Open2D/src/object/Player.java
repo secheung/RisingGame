@@ -157,17 +157,12 @@ public class Player extends GameObject{
 			if(struckEnemy.getX() < x) {
 				direction = Direction.LEFT;
 				x = struckEnemy.getX()-playerState.getOffSnapX();
-				moveToX = x+width/2;
+				moveToX = getMidX();
 			} else if(struckEnemy.getX() > x){
 				direction = Direction.RIGHT;
 				x = struckEnemy.getX()+playerState.getOffSnapX();
-				moveToX = x+width/2;
+				moveToX = getMidX();
 			}
-			
-//			if(direction == Direction.RIGHT)
-//				x += STRIKE_SPEED;
-//			else if(direction == Direction.LEFT)
-//				x -= STRIKE_SPEED;
 		}
 		
 	}
@@ -196,7 +191,7 @@ public class Player extends GameObject{
 	}
 
 	private void executeMovement(){
-		float checkX = x+width/2;
+		float checkX = getMidX();
 		if(moveToX > checkX){
 			direction = Direction.RIGHT;
 			playerState = PlayerState.RUN;

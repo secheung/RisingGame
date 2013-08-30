@@ -120,6 +120,14 @@ public abstract class GameObject {
 		this.z = z;
 	}
 
+	public float getMidX(){
+		return x+width/2;
+	}
+	
+	public float getMidY(){
+		return y+width/2;
+	}
+	
 	public float getWidth() {
 		return width;
 	}

@@ -15,10 +15,6 @@ import engine.open2d.renderer.WorldRenderer;
 
 public class GameLogic extends AsyncTask<Void, Void, Void>{
 	private static final int GESTURE_INTERVAL_CHECK = 4;
-	public static final int SWIPE_LEFT = 60;
-	public static final int SWIPE_RIGHT = -60;
-	public static final int SWIPE_UP = 60;
-	public static final int SWIPE_DOWN = -60;
 	
 	public static float CAM_X_CHANGE = 0.65f;
 	public static float CAM_Y_CHANGE = 0.65f;
@@ -188,17 +184,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 				gestureCheck = 0;
 				Log.d("gesture", (gestureX - e.getX())+"");
 				Log.d("gesture", (gestureY - e.getY())+"");
-				if(gestureX - e.getX() > SWIPE_LEFT){
-					Log.d("gesture", "swipe left");
-				} else if(gestureX - e.getX() < SWIPE_RIGHT){
-					Log.d("gesture", "swipe right");
-				}
-				
-				if(gestureY - e.getY() > SWIPE_UP){
-					Log.d("gesture", "swipe up");
-				} else if(gestureY - e.getY() < SWIPE_DOWN){
-					Log.d("gesture", "swipe down");
-				}
+				Log.d("gesture", GameTools.gestureBreakdownHorizontal(GameTools.gestureDetection(gestureX - e.getX(), gestureY - e.getY()))+"");
 			}
 		}
 		

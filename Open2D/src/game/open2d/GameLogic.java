@@ -166,23 +166,31 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		}
 	}
 	
-	public void passTouchEvents(MotionEvent e){
+	public void gestureProcessing(MotionEvent e){
 		if(e.getAction() == MotionEvent.ACTION_DOWN){
 			gestureX = e.getX();
 			gestureY = e.getY();
 			gestureCheck = 0;
+		} else if(e.getAction() == MotionEvent.ACTION_UP){
+			gestureCheck = 0;
+		} else if(e.getAction() == MotionEvent.ACTION_MOVE){
+			gestureCheck++;
+			if(gestureCheck > GESTURE_INTERVAL_CHECK){
+				gestureCheck = 0;
+				Log.d("Gesture",GameTools.gestureDetection(gestureX, e.getX(), gestureY, e.getY())+"");
+			}
+		}
+	}
+	
+	public void passTouchEvents(MotionEvent e){
+		gestureProcessing(e);
+		if(e.getAction() == MotionEvent.ACTION_DOWN){
 			for(GameObject gameObject : gameObjects.values()){
 				if(gameObject instanceof Enemy)
 					gameObject.passTouchEvent(e, worldRenderer);
 			}
 		} else if(e.getAction() == MotionEvent.ACTION_UP){
-			gestureCheck = 0;
 		} else if(e.getAction() == MotionEvent.ACTION_MOVE){
-			gestureCheck++;
-			Log.d("gesture", gestureCheck+"");
-			if(gestureCheck > GESTURE_INTERVAL_CHECK){
-				gestureCheck = 0;
-			}
 		}
 		
 		Player player = (Player) gameObjects.get(Player.OBJNAME);

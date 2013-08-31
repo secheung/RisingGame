@@ -58,9 +58,9 @@ public class GameTools {
 		return true;
 	}
 	
-	public static Gesture gestureDetection(float xDiff, float yDiff){
-		Gesture horizontal = gestureDetectionHorizontal(xDiff);
-		Gesture vertical = gestureDetectionVertical(yDiff);
+	public static Gesture gestureDetection(float prevX,float curX, float prevY, float curY){
+		Gesture horizontal = gestureDetectionHorizontal(prevX, curX);
+		Gesture vertical = gestureDetectionVertical(prevY,curY);
 		
 		if(horizontal == Gesture.RIGHT && vertical == Gesture.UP)
 			return Gesture.UP_RIGHT;
@@ -79,7 +79,8 @@ public class GameTools {
 		return null;
 	}
 	
-	public static Gesture gestureDetectionHorizontal(float xDiff){
+	public static Gesture gestureDetectionHorizontal(float prevX, float curX){
+		float xDiff = prevX - curX;
 		if(xDiff > SWIPE_LEFT){
 			return Gesture.LEFT;
 		} else if(xDiff < SWIPE_RIGHT){
@@ -89,7 +90,8 @@ public class GameTools {
 		return null;
 	}
 	
-	public static Gesture gestureDetectionVertical(float yDiff){
+	public static Gesture gestureDetectionVertical(float prevY, float curY){
+		float yDiff = prevY - curY;
 		if(yDiff > SWIPE_UP){
 			return Gesture.UP;
 		} else if(yDiff < SWIPE_DOWN){

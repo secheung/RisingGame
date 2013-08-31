@@ -182,9 +182,6 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 			Log.d("gesture", gestureCheck+"");
 			if(gestureCheck > GESTURE_INTERVAL_CHECK){
 				gestureCheck = 0;
-				Log.d("gesture", (gestureX - e.getX())+"");
-				Log.d("gesture", (gestureY - e.getY())+"");
-				Log.d("gesture", GameTools.gestureBreakdownHorizontal(GameTools.gestureDetection(gestureX - e.getX(), gestureY - e.getY()))+"");
 			}
 		}
 		

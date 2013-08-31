@@ -111,7 +111,7 @@ public class GameTools {
 	public static Gesture gestureBreakdownVertical(Gesture gesture){
 		if(gesture == Gesture.UP || gesture == Gesture.UP_RIGHT || gesture == Gesture.UP_LEFT)
 			return Gesture.UP;
-		else if(gesture == Gesture.DOWN || gesture == Gesture.DOWN_LEFT || gesture == Gesture.DOWN_LEFT)
+		else if(gesture == Gesture.DOWN || gesture == Gesture.DOWN_LEFT || gesture == Gesture.DOWN_RIGHT)
 			return Gesture.DOWN;
 
 		return null;

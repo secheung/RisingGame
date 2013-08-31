@@ -9,10 +9,17 @@ import object.GameObject;
 import object.Player;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.MotionEvent;
 import engine.open2d.renderer.WorldRenderer;
 
 public class GameLogic extends AsyncTask<Void, Void, Void>{
+	private static final int GESTURE_INTERVAL_CHECK = 4;
+	public static final int SWIPE_LEFT = 60;
+	public static final int SWIPE_RIGHT = -60;
+	public static final int SWIPE_UP = 60;
+	public static final int SWIPE_DOWN = -60;
+	
 	public static float CAM_X_CHANGE = 0.65f;
 	public static float CAM_Y_CHANGE = 0.65f;
 	public static float CAM_Z_CHANGE = 0.65f;
@@ -28,6 +35,10 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	int enemyLimit = 2;
 	
 	LinkedHashMap<String,GameObject> gameObjects;
+	
+	float gestureX;
+	float gestureY;
+	int gestureCheck;
 	
 	public GameLogic(Context context, WorldRenderer worldRenderer){
 		this.worldRenderer = worldRenderer;
@@ -161,9 +172,33 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	
 	public void passTouchEvents(MotionEvent e){
 		if(e.getAction() == MotionEvent.ACTION_DOWN){
+			gestureX = e.getX();
+			gestureY = e.getY();
+			gestureCheck = 0;
 			for(GameObject gameObject : gameObjects.values()){
 				if(gameObject instanceof Enemy)
 					gameObject.passTouchEvent(e, worldRenderer);
+			}
+		} else if(e.getAction() == MotionEvent.ACTION_UP){
+			gestureCheck = 0;
+		} else if(e.getAction() == MotionEvent.ACTION_MOVE){
+			gestureCheck++;
+			Log.d("gesture", gestureCheck+"");
+			if(gestureCheck > GESTURE_INTERVAL_CHECK){
+				gestureCheck = 0;
+				Log.d("gesture", (gestureX - e.getX())+"");
+				Log.d("gesture", (gestureY - e.getY())+"");
+				if(gestureX - e.getX() > SWIPE_LEFT){
+					Log.d("gesture", "swipe left");
+				} else if(gestureX - e.getX() < SWIPE_RIGHT){
+					Log.d("gesture", "swipe right");
+				}
+				
+				if(gestureY - e.getY() > SWIPE_UP){
+					Log.d("gesture", "swipe up");
+				} else if(gestureY - e.getY() < SWIPE_DOWN){
+					Log.d("gesture", "swipe down");
+				}
 			}
 		}
 		

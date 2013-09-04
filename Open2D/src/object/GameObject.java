@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import android.view.MotionEvent;
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
+import game.open2d.GameTools.Gesture;
 
 public abstract class GameObject {
 	public interface GameObjectState{};
@@ -30,6 +31,7 @@ public abstract class GameObject {
 	protected HashMap<GameObjectState, Plane> animations;
 	protected String name;
 	public boolean selected;
+	protected Gesture gesture;
 	
 	protected LinkedHashMap<String,GameObject> gameObjects;
 	
@@ -82,6 +84,10 @@ public abstract class GameObject {
 		updateLogic();
 		updateDisplay();
 		updateAfterDisplay();
+	}
+	
+	public void setGesture(Gesture gesture){
+		this.gesture = gesture; 
 	}
 	
 	public String getName() {

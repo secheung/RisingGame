@@ -10,6 +10,7 @@ import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
 import engine.open2d.texture.AnimatedTexture.Playback;
 import game.open2d.GameTools;
+import game.open2d.GameTools.Gesture;
 import game.open2d.R;
 
 public class Player extends GameObject{
@@ -101,6 +102,7 @@ public class Player extends GameObject{
 		animations = new HashMap<GameObjectState, Plane>();
 		animations.put(PlayerState.STAND, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.STAND.getName(), width, height, x, y, z, 4, 7));
 		animations.put(PlayerState.RUN, new Plane(R.drawable.rising_run, name+"_"+PlayerState.RUN.getName(), width, height, x, y, z, 11, 3));
+		animations.put(PlayerState.DODGE, new Plane(R.drawable.rising_dodge, name+"_"+PlayerState.DODGE.getName(), width, height, x, y, z, 3, 3));
 		animations.put(PlayerState.STRIKE1, new Plane(R.drawable.rising_strike1, name+"_"+PlayerState.STRIKE1.getName(), width, height, x, y, z, 2, 7));
 		animations.put(PlayerState.STRIKE2, new Plane(R.drawable.rising_strike2, name+"_"+PlayerState.STRIKE2.getName(), width, height, x, y, z, 2, 7));
 		animations.put(PlayerState.STRIKE3, new Plane(R.drawable.rising_strike3, name+"_"+PlayerState.STRIKE3.getName(), width, height, x, y, z, 2, 7));
@@ -142,6 +144,15 @@ public class Player extends GameObject{
 			}
 		}
 		
+		if(playerState != PlayerState.FINISH){
+			if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.LEFT){
+				playerState = PlayerState.DODGE;
+				direction = Direction.RIGHT;
+			} else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.RIGHT){
+				playerState = PlayerState.DODGE;
+				direction = Direction.LEFT;
+			}
+		}
 	}
 	
 	@Override
@@ -165,6 +176,10 @@ public class Player extends GameObject{
 			}
 		}
 		
+		if(playerState == PlayerState.DODGE){
+			moveToX = getMidX();
+			moveToY = getMidY();
+		}
 	}
 	
 	@Override
@@ -187,6 +202,12 @@ public class Player extends GameObject{
 				display.resetAnimation();
 				playerState = PlayerState.STAND;
 			}
+			
+			if(	playerState==PlayerState.DODGE){
+				gesture = Gesture.NONE;
+				display.resetAnimation();
+				playerState = PlayerState.STAND;				
+			}
 		}
 	}
 
@@ -204,24 +225,26 @@ public class Player extends GameObject{
 			playerState = PlayerState.STAND;
 		}
 	}
-	
+
 	private void executeEnemyInteraction(Enemy enemy){
-		if(		isStrikeState() &&
-				display.getFrame() > display.getTotalFrame()-CANCEL_STRIKE_FRAMES){
+		
+		if(		playerState == PlayerState.STAND || playerState == PlayerState.RUN ||
+				(isStrikeState() &&
+				display.getFrame() > display.getTotalFrame()-CANCEL_STRIKE_FRAMES)){
 			
-		}
-		if(GameTools.boxColDetect(this, enemy, COLLISION_BUFFER) && enemy.selected){
-			playerState = PlayerState.getStrike((int)(PlayerState.STRIKE_NUMBERS*Math.random()));
-			struckEnemy = enemy;
-			
-			if(enemy.getStruck() <= 0){
-				playerState = PlayerState.FINISH;
-			}
-			
-			if(x -  enemy.getX() < 0){
-				direction = Direction.RIGHT;
-			} else if(x -  enemy.getX() > 0) {
-				direction = Direction.LEFT;
+			if(	GameTools.boxColDetect(this, enemy, COLLISION_BUFFER) && enemy.selected){
+				playerState = PlayerState.getStrike((int)(PlayerState.STRIKE_NUMBERS*Math.random()));
+				struckEnemy = enemy;
+				
+				if(enemy.getStruck() <= 0){
+					playerState = PlayerState.FINISH;
+				}
+				
+				if(x -  enemy.getX() < 0){
+					direction = Direction.RIGHT;
+				} else if(x -  enemy.getX() > 0) {
+					direction = Direction.LEFT;
+				}
 			}
 		}
 	}

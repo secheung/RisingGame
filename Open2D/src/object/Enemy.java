@@ -53,8 +53,8 @@ public class Enemy extends GameObject {
 		this.playerRef = player;
 		animations = new HashMap<GameObjectState, Plane>();
 		animations.put(EnemyState.STAND, new Plane(R.drawable.enemy_stance, name+"_"+EnemyState.STAND.getName(), width, height, x, y, z, 4, 7));
-		animations.put(EnemyState.RUN, new Plane(R.drawable.rising_run, name+"_"+EnemyState.RUN.getName(), width, height, x, y, z, 11, 3));
-		animations.put(EnemyState.WALK, new Plane(R.drawable.rising_run, name+"_"+EnemyState.WALK.getName(), width, height, x, y, z, 11, 3));
+		animations.put(EnemyState.RUN, new Plane(R.drawable.enemy_run, name+"_"+EnemyState.RUN.getName(), width, height, x, y, z, 11, 3));
+		animations.put(EnemyState.WALK, new Plane(R.drawable.enemy_run, name+"_"+EnemyState.WALK.getName(), width, height, x, y, z, 11, 3));
 		animations.put(EnemyState.DEAD, new Plane(R.drawable.enemy_stance, name+"_"+EnemyState.DEAD.getName(), width, height, x, y, z, 4, 7));
 		animations.put(EnemyState.STRUCK1, new Plane(R.drawable.enemy_struck1, name+"_"+EnemyState.STRUCK1.getName(), width, height, x, y, z, 2, 7));
 		

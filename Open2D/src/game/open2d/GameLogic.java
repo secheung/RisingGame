@@ -12,9 +12,11 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.MotionEvent;
 import engine.open2d.renderer.WorldRenderer;
+import game.open2d.GameTools.Gesture;
 
 public class GameLogic extends AsyncTask<Void, Void, Void>{
-	private static final int GESTURE_INTERVAL_CHECK = 4;
+	private static final int GESTURE_INTERVAL_MIN_CHECK = 2;
+	private static final int GESTURE_INTERVAL_MAX_CHECK = 11;
 	
 	public static float CAM_X_CHANGE = 0.65f;
 	public static float CAM_Y_CHANGE = 0.65f;
@@ -166,30 +168,38 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		}
 	}
 	
-	public void gestureProcessing(MotionEvent e){
+	public Gesture gestureProcessing(MotionEvent e){
 		if(e.getAction() == MotionEvent.ACTION_DOWN){
 			gestureX = e.getX();
 			gestureY = e.getY();
 			gestureCheck = 0;
 		} else if(e.getAction() == MotionEvent.ACTION_UP){
+			Log.d("Gesture", gestureCheck+"");
+			if(gestureCheck > GESTURE_INTERVAL_MIN_CHECK && gestureCheck < GESTURE_INTERVAL_MAX_CHECK){
+				gestureCheck = 0;
+				Log.d("Gesture",GameTools.gestureDetection(gestureX, e.getX(), gestureY, e.getY())+"");
+				return GameTools.gestureDetection(gestureX, e.getX(), gestureY, e.getY());
+			}
 			gestureCheck = 0;
 		} else if(e.getAction() == MotionEvent.ACTION_MOVE){
 			gestureCheck++;
-			if(gestureCheck > GESTURE_INTERVAL_CHECK){
-				gestureCheck = 0;
-				Log.d("Gesture",GameTools.gestureDetection(gestureX, e.getX(), gestureY, e.getY())+"");
-			}
 		}
+		
+		return Gesture.NONE;
 	}
 	
 	public void passTouchEvents(MotionEvent e){
-		gestureProcessing(e);
+		Gesture gesture = gestureProcessing(e);
+		
 		if(e.getAction() == MotionEvent.ACTION_DOWN){
 			for(GameObject gameObject : gameObjects.values()){
 				if(gameObject instanceof Enemy)
 					gameObject.passTouchEvent(e, worldRenderer);
 			}
 		} else if(e.getAction() == MotionEvent.ACTION_UP){
+			for(GameObject gameObject : gameObjects.values()){
+				gameObject.setGesture(gesture);
+			}
 		} else if(e.getAction() == MotionEvent.ACTION_MOVE){
 		}
 		

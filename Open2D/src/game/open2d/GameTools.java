@@ -5,6 +5,7 @@ import object.GameObject;
 
 public class GameTools {
 	public static enum Gesture {
+		NONE,
 		UP,
 		UP_RIGHT,
 		RIGHT,
@@ -71,12 +72,12 @@ public class GameTools {
 		else if(horizontal == Gesture.LEFT&& vertical == Gesture.DOWN)
 			return Gesture.DOWN_LEFT;
 		
-		if(horizontal == null)
+		if(horizontal == Gesture.NONE)
 			return vertical;
-		if(vertical == null)
+		if(vertical == Gesture.NONE)
 			return horizontal;
 		
-		return null;
+		return Gesture.NONE;
 	}
 	
 	public static Gesture gestureDetectionHorizontal(float prevX, float curX){
@@ -87,7 +88,7 @@ public class GameTools {
 			return Gesture.RIGHT;
 		}
 		
-		return null;
+		return Gesture.NONE;
 	}
 	
 	public static Gesture gestureDetectionVertical(float prevY, float curY){
@@ -98,7 +99,7 @@ public class GameTools {
 			return Gesture.DOWN;
 		}
 		
-		return null;
+		return Gesture.NONE;
 	}
 	
 	public static Gesture gestureBreakdownHorizontal(Gesture gesture){
@@ -107,7 +108,7 @@ public class GameTools {
 		else if(gesture == Gesture.LEFT || gesture == Gesture.UP_LEFT || gesture == Gesture.DOWN_LEFT)
 			return Gesture.LEFT;
 
-		return null;
+		return Gesture.NONE;
 	}
 	
 	public static Gesture gestureBreakdownVertical(Gesture gesture){
@@ -116,6 +117,6 @@ public class GameTools {
 		else if(gesture == Gesture.DOWN || gesture == Gesture.DOWN_LEFT || gesture == Gesture.DOWN_RIGHT)
 			return Gesture.DOWN;
 
-		return null;
+		return Gesture.NONE;
 	}
 }

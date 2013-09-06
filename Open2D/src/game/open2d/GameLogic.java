@@ -1,6 +1,10 @@
 package game.open2d;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 
 import object.Enemy;
 import object.Enemy.EnemyState;
@@ -55,27 +59,45 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		
 		Enemy enemy0 = new Enemy(gameObjects, player, 0, -3.7f, -1.0f, 3.5f, 3.5f);
 		enemy0.loadAnimIntoRenderer(worldRenderer);
+
+		Enemy enemy1 = new Enemy(gameObjects, player, 1, -2.0f, -1.0f, 3.5f, 3.5f);
+		enemy1.loadAnimIntoRenderer(worldRenderer);
 		
 		gameObjects.put(player.getName(), player);
 		gameObjects.put(enemy0.getName(), enemy0);
+		gameObjects.put(enemy1.getName(), enemy1);
 	}
 	
 	public void update(){
 		if(gameObjects.size() < enemyLimit){
-			Enemy enemy0 = new Enemy(gameObjects, (Player)gameObjects.get("player"), 0, (float)(3.7f*Math.random()-7.4f*Math.random()), -1.0f, 3.5f, 3.5f);
-			enemy0.loadAnimIntoRenderer(worldRenderer);
-			gameObjects.put(enemy0.getName(), enemy0);
+			if(!gameObjects.containsKey("enemy0")){
+				Enemy enemy0 = new Enemy(gameObjects, (Player)gameObjects.get("player"), 0, (float)(3.7f*Math.random()-7.4f*Math.random()), -1.0f, 3.5f, 3.5f);
+				enemy0.loadAnimIntoRenderer(worldRenderer);
+				gameObjects.put(enemy0.getName(), enemy0);
+			}
+			
+			if(!gameObjects.containsKey("enemy1")){
+				Enemy enemy1 = new Enemy(gameObjects, (Player)gameObjects.get("player"), 1, (float)(3.7f*Math.random()-7.4f*Math.random()), -1.0f, 3.5f, 3.5f);
+				enemy1.loadAnimIntoRenderer(worldRenderer);
+				gameObjects.put(enemy1.getName(), enemy1);
+			}
 		}
 		
+		ArrayList<String> removeObjects = new ArrayList<String>();
 		for(GameObject gameObject : gameObjects.values()){
 			gameObject.update();
 			if(gameObject instanceof Enemy){
 				Enemy enemy = (Enemy)gameObject;
 				if(enemy.getEnemyState() == EnemyState.DEAD){
-					gameObject.unloadAnimFromRenderer(worldRenderer);
-					gameObjects.remove(gameObject.getName());
+					removeObjects.add(gameObject.getName());
 				}
 			}
+		}
+		
+		for(Object remove:removeObjects.toArray()){
+			GameObject gameObject = gameObjects.get((String)remove);
+			gameObject.unloadAnimFromRenderer(worldRenderer);
+			gameObjects.remove(gameObject.getName());
 		}
 	}
 	
@@ -174,10 +196,9 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 			gestureY = e.getY();
 			gestureCheck = 0;
 		} else if(e.getAction() == MotionEvent.ACTION_UP){
-			Log.d("Gesture", gestureCheck+"");
 			if(gestureCheck > GESTURE_INTERVAL_MIN_CHECK && gestureCheck < GESTURE_INTERVAL_MAX_CHECK){
 				gestureCheck = 0;
-				Log.d("Gesture",GameTools.gestureDetection(gestureX, e.getX(), gestureY, e.getY())+"");
+//				Log.d("Gesture",GameTools.gestureDetection(gestureX, e.getX(), gestureY, e.getY())+"");
 				return GameTools.gestureDetection(gestureX, e.getX(), gestureY, e.getY());
 			}
 			gestureCheck = 0;

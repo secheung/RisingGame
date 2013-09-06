@@ -68,6 +68,7 @@ public abstract class GameObject {
 	
 	public void switchAnimation(GameObjectState animToSwitch){
 		display.drawDisable();
+		display.resetAnimation();
 		display = animations.get(animToSwitch);
 		display.drawEnable();
 	}

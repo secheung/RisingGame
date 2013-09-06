@@ -3,6 +3,7 @@ package object;
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
 import game.open2d.GameTools;
+import game.open2d.GameTools.Gesture;
 import game.open2d.R;
 
 import java.util.HashMap;
@@ -17,7 +18,7 @@ import object.Player.PlayerState;
 public class Enemy extends GameObject {
 	public static enum EnemyState implements GameObjectState{
 		STAND("stand"),
-		STRIKE("strike"),
+		STRIKE1("strike"),
 		STRUCK1("struck1"),
 		ENDSTRIKE("end strike"),
 		RUN("run"),
@@ -49,13 +50,14 @@ public class Enemy extends GameObject {
 	public Enemy(LinkedHashMap<String,GameObject> gameObjects, Player player, int index, float x, float y, float width, float height){
 		super(gameObjects,x,y,width,height);
 		this.name = OBJNAME+index;
-		this.z = -0.9f;
+		this.z = -0.9f+index*0.01f;
 		this.playerRef = player;
 		animations = new HashMap<GameObjectState, Plane>();
 		animations.put(EnemyState.STAND, new Plane(R.drawable.enemy_stance, name+"_"+EnemyState.STAND.getName(), width, height, x, y, z, 4, 7));
 		animations.put(EnemyState.RUN, new Plane(R.drawable.enemy_run, name+"_"+EnemyState.RUN.getName(), width, height, x, y, z, 11, 3));
 		animations.put(EnemyState.WALK, new Plane(R.drawable.enemy_run, name+"_"+EnemyState.WALK.getName(), width, height, x, y, z, 11, 3));
 		animations.put(EnemyState.DEAD, new Plane(R.drawable.enemy_stance, name+"_"+EnemyState.DEAD.getName(), width, height, x, y, z, 4, 7));
+		animations.put(EnemyState.STRIKE1, new Plane(R.drawable.enemy_strike1, name+"_"+EnemyState.STRIKE1.getName(), width, height, x, y, z, 4, 6));
 		animations.put(EnemyState.STRUCK1, new Plane(R.drawable.enemy_struck1, name+"_"+EnemyState.STRUCK1.getName(), width, height, x, y, z, 2, 7));
 		
 		struck = 3;
@@ -84,6 +86,9 @@ public class Enemy extends GameObject {
 				enemyState = EnemyState.RUN;
 			}
 			
+			if(GameTools.boxColDetect(this, playerRef, COLLISION_BUFFER) && Math.random() > 0.90){
+				enemyState = EnemyState.STRIKE1;
+			}
 		} else if(enemyState == EnemyState.RUN || enemyState == EnemyState.WALK){
 			if(Math.abs(checkX - playerRef.getMidX()) > CLOSE_DIST_TO_PLAYER){
 				enemyState = EnemyState.WALK;
@@ -98,14 +103,16 @@ public class Enemy extends GameObject {
 			}
 		}
 		
-		if(playerRef.getPlayerState() == PlayerState.FINISH){
-			enemyState = EnemyState.DEAD;
-		} else if(playerRef.getPlayerState() == PlayerState.STRIKE1){
-			enemyState = EnemyState.STRUCK1;
-		} else if(playerRef.getPlayerState() == PlayerState.STRIKE2){
-			enemyState = EnemyState.STRUCK1;
-		} else if(playerRef.getPlayerState() == PlayerState.STRIKE3){
-			enemyState = EnemyState.STRUCK1;
+		if(selected){
+			if(playerRef.getPlayerState() == PlayerState.FINISH){
+				enemyState = EnemyState.DEAD;
+			} else if(playerRef.getPlayerState() == PlayerState.STRIKE1){
+				enemyState = EnemyState.STRUCK1;
+			} else if(playerRef.getPlayerState() == PlayerState.STRIKE2){
+				enemyState = EnemyState.STRUCK1;
+			} else if(playerRef.getPlayerState() == PlayerState.STRIKE3){
+				enemyState = EnemyState.STRUCK1;
+			}
 		}
 	}
 
@@ -132,7 +139,8 @@ public class Enemy extends GameObject {
 
 	@Override
 	public void updateDisplay() {
-		switchAnimation(enemyState);
+		if(display != animations.get(enemyState))
+			switchAnimation(enemyState);
 		
 		if(direction==Direction.RIGHT){
 			display.flipTexture(false);
@@ -151,7 +159,12 @@ public class Enemy extends GameObject {
 
 	@Override
 	public void updateAfterDisplay() {
-		
+		if(display.isPlayed()){
+			if(enemyState == EnemyState.STRIKE1){
+				display.resetAnimation();
+				enemyState = EnemyState.STAND;
+			}
+		}
 	}
 	
 	@Override
@@ -160,6 +173,10 @@ public class Enemy extends GameObject {
 		
 		if(animations.containsValue(selectedPlane)){
 			selected = true;
+		}
+		
+		if(gesture != Gesture.NONE){
+			selected = false;
 		}
 	}
 
@@ -174,6 +191,4 @@ public class Enemy extends GameObject {
 	public int getStruck(){
 		return struck;
 	}
-
-
 }

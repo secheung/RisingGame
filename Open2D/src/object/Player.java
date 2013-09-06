@@ -80,6 +80,7 @@ public class Player extends GameObject{
 	
 	private static float WALK_SPEED = 0.2f;
 	private static float STRIKE_SPEED = 0.1f;
+	private static float DODGE_SPEED = 0.2f;
 	private static float BUFFER = 0.4f;
 	private static float COLLISION_BUFFER = 1.0f;
 	private static float CANCEL_STRIKE_FRAMES = 8;
@@ -88,6 +89,8 @@ public class Player extends GameObject{
 	private PlayerState playerState;
 	private float moveToX;
 	private float moveToY;
+	
+	private int punchIndex;
 	
 	public Player(LinkedHashMap<String,GameObject> gameObjects, float x, float y, float width, float height){
 		super(gameObjects,x,y,width,height);
@@ -98,6 +101,8 @@ public class Player extends GameObject{
 		this.moveToX = x;
 		this.moveToY = y;
 		this.z = -1.0f;
+		
+		this.punchIndex = 1;
 		
 		animations = new HashMap<GameObjectState, Plane>();
 		animations.put(PlayerState.STAND, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.STAND.getName(), width, height, x, y, z, 4, 7));
@@ -174,17 +179,31 @@ public class Player extends GameObject{
 				x = struckEnemy.getX()+playerState.getOffSnapX();
 				moveToX = getMidX();
 			}
+			
+			punchIndex++;
+			if(punchIndex > PlayerState.STRIKE_NUMBERS){
+				punchIndex = 1;
+			}
 		}
 		
 		if(playerState == PlayerState.DODGE){
+			if(direction == Direction.RIGHT)
+				x -= DODGE_SPEED;
+			else if(direction == Direction.LEFT)
+				x += DODGE_SPEED;
 			moveToX = getMidX();
 			moveToY = getMidY();
+		}
+		
+		if(playerState == PlayerState.FINISH){
+			punchIndex = 1;
 		}
 	}
 	
 	@Override
 	public void updateDisplay() {
-		switchAnimation(playerState);
+		if(display != animations.get(playerState))
+			switchAnimation(playerState);
 		
 		if(direction==Direction.RIGHT){
 			display.flipTexture(false);
@@ -233,7 +252,8 @@ public class Player extends GameObject{
 				display.getFrame() > display.getTotalFrame()-CANCEL_STRIKE_FRAMES)){
 			
 			if(	GameTools.boxColDetect(this, enemy, COLLISION_BUFFER) && enemy.selected){
-				playerState = PlayerState.getStrike((int)(PlayerState.STRIKE_NUMBERS*Math.random()));
+//				playerState = PlayerState.getStrike((int)(PlayerState.STRIKE_NUMBERS*Math.random()));
+				playerState = PlayerState.getStrike(punchIndex);
 				struckEnemy = enemy;
 				
 				if(enemy.getStruck() <= 0){

@@ -1,4 +1,4 @@
-package game.open2d;
+package game;
 
 import android.util.Log;
 import object.GameObject;

@@ -1,4 +1,4 @@
-package game.open2d;
+package game;
 
 import engine.open2d.renderer.WorldRenderer;
 import android.content.Context;

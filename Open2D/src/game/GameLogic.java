@@ -1,4 +1,4 @@
-package game.open2d;
+package game;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +16,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.MotionEvent;
 import engine.open2d.renderer.WorldRenderer;
-import game.open2d.GameTools.Gesture;
+import game.GameTools.Gesture;
+import game.open2d.R;
 
 public class GameLogic extends AsyncTask<Void, Void, Void>{
 	private static final int GESTURE_INTERVAL_MIN_CHECK = 2;

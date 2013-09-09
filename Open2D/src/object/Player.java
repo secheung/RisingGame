@@ -9,8 +9,8 @@ import android.view.MotionEvent;
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
 import engine.open2d.texture.AnimatedTexture.Playback;
-import game.open2d.GameTools;
-import game.open2d.GameTools.Gesture;
+import game.GameTools;
+import game.GameTools.Gesture;
 import game.open2d.R;
 
 public class Player extends GameObject{

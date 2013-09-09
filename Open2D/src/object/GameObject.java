@@ -3,10 +3,11 @@ package object;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import android.util.Log;
 import android.view.MotionEvent;
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
-import game.open2d.GameTools.Gesture;
+import game.GameTools.Gesture;
 
 public abstract class GameObject {
 	public interface GameObjectState{};
@@ -72,13 +73,6 @@ public abstract class GameObject {
 		display = animations.get(animToSwitch);
 		display.drawEnable();
 	}
-	
-//	public void switchAnimationResetFrame(GameObjectState animToSwitch){
-//		display.disable();
-//		display = animations.get(animToSwitch);
-//		display.setFrame(1);
-//		display.enable();
-//	}
 	
 	public void update() {
 		updateState();

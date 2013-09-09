@@ -2,8 +2,8 @@ package object;
 
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
-import game.open2d.GameTools;
-import game.open2d.GameTools.Gesture;
+import game.GameTools;
+import game.GameTools.Gesture;
 import game.open2d.R;
 
 import java.util.HashMap;
@@ -24,6 +24,7 @@ public class Enemy extends GameObject {
 		RUN("run"),
 		WALK("walk"),
 		DODGE("dodge"),
+		DISABLE("freeze"),
 		DEAD("dead");
 		
 		String name;
@@ -90,17 +91,7 @@ public class Enemy extends GameObject {
 				enemyState = EnemyState.STRIKE1;
 			}
 		} else if(enemyState == EnemyState.RUN || enemyState == EnemyState.WALK){
-			if(Math.abs(checkX - playerRef.getMidX()) > CLOSE_DIST_TO_PLAYER){
-				enemyState = EnemyState.WALK;
-			}
-			
-			if(Math.abs(checkX - playerRef.getMidX()) > FAR_DIST_TO_PLAYER){
-				enemyState = EnemyState.RUN;
-			}
-			
-			if(GameTools.boxColDetect(this, playerRef, COLLISION_BUFFER)){
-				enemyState = EnemyState.STAND;
-			}
+			executeMovement();
 		}
 		
 		if(selected){
@@ -180,6 +171,22 @@ public class Enemy extends GameObject {
 		}
 	}
 
+	public void executeMovement(){
+		float checkX = getMidX();
+		
+		if(Math.abs(checkX - playerRef.getMidX()) > CLOSE_DIST_TO_PLAYER){
+			enemyState = EnemyState.WALK;
+		}
+		
+		if(Math.abs(checkX - playerRef.getMidX()) > FAR_DIST_TO_PLAYER){
+			enemyState = EnemyState.RUN;
+		}
+		
+		if(GameTools.boxColDetect(this, playerRef, COLLISION_BUFFER)){
+			enemyState = EnemyState.STAND;
+		}
+	}
+	
 	public EnemyState getEnemyState() {
 		return enemyState;
 	}

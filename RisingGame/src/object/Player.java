@@ -3,6 +3,7 @@ package object;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import object.Enemy.EnemyState;
 import object.GameObject.Direction;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -215,9 +216,12 @@ public class Player extends GameObject{
 	@Override
 	public void updateAfterDisplay() {
 		if(display.isPlayed()){
-			if(	playerState==PlayerState.FINISH ||
-				isStrikeState()){
-				
+			if(isStrikeState()){
+				display.resetAnimation();
+				playerState = PlayerState.STAND;
+			}
+			
+			if(playerState==PlayerState.FINISH){
 				display.resetAnimation();
 				playerState = PlayerState.STAND;
 			}

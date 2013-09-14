@@ -20,11 +20,10 @@ public class Enemy extends GameObject {
 		STAND("stand"),
 		STRIKE1("strike"),
 		STRUCK1("struck1"),
-		ENDSTRIKE("end strike"),
 		RUN("run"),
 		WALK("walk"),
 		JUMP_BACK("jump_back"),
-//		CROSS_ROLL("cross_roll"),
+		CROSS_ROLL("cross_roll"),
 		DODGE("dodge"),
 		FREEZE("freeze"),
 		DEAD("dead");
@@ -43,7 +42,7 @@ public class Enemy extends GameObject {
 	private static float RUN_SPEED = 0.16f;
 	private static float WALK_SPEED = 0.08f;
 	private static float JUMP_BACK_SPEED = 0.15f;
-	private static float CROSS_ROLL_SPEED = 0.25f;
+	private static float CROSS_ROLL_SPEED = 0.17f;
 	private static float FAR_DIST_TO_PLAYER = 2.5f;
 	private static float CLOSE_DIST_TO_PLAYER = 1.5f;
 	private static float COLLISION_BUFFER = 1.0f;
@@ -64,7 +63,7 @@ public class Enemy extends GameObject {
 		animations.put(EnemyState.RUN, new Plane(R.drawable.enemy_run, name+"_"+EnemyState.RUN.getName(), width, height, x, y, z, 11, 3));
 		animations.put(EnemyState.WALK, new Plane(R.drawable.enemy_run, name+"_"+EnemyState.WALK.getName(), width, height, x, y, z, 11, 3));
 		animations.put(EnemyState.JUMP_BACK, new Plane(R.drawable.enemy_jump_back, name+"_"+EnemyState.JUMP_BACK.getName(), width, height, x, y, z, 2, 13));
-//		animations.put(EnemyState.CROSS_ROLL, new Plane(R.drawable.enemy_jump_back, name+"_"+EnemyState.CROSS_ROLL.getName(), width, height, x, y, z, 2, 13));
+		animations.put(EnemyState.CROSS_ROLL, new Plane(R.drawable.enemy_jump_back, name+"_"+EnemyState.CROSS_ROLL.getName(), width, height, x, y, z, 2, 13));
 		animations.put(EnemyState.DEAD, new Plane(R.drawable.enemy_stance, name+"_"+EnemyState.DEAD.getName(), width, height, x, y, z, 4, 7));
 		animations.put(EnemyState.STRIKE1, new Plane(R.drawable.enemy_strike1, name+"_"+EnemyState.STRIKE1.getName(), width, height, x, y, z, 4, 6));
 		animations.put(EnemyState.STRUCK1, new Plane(R.drawable.enemy_struck1, name+"_"+EnemyState.STRUCK1.getName(), width, height, x, y, z, 2, 7));
@@ -81,7 +80,7 @@ public class Enemy extends GameObject {
 	public void updateState() {
 		float checkX = getMidX();
 		
-		if(!isEnemyStriking()){
+		if(!isEnemyStriking() && !isDodging()){
 			if(playerRef.getMidX() > checkX){
 				direction = Direction.RIGHT;
 			} else if(playerRef.getMidX() < checkX){
@@ -146,11 +145,11 @@ public class Enemy extends GameObject {
 				x -= JUMP_BACK_SPEED;
 			else if(direction == Direction.LEFT)
 				x += JUMP_BACK_SPEED;
-//		}else if(enemyState == EnemyState.CROSS_ROLL){
-//			if(direction == Direction.RIGHT)
-//				x += CROSS_ROLL_SPEED;
-//			else if(direction == Direction.LEFT)
-//				x -= CROSS_ROLL_SPEED;
+		}else if(enemyState == EnemyState.CROSS_ROLL){
+			if(direction == Direction.RIGHT)
+				x += CROSS_ROLL_SPEED;
+			else if(direction == Direction.LEFT)
+				x -= CROSS_ROLL_SPEED;
 		}else if(enemyState == EnemyState.FREEZE){
 			unfreezeTimeCount--;
 		}
@@ -187,9 +186,9 @@ public class Enemy extends GameObject {
 		} else if(enemyState == EnemyState.JUMP_BACK){
 			display.resetAnimation();
 			enemyState = EnemyState.STAND;
-//		} else if(enemyState == EnemyState.CROSS_ROLL){
-//			display.resetAnimation();
-//			enemyState = EnemyState.STAND;
+		} else if(enemyState == EnemyState.CROSS_ROLL){
+			display.resetAnimation();
+			enemyState = EnemyState.STAND;
 		} else if(enemyState == EnemyState.STRUCK1){
 			display.resetAnimation();
 			struck -= 1;
@@ -237,19 +236,20 @@ public class Enemy extends GameObject {
 		if(isDodging())
 			return;
 		
+		int counter = 0;
 		for(GameObject gameObject : gameObjects.values()){
+			counter++;
 			if(gameObject instanceof Enemy){
 				Enemy enemy = (Enemy)gameObject;
 				if(enemy != this && GameTools.boxColDetect(this, enemy, COLLISION_BUFFER)){
 					if(	enemy.getEnemyState() != EnemyState.WALK &&
 						enemy.getEnemyState() != EnemyState.RUN &&
 						!enemy.isDodging()){
-//						if(Math.random() > 0.5){
-//							enemyState = EnemyState.JUMP_BACK;
-//						} else {
-//							enemyState = EnemyState.CROSS_ROLL;
-//						}
-						enemyState = EnemyState.JUMP_BACK;
+						if(counter % 2 == 1){
+							enemyState = EnemyState.JUMP_BACK;
+						} else {
+							enemyState = EnemyState.CROSS_ROLL;
+						}
 					}
 				}
 			}
@@ -266,8 +266,8 @@ public class Enemy extends GameObject {
 	}
 	
 	public boolean isDodging(){
-		if(	enemyState == EnemyState.JUMP_BACK //||
-//			enemyState == EnemyState.CROSS_ROLL
+		if(	enemyState == EnemyState.JUMP_BACK ||
+			enemyState == EnemyState.CROSS_ROLL
 		){
 			return true;
 		}

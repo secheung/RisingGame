@@ -35,7 +35,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	float camY = 0.0f;
 	float camZ = 0.0f;
 	
-	int enemyLimit = 2;
+	int enemyLimit = 3;
 	
 	LinkedHashMap<String,GameObject> gameObjects;
 	
@@ -63,10 +63,14 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 
 		Enemy enemy1 = new Enemy(gameObjects, player, 1, -2.0f, -1.0f, 3.5f, 3.5f);
 		enemy1.loadAnimIntoRenderer(worldRenderer);
+
+		Enemy enemy2 = new Enemy(gameObjects, player, 2, -2.0f, -1.0f, 3.5f, 3.5f);
+		enemy2.loadAnimIntoRenderer(worldRenderer);
 		
 		gameObjects.put(player.getName(), player);
 		gameObjects.put(enemy0.getName(), enemy0);
 		gameObjects.put(enemy1.getName(), enemy1);
+		gameObjects.put(enemy2.getName(), enemy2);
 	}
 	
 	public void update(){
@@ -81,6 +85,12 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 				Enemy enemy1 = new Enemy(gameObjects, (Player)gameObjects.get("player"), 1, (float)(3.7f*Math.random()-7.4f*Math.random()), -1.0f, 3.5f, 3.5f);
 				enemy1.loadAnimIntoRenderer(worldRenderer);
 				gameObjects.put(enemy1.getName(), enemy1);
+			}
+			
+			if(!gameObjects.containsKey("enemy2")){
+				Enemy enemy2 = new Enemy(gameObjects, (Player)gameObjects.get("player"), 2, (float)(3.7f*Math.random()-7.4f*Math.random()), -1.0f, 3.5f, 3.5f);
+				enemy2.loadAnimIntoRenderer(worldRenderer);
+				gameObjects.put(enemy2.getName(), enemy2);
 			}
 		}
 		

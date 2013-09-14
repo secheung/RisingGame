@@ -255,15 +255,14 @@ public class Player extends GameObject{
 				(isStrikeState() &&
 				display.getFrame() > display.getTotalFrame()-CANCEL_STRIKE_FRAMES)){
 			
-			if(	GameTools.boxColDetect(this, enemy, COLLISION_BUFFER) && enemy.selected){
-//				playerState = PlayerState.getStrike((int)(PlayerState.STRIKE_NUMBERS*Math.random()));
+			if(	GameTools.boxColDetect(this, enemy, COLLISION_BUFFER) && enemy.selected  && !enemy.isDodging()){
 				playerState = PlayerState.getStrike(punchIndex);
 				struckEnemy = enemy;
 				
 				if(enemy.getStruck() <= 0){
 					playerState = PlayerState.FINISH;
 				}
-				
+
 				if(x -  enemy.getX() < 0){
 					direction = Direction.RIGHT;
 				} else if(x -  enemy.getX() > 0) {

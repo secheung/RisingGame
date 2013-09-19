@@ -215,7 +215,8 @@ public class Enemy extends GameObject {
 		Plane selectedPlane = worldRenderer.getSelectedPlane(e.getX(), e.getY());
 
 		float[] points = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), this.display);
-		selected = checkEnemySelection(points[0],points[1]);
+		if(enemyState != EnemyState.FREEZE)
+			selected = checkEnemySelection(points[0],points[1]);
 		
 //		if(animations.containsValue(selectedPlane)){
 //			selected = true;
@@ -254,6 +255,7 @@ public class Enemy extends GameObject {
 				if(enemy != this && GameTools.boxColDetect(this, enemy, COLLISION_BUFFER)){
 					if(	enemy.getEnemyState() != EnemyState.WALK &&
 						enemy.getEnemyState() != EnemyState.RUN &&
+						enemy.getEnemyState() != EnemyState.STRUCK1 &&
 						!enemy.isDodging()){
 						if(counter % 2 == 1){
 							enemyState = EnemyState.JUMP_BACK;
@@ -272,7 +274,7 @@ public class Enemy extends GameObject {
 		float left = x + COLLISION_BUFFER;
 		float right = x + width - COLLISION_BUFFER;
 
-		return(xPoint > left && xPoint < right && yPoint > y && yPoint < top);
+		return(xPoint > left && xPoint < right && yPoint > y && yPoint < top);	
 	}
 	
 	public boolean isEnemyStriking(){

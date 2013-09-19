@@ -64,7 +64,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		Enemy enemy1 = new Enemy(gameObjects, player, 1, -2.0f, -1.0f, 3.5f, 3.5f);
 		enemy1.loadAnimIntoRenderer(worldRenderer);
 
-		Enemy enemy2 = new Enemy(gameObjects, player, 2, -2.0f, -1.0f, 3.5f, 3.5f);
+		Enemy enemy2 = new Enemy(gameObjects, player, 2, -2.1f, -1.0f, 3.5f, 3.5f);
 		enemy2.loadAnimIntoRenderer(worldRenderer);
 		
 		gameObjects.put(player.getName(), player);

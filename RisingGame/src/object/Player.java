@@ -105,10 +105,10 @@ public class Player extends GameObject{
 	
 	private static float WALK_SPEED = 0.2f;
 	private static float STRIKE_SPEED = 0.1f;
-	private static float DODGE_SPEED = 0.2f;
+	private static float DODGE_SPEED = 0.23f;
 	private static float BUFFER = 0.4f;
 	private static float COLLISION_BUFFER = 1.0f;
-	private static float CANCEL_STRIKE_FRAMES = 8;
+	public static float CANCEL_STRIKE_FRAMES = 8;
 	
 	private Enemy struckEnemy;
 	private PlayerState playerState;
@@ -178,6 +178,7 @@ public class Player extends GameObject{
 		}
 		
 		if(!isFinishState()){
+//		if(isStrikeState()){
 			if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.LEFT){
 				playerState = PlayerState.DODGE;
 				direction = Direction.RIGHT;
@@ -200,11 +201,13 @@ public class Player extends GameObject{
 		if(isStrikeState()){
 			if(struckEnemy.getX() < x) {
 				direction = Direction.LEFT;
-				x = struckEnemy.getX()-playerState.getOffSnapX();
+//				if(display.getFrame() == 0)
+					x = struckEnemy.getX()-playerState.getOffSnapX();
 				moveToX = getMidX();
 			} else if(struckEnemy.getX() > x){
 				direction = Direction.RIGHT;
-				x = struckEnemy.getX()+playerState.getOffSnapX();
+//				if(display.getFrame() == 0)
+					x = struckEnemy.getX()+playerState.getOffSnapX();
 				moveToX = getMidX();
 			}
 		}
@@ -281,7 +284,7 @@ public class Player extends GameObject{
 		
 		if(		playerState == PlayerState.STAND || playerState == PlayerState.RUN ||
 				(isStrikeState() &&
-				display.getFrame() > display.getTotalFrame()-CANCEL_STRIKE_FRAMES)){
+				display.getFrame() >= display.getTotalFrame()-CANCEL_STRIKE_FRAMES)){
 			
 			if(	GameTools.boxColDetect(this, enemy, COLLISION_BUFFER) && enemy.selected  && !enemy.isDodging()){
 				playerState = PlayerState.getStrike(punchIndex);

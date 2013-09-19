@@ -46,6 +46,7 @@ public class Enemy extends GameObject {
 	private static float FAR_DIST_TO_PLAYER = 2.5f;
 	private static float CLOSE_DIST_TO_PLAYER = 1.5f;
 	private static float COLLISION_BUFFER = 1.0f;
+	private static float KNOCK_BACK = 0.0f;
 	
 	Player playerRef;
 	EnemyState enemyState;
@@ -129,7 +130,13 @@ public class Enemy extends GameObject {
 	@Override
 	public void updateLogic() {
 		if(enemyState == EnemyState.STRUCK1){
-			selected = false;
+			if(display.getFrame() < Player.CANCEL_STRIKE_FRAMES){
+				selected = false;
+			}
+			if(direction == Direction.RIGHT)
+				x -= KNOCK_BACK;
+			else if(direction == Direction.LEFT)
+				x += KNOCK_BACK;
 		}else if(enemyState == EnemyState.RUN){
 			if(direction == Direction.RIGHT)
 				x += RUN_SPEED;
@@ -206,10 +213,13 @@ public class Enemy extends GameObject {
 	@Override
 	public void passTouchEvent(MotionEvent e, WorldRenderer worldRenderer) {
 		Plane selectedPlane = worldRenderer.getSelectedPlane(e.getX(), e.getY());
+
+		float[] points = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), this.display);
+		selected = checkEnemySelection(points[0],points[1]);
 		
-		if(animations.containsValue(selectedPlane)){
-			selected = true;
-		}
+//		if(animations.containsValue(selectedPlane)){
+//			selected = true;
+//		}
 		
 		if(gesture != Gesture.NONE){
 			selected = false;
@@ -254,6 +264,15 @@ public class Enemy extends GameObject {
 				}
 			}
 		}
+	}
+	
+	private boolean checkEnemySelection(float xPoint,float yPoint){
+		float top = y + height - COLLISION_BUFFER;
+		float bottom = y + COLLISION_BUFFER;
+		float left = x + COLLISION_BUFFER;
+		float right = x + width - COLLISION_BUFFER;
+
+		return(xPoint > left && xPoint < right && yPoint > y && yPoint < top);
 	}
 	
 	public boolean isEnemyStriking(){

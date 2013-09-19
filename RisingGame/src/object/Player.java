@@ -23,9 +23,11 @@ public class Player extends GameObject{
 		STRIKE1("strike1",-1.0f,0f,0f),
 		STRIKE2("strike2",-1.0f,0f,0f),
 		STRIKE3("strike3",-1.0f,0f,0f),
-		FINISH("finish",0f,0f,0f);
+		FINISH1("finish1",0f,0f,0f),
+		FINISH2("finish2",0f,0f,0f);
 		
 		private static int STRIKE_NUMBERS = 3;
+		private static int FINISH_NUMBERS = 2;
 		
 		public static PlayerState getRandomStrike(){
 			double randNum = Math.random();
@@ -34,12 +36,34 @@ public class Player extends GameObject{
 			return getStrike(strike_number);
 		}
 		
+		public static PlayerState getRandomFinish(){
+			double randNum = Math.random();
+			int finish_number = (int) (randNum * FINISH_NUMBERS + 1);
+			
+			return getFinish(finish_number);
+		}
+		
 		public static PlayerState getStrike(int index){
 			if(index < 1 || index > STRIKE_NUMBERS)
 				return STRIKE2;
 			
 			StringBuffer buffer = new StringBuffer();
 			buffer.append("strike");
+			buffer.append(index);
+			for(PlayerState playerState : PlayerState.values()){
+				if(buffer.toString().equals(playerState.getName())){
+					return playerState;
+				}
+			}
+			return null;
+		}
+		
+		public static PlayerState getFinish(int index){
+			if(index < 1 || index > FINISH_NUMBERS)
+				return FINISH2;
+			
+			StringBuffer buffer = new StringBuffer();
+			buffer.append("finish");
 			buffer.append(index);
 			for(PlayerState playerState : PlayerState.values()){
 				if(buffer.toString().equals(playerState.getName())){
@@ -92,6 +116,7 @@ public class Player extends GameObject{
 	private float moveToY;
 	
 	private int punchIndex;
+	private int finishIndex;
 	
 	public Player(LinkedHashMap<String,GameObject> gameObjects, float x, float y, float width, float height){
 		super(gameObjects,x,y,width,height);
@@ -104,6 +129,7 @@ public class Player extends GameObject{
 		this.z = -1.0f;
 		
 		this.punchIndex = 1;
+		this.finishIndex = 1;
 		
 		animations = new HashMap<GameObjectState, Plane>();
 		animations.put(PlayerState.STAND, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.STAND.getName(), width, height, x, y, z, 4, 7));
@@ -112,7 +138,8 @@ public class Player extends GameObject{
 		animations.put(PlayerState.STRIKE1, new Plane(R.drawable.rising_strike1, name+"_"+PlayerState.STRIKE1.getName(), width, height, x, y, z, 2, 7));
 		animations.put(PlayerState.STRIKE2, new Plane(R.drawable.rising_strike2, name+"_"+PlayerState.STRIKE2.getName(), width, height, x, y, z, 2, 7));
 		animations.put(PlayerState.STRIKE3, new Plane(R.drawable.rising_strike3, name+"_"+PlayerState.STRIKE3.getName(), width, height, x, y, z, 2, 7));
-		animations.put(PlayerState.FINISH, new Plane(R.drawable.finish1, name+"_"+PlayerState.FINISH.getName(), width, height, x, y, z, 8, 5));
+		animations.put(PlayerState.FINISH1, new Plane(R.drawable.rising_finish1, name+"_"+PlayerState.FINISH1.getName(), width, height, x, y, z, 8, 5));
+		animations.put(PlayerState.FINISH2, new Plane(R.drawable.rising_finish2, name+"_"+PlayerState.FINISH2.getName(), width, height, x, y, z, 4, 8));
 		
 		this.display = animations.get(PlayerState.STAND);
 		this.direction = Direction.RIGHT;
@@ -150,7 +177,7 @@ public class Player extends GameObject{
 			}
 		}
 		
-		if(playerState != PlayerState.FINISH){
+		if(!isFinishState()){
 			if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.LEFT){
 				playerState = PlayerState.DODGE;
 				direction = Direction.RIGHT;
@@ -170,7 +197,7 @@ public class Player extends GameObject{
 				x -= WALK_SPEED;
 		}
 		
-		if(	isStrikeState()){
+		if(isStrikeState()){
 			if(struckEnemy.getX() < x) {
 				direction = Direction.LEFT;
 				x = struckEnemy.getX()-playerState.getOffSnapX();
@@ -179,11 +206,6 @@ public class Player extends GameObject{
 				direction = Direction.RIGHT;
 				x = struckEnemy.getX()+playerState.getOffSnapX();
 				moveToX = getMidX();
-			}
-			
-			punchIndex++;
-			if(punchIndex > PlayerState.STRIKE_NUMBERS){
-				punchIndex = 1;
 			}
 		}
 		
@@ -194,10 +216,6 @@ public class Player extends GameObject{
 				x += DODGE_SPEED;
 			moveToX = getMidX();
 			moveToY = getMidY();
-		}
-		
-		if(playerState == PlayerState.FINISH){
-			punchIndex = 1;
 		}
 	}
 	
@@ -219,11 +237,21 @@ public class Player extends GameObject{
 			if(isStrikeState()){
 				display.resetAnimation();
 				playerState = PlayerState.STAND;
+				
+				punchIndex++;
+				if(punchIndex > PlayerState.STRIKE_NUMBERS){
+					punchIndex = 1;
+				}
 			}
 			
-			if(playerState==PlayerState.FINISH){
+			if(isFinishState()){
 				display.resetAnimation();
 				playerState = PlayerState.STAND;
+				
+				finishIndex++;
+				if(finishIndex > PlayerState.FINISH_NUMBERS){
+					finishIndex = 1;
+				}
 			}
 			
 			if(	playerState==PlayerState.DODGE){
@@ -260,7 +288,7 @@ public class Player extends GameObject{
 				struckEnemy = enemy;
 				
 				if(enemy.getStruck() <= 0){
-					playerState = PlayerState.FINISH;
+					playerState = PlayerState.getFinish(finishIndex);
 				}
 
 				if(x -  enemy.getX() < 0){
@@ -276,5 +304,10 @@ public class Player extends GameObject{
 		return (playerState==PlayerState.STRIKE1||
 				playerState==PlayerState.STRIKE2||
 				playerState==PlayerState.STRIKE3);
+	}
+	
+	public boolean isFinishState(){
+		return (playerState==PlayerState.FINISH1|| 
+				playerState==PlayerState.FINISH2);
 	}
 }

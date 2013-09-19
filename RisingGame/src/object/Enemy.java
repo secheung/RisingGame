@@ -63,7 +63,7 @@ public class Enemy extends GameObject {
 		animations.put(EnemyState.RUN, new Plane(R.drawable.enemy_run, name+"_"+EnemyState.RUN.getName(), width, height, x, y, z, 11, 3));
 		animations.put(EnemyState.WALK, new Plane(R.drawable.enemy_run, name+"_"+EnemyState.WALK.getName(), width, height, x, y, z, 11, 3));
 		animations.put(EnemyState.JUMP_BACK, new Plane(R.drawable.enemy_jump_back, name+"_"+EnemyState.JUMP_BACK.getName(), width, height, x, y, z, 2, 13));
-		animations.put(EnemyState.CROSS_ROLL, new Plane(R.drawable.enemy_jump_back, name+"_"+EnemyState.CROSS_ROLL.getName(), width, height, x, y, z, 2, 13));
+		animations.put(EnemyState.CROSS_ROLL, new Plane(R.drawable.enemy_cross_roll, name+"_"+EnemyState.CROSS_ROLL.getName(), width, height, x, y, z, 4, 5));
 		animations.put(EnemyState.DEAD, new Plane(R.drawable.enemy_stance, name+"_"+EnemyState.DEAD.getName(), width, height, x, y, z, 4, 7));
 		animations.put(EnemyState.STRIKE1, new Plane(R.drawable.enemy_strike1, name+"_"+EnemyState.STRIKE1.getName(), width, height, x, y, z, 4, 6));
 		animations.put(EnemyState.STRUCK1, new Plane(R.drawable.enemy_struck1, name+"_"+EnemyState.STRUCK1.getName(), width, height, x, y, z, 2, 7));
@@ -107,7 +107,7 @@ public class Enemy extends GameObject {
 		otherAIMoveInteration();
 		
 		if(selected && GameTools.boxColDetect(this, playerRef, COLLISION_BUFFER) && !isDodging()){
-			if(playerRef.getPlayerState() == PlayerState.FINISH){
+			if(playerRef.isFinishState()){
 				enemyState = EnemyState.DEAD;
 			}else if(playerRef.getPlayerState() == PlayerState.STRIKE1){
 				enemyState = EnemyState.STRUCK1;
@@ -119,7 +119,7 @@ public class Enemy extends GameObject {
 		}
 		
 		if(!selected){
-			if(playerRef.getPlayerState() == PlayerState.FINISH && enemyState != EnemyState.FREEZE){
+			if(playerRef.isFinishState() && enemyState != EnemyState.FREEZE){
 				enemyState = EnemyState.FREEZE;
 				unfreezeTimeCount = playerRef.getDisplay().getTotalFrame();
 			}

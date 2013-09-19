@@ -35,7 +35,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	float camY = 0.0f;
 	float camZ = 0.0f;
 	
-	int enemyLimit = 3;
+	int enemyLimit = 2;
 	
 	LinkedHashMap<String,GameObject> gameObjects;
 	
@@ -122,8 +122,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 			}
 		}
 		
-		if(player.getPlayerState() == PlayerState.FINISH){
-//			finishCamZoom(player);
+		if(player.isFinishState()){
 			camZoomTo(	player.getX()+player.getWidth()/2,
 						player.getY()+player.getHeight()/2,
 						player.getZ()-0.5f,

@@ -307,4 +307,8 @@ public class Enemy extends GameObject {
 	public int getStruck(){
 		return struck;
 	}
+
+	public boolean isSelected() {
+		return selected;
+	}
 }

@@ -241,20 +241,14 @@ public class Player extends GameObject{
 				display.resetAnimation();
 				playerState = PlayerState.STAND;
 				
-				punchIndex++;
-				if(punchIndex > PlayerState.STRIKE_NUMBERS){
-					punchIndex = 1;
-				}
+				updatePunchIndex();
 			}
 			
 			if(isFinishState()){
 				display.resetAnimation();
 				playerState = PlayerState.STAND;
 				
-				finishIndex++;
-				if(finishIndex > PlayerState.FINISH_NUMBERS){
-					finishIndex = 1;
-				}
+				updateFinishIndex();
 			}
 			
 			if(	playerState==PlayerState.DODGE){
@@ -286,7 +280,7 @@ public class Player extends GameObject{
 				(isStrikeState() &&
 				display.getFrame() >= display.getTotalFrame()-CANCEL_STRIKE_FRAMES)){
 			
-			if(	GameTools.boxColDetect(this, enemy, COLLISION_BUFFER) && enemy.selected  && !enemy.isDodging()){
+			if(	GameTools.boxColDetect(this, enemy, COLLISION_BUFFER) && enemy.isSelected()  && !enemy.isDodging()){
 				playerState = PlayerState.getStrike(punchIndex);
 				struckEnemy = enemy;
 				
@@ -294,12 +288,22 @@ public class Player extends GameObject{
 					playerState = PlayerState.getFinish(finishIndex);
 				}
 
-				if(x -  enemy.getX() < 0){
-					direction = Direction.RIGHT;
-				} else if(x -  enemy.getX() > 0) {
-					direction = Direction.LEFT;
-				}
+				updatePunchIndex();
 			}
+		}
+	}
+
+	private void updatePunchIndex() {
+		punchIndex++;
+		if(punchIndex > PlayerState.STRIKE_NUMBERS){
+			punchIndex = 1;
+		}
+	}
+	
+	private void updateFinishIndex() {
+		finishIndex++;
+		if(finishIndex > PlayerState.FINISH_NUMBERS){
+			finishIndex = 1;
 		}
 	}
 	

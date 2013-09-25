@@ -108,7 +108,7 @@ public class Enemy extends GameObject {
 		otherAIMoveInteration();
 		
 		if(selected && GameTools.boxColDetect(this, playerRef, COLLISION_BUFFER) && !isDodging()){
-			if(playerRef.isFinishState()){
+			if(playerRef.isFinishState() || playerRef.isCounterState()){
 				enemyState = EnemyState.DEAD;
 			}else if(playerRef.getPlayerState() == PlayerState.STRIKE1){
 				enemyState = EnemyState.STRUCK1;
@@ -120,7 +120,7 @@ public class Enemy extends GameObject {
 		}
 		
 		if(!selected){
-			if(playerRef.isFinishState() && enemyState != EnemyState.FREEZE){
+			if((playerRef.isFinishState() || playerRef.isCounterState()) && enemyState != EnemyState.FREEZE){
 				enemyState = EnemyState.FREEZE;
 				unfreezeTimeCount = playerRef.getDisplay().getTotalFrame();
 			}
@@ -274,7 +274,7 @@ public class Enemy extends GameObject {
 		float left = x + COLLISION_BUFFER;
 		float right = x + width - COLLISION_BUFFER;
 
-		return(xPoint > left && xPoint < right && yPoint > y && yPoint < top);	
+		return(xPoint > left && xPoint < right && yPoint > bottom && yPoint < top);	
 	}
 	
 	public boolean isEnemyStriking(){

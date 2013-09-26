@@ -197,7 +197,7 @@ public class Player extends GameObject{
 			}
 		}
 		
-		if(!isFinishState() || !isCounterState()){
+		if(!isFinishState() && !isCounterState()){
 			if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.LEFT){
 				playerState = PlayerState.DODGE;
 				direction = Direction.RIGHT;

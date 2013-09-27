@@ -269,8 +269,10 @@ public class Enemy extends GameObject {
 	}
 	
 	private boolean checkEnemySelection(float xPoint,float yPoint){
-		float top = y + height - COLLISION_BUFFER;
-		float bottom = y + COLLISION_BUFFER;
+//		float top = y + height - COLLISION_BUFFER;
+//		float bottom = y + COLLISION_BUFFER;
+		float top = y + height;
+		float bottom = y;
 		float left = x + COLLISION_BUFFER;
 		float right = x + width - COLLISION_BUFFER;
 

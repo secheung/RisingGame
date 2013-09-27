@@ -8,6 +8,8 @@ import android.view.MotionEvent;
 
 public class GameSurfaceView extends GLSurfaceView{
 
+	private static int TEXTURE_QUALITY = 1;
+	
 	private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
     private WorldRenderer worldRenderer;
     private GameLogic gameLogic;
@@ -19,7 +21,7 @@ public class GameSurfaceView extends GLSurfaceView{
 
 		//WorldRenderer = WorldRenderer.getInstance();
 		worldRenderer = new WorldRenderer(context);
-		worldRenderer.setTextureQuality(1);
+		worldRenderer.setTextureQuality(TEXTURE_QUALITY);
 		setRenderer(worldRenderer);
 		setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 		

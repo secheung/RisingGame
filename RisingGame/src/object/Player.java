@@ -159,7 +159,7 @@ public class Player extends GameObject{
 		animations.put(PlayerState.STRIKE3, new Plane(R.drawable.rising_strike3, name+"_"+PlayerState.STRIKE3.getName(), width, height, x, y, z, 2, 7));
 		animations.put(PlayerState.FINISH1, new Plane(R.drawable.rising_finish1, name+"_"+PlayerState.FINISH1.getName(), width, height, x, y, z, 8, 5));
 		animations.put(PlayerState.FINISH2, new Plane(R.drawable.rising_finish2, name+"_"+PlayerState.FINISH2.getName(), width, height, x, y, z, 4, 8));
-		animations.put(PlayerState.COUNTER1, new Plane(R.drawable.rising_counter1, name+"_"+PlayerState.COUNTER1.getName(), width, height, x, y, z, 4, 10));
+		animations.put(PlayerState.COUNTER1, new Plane(R.drawable.rising_counter1, name+"_"+PlayerState.COUNTER1.getName(), width, height, x, y, z, 6, 6));
 		
 		this.display = animations.get(PlayerState.STAND);
 		this.direction = Direction.RIGHT;
@@ -309,19 +309,18 @@ public class Player extends GameObject{
 				display.getFrame() >= display.getTotalFrame()-CANCEL_STRIKE_FRAMES)){
 			
 			if(	GameTools.boxColDetect(this, enemy, COLLISION_BUFFER) && enemy.isSelected()  && !enemy.isDodging()){
-				playerState = PlayerState.getStrike(punchIndex);
-				struckEnemy = enemy;
-				
-				if(enemy.getStruck() <= 0){
-					playerState = PlayerState.getFinish(finishIndex);
-				}
-				
 				if(enemy.isEnemyStriking() && playerState == PlayerState.DODGE){
 					playerState = PlayerState.getCounter(counterIndex);
-					Log.d("open2d", ""+playerState);
-				}
+				} else {
+					playerState = PlayerState.getStrike(punchIndex);
+					struckEnemy = enemy;
+					
+					if(enemy.getStruck() <= 0){
+						playerState = PlayerState.getFinish(finishIndex);
+					}
 
-				updatePunchIndex();
+					updatePunchIndex();
+				}
 			}
 		}
 	}

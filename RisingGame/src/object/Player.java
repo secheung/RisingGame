@@ -25,10 +25,11 @@ public class Player extends GameObject{
 		STRIKE3("strike3",-1.0f,0f,0f),
 		FINISH1("finish1",0f,0f,0f),
 		FINISH2("finish2",0f,0f,0f),
+		FINISH3("finish3",0f,0f,0f),
 		COUNTER1("counter1",0f,0f,0f);
 		
 		private static int STRIKE_NUMBERS = 3;
-		private static int FINISH_NUMBERS = 2;
+		private static int FINISH_NUMBERS = 3;
 		private static int COUNTER_NUMBERS = 1;
 		
 		public static PlayerState getRandomStrike(){
@@ -159,6 +160,7 @@ public class Player extends GameObject{
 		animations.put(PlayerState.STRIKE3, new Plane(R.drawable.rising_strike3, name+"_"+PlayerState.STRIKE3.getName(), width, height, x, y, z, 2, 7));
 		animations.put(PlayerState.FINISH1, new Plane(R.drawable.rising_finish1, name+"_"+PlayerState.FINISH1.getName(), width, height, x, y, z, 8, 5));
 		animations.put(PlayerState.FINISH2, new Plane(R.drawable.rising_finish2, name+"_"+PlayerState.FINISH2.getName(), width, height, x, y, z, 4, 8));
+		animations.put(PlayerState.FINISH3, new Plane(R.drawable.rising_finish3, name+"_"+PlayerState.FINISH3.getName(), width, height, x, y, z, 5, 8));
 		animations.put(PlayerState.COUNTER1, new Plane(R.drawable.rising_counter1, name+"_"+PlayerState.COUNTER1.getName(), width, height, x, y, z, 6, 6));
 		
 		this.display = animations.get(PlayerState.STAND);
@@ -354,7 +356,8 @@ public class Player extends GameObject{
 	
 	public boolean isFinishState(){
 		return (playerState==PlayerState.FINISH1|| 
-				playerState==PlayerState.FINISH2);
+				playerState==PlayerState.FINISH2||
+				playerState==PlayerState.FINISH3);
 	}
 	
 	public boolean isCounterState(){

@@ -59,6 +59,26 @@ public class GameTools {
 		return true;
 	}
 	
+	public static boolean boxColDetect(	GameObject object1, float topOffset1, float bottomOffset1, float leftOffset1, float rightOffset1,
+										GameObject object2, float topOffset2, float bottomOffset2, float leftOffset2, float rightOffset2){
+		float left1 = object1.getX() + leftOffset1;
+		float right1 = object1.getX() + object2.getWidth() +  rightOffset1;
+		float top1 = object1.getY() + object2.getHeight() + topOffset1;
+		float bottom1 = object1.getY() + bottomOffset1;
+		
+		float left2 = object2.getX() + leftOffset2;
+		float right2 = object2.getX() + object2.getWidth() + rightOffset2;
+		float top2 = object2.getY() + object2.getHeight() + topOffset2;
+		float bottom2 = object2.getY() + bottomOffset2;
+		
+		if (bottom1 > top2) return false;
+		if (top1 < bottom2) return false;
+		if (right1 < left2) return false;
+		if (left1 > right2) return false;
+		
+		return true;
+	}
+	
 	public static Gesture gestureDetection(float prevX,float curX, float prevY, float curY){
 		Gesture horizontal = gestureDetectionHorizontal(prevX, curX);
 		Gesture vertical = gestureDetectionVertical(prevY,curY);

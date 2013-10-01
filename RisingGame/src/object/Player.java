@@ -26,10 +26,11 @@ public class Player extends GameObject{
 		FINISH1("finish1",0f,0f,0f),
 		FINISH2("finish2",0f,0f,0f),
 		FINISH3("finish3",0f,0f,0f),
+		FINISH4("finish4",0f,0f,0f),
 		COUNTER1("counter1",0f,0f,0f);
 		
 		private static int STRIKE_NUMBERS = 3;
-		private static int FINISH_NUMBERS = 3;
+		private static int FINISH_NUMBERS = 4;
 		private static int COUNTER_NUMBERS = 1;
 		
 		public static PlayerState getRandomStrike(){
@@ -153,6 +154,7 @@ public class Player extends GameObject{
 		
 		animations = new HashMap<GameObjectState, Plane>();
 		animations.put(PlayerState.STAND, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.STAND.getName(), width, height, x, y, z, 4, 7));
+		animations.put(PlayerState.DEAD, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.DEAD.getName(), width, height, x, y, z, 4, 7));
 		animations.put(PlayerState.RUN, new Plane(R.drawable.rising_run, name+"_"+PlayerState.RUN.getName(), width, height, x, y, z, 11, 3));
 		animations.put(PlayerState.DODGE, new Plane(R.drawable.rising_dodge, name+"_"+PlayerState.DODGE.getName(), width, height, x, y, z, 3, 3));
 		animations.put(PlayerState.STRIKE1, new Plane(R.drawable.rising_strike1, name+"_"+PlayerState.STRIKE1.getName(), width, height, x, y, z, 2, 7));
@@ -161,6 +163,7 @@ public class Player extends GameObject{
 		animations.put(PlayerState.FINISH1, new Plane(R.drawable.rising_finish1, name+"_"+PlayerState.FINISH1.getName(), width, height, x, y, z, 8, 5));
 		animations.put(PlayerState.FINISH2, new Plane(R.drawable.rising_finish2, name+"_"+PlayerState.FINISH2.getName(), width, height, x, y, z, 4, 8));
 		animations.put(PlayerState.FINISH3, new Plane(R.drawable.rising_finish3, name+"_"+PlayerState.FINISH3.getName(), width, height, x, y, z, 5, 8));
+		animations.put(PlayerState.FINISH4, new Plane(R.drawable.rising_finish4, name+"_"+PlayerState.FINISH4.getName(), width, height, x, y, z, 5, 8));
 		animations.put(PlayerState.COUNTER1, new Plane(R.drawable.rising_counter1, name+"_"+PlayerState.COUNTER1.getName(), width, height, x, y, z, 6, 6));
 		
 		this.display = animations.get(PlayerState.STAND);
@@ -193,6 +196,7 @@ public class Player extends GameObject{
 		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
 			executeMovement();
 		}
+		
 		for(GameObject gameObject : gameObjects.values()){
 			if(gameObject instanceof Enemy){
 				executeEnemyInteraction((Enemy)gameObject);
@@ -286,6 +290,11 @@ public class Player extends GameObject{
 				display.resetAnimation();
 				playerState = PlayerState.STAND;				
 			}
+			
+			if(playerState==PlayerState.DEAD){
+				display.resetAnimation();
+				playerState = PlayerState.STAND;
+			}
 		}
 	}
 
@@ -306,12 +315,24 @@ public class Player extends GameObject{
 
 	private void executeEnemyInteraction(Enemy enemy){
 		
+		if(enemy.isStrikeState()){
+			if(enemy.isStrikingPlayer() &&
+				enemy.getDisplay().getFrame() == Enemy.COLLISION_FRAME){
+				if(	playerState != PlayerState.DODGE &&
+					!isFinishState() && 
+//					!isStrikeState() &&
+					!isCounterState()){
+						playerState = PlayerState.DEAD;
+				}
+			}
+		}
+		
 		if(		playerState == PlayerState.STAND || playerState == PlayerState.RUN || playerState == PlayerState.DODGE ||
 				(isStrikeState() &&
 				display.getFrame() >= display.getTotalFrame()-CANCEL_STRIKE_FRAMES)){
 			
 			if(	GameTools.boxColDetect(this, enemy, COLLISION_BUFFER) && enemy.isSelected()  && !enemy.isDodging()){
-				if(enemy.isEnemyStriking() && playerState == PlayerState.DODGE){
+				if(enemy.isStrikeState() && playerState == PlayerState.DODGE){
 					playerState = PlayerState.getCounter(counterIndex);
 				} else {
 					playerState = PlayerState.getStrike(punchIndex);
@@ -357,7 +378,8 @@ public class Player extends GameObject{
 	public boolean isFinishState(){
 		return (playerState==PlayerState.FINISH1|| 
 				playerState==PlayerState.FINISH2||
-				playerState==PlayerState.FINISH3);
+				playerState==PlayerState.FINISH3||
+				playerState==PlayerState.FINISH4);
 	}
 	
 	public boolean isCounterState(){

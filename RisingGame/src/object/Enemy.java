@@ -47,6 +47,7 @@ public class Enemy extends GameObject {
 	private static float CLOSE_DIST_TO_PLAYER = 1.5f;
 	private static float COLLISION_BUFFER = 1.0f;
 	private static float KNOCK_BACK = 0.0f;
+	public static float COLLISION_FRAME = 20.0f;
 	
 	Player playerRef;
 	EnemyState enemyState;
@@ -81,7 +82,7 @@ public class Enemy extends GameObject {
 	public void updateState() {
 		float checkX = getMidX();
 		
-		if(!isEnemyStriking() && !isDodging()){
+		if(!isStrikeState() && !isDodging()){
 			if(playerRef.getMidX() > checkX){
 				direction = Direction.RIGHT;
 			} else if(playerRef.getMidX() < checkX){
@@ -137,6 +138,8 @@ public class Enemy extends GameObject {
 				x -= KNOCK_BACK;
 			else if(direction == Direction.LEFT)
 				x += KNOCK_BACK;
+		}else if(isStrikeState()){
+			
 		}else if(enemyState == EnemyState.RUN){
 			if(direction == Direction.RIGHT)
 				x += RUN_SPEED;
@@ -187,7 +190,7 @@ public class Enemy extends GameObject {
 		if(!display.isPlayed())
 			return;
 		
-		if(isEnemyStriking()){
+		if(isStrikeState()){
 			display.resetAnimation();
 			enemyState = EnemyState.STAND;
 		} else if(enemyState == EnemyState.JUMP_BACK){
@@ -256,7 +259,8 @@ public class Enemy extends GameObject {
 					if(	enemy.getEnemyState() != EnemyState.WALK &&
 						enemy.getEnemyState() != EnemyState.RUN &&
 						enemy.getEnemyState() != EnemyState.STRUCK1 &&
-						!enemy.isDodging()){
+						!enemy.isDodging() &&
+						this.getEnemyState() != EnemyState.STRUCK1){
 						if(counter % 2 == 1){
 							enemyState = EnemyState.JUMP_BACK;
 						} else {
@@ -266,6 +270,13 @@ public class Enemy extends GameObject {
 				}
 			}
 		}
+	}
+	
+	public boolean isStrikingPlayer(){
+		return ((GameTools.boxColDetect(	playerRef, -COLLISION_BUFFER, COLLISION_BUFFER, COLLISION_BUFFER, -COLLISION_BUFFER,
+											this, -1.0f, 1.0f, 1.5f,0.1f) && direction == Direction.RIGHT) ||
+				(GameTools.boxColDetect(	playerRef, -COLLISION_BUFFER, COLLISION_BUFFER, COLLISION_BUFFER, -COLLISION_BUFFER,
+											this, -1.0f, 1.0f, -0.1f,-1.5f) && direction == Direction.RIGHT));
 	}
 	
 	private boolean checkEnemySelection(float xPoint,float yPoint){
@@ -279,7 +290,7 @@ public class Enemy extends GameObject {
 		return(xPoint > left && xPoint < right && yPoint > bottom && yPoint < top);	
 	}
 	
-	public boolean isEnemyStriking(){
+	public boolean isStrikeState(){
 		if(enemyState == EnemyState.STRIKE1){
 			return true;
 		} 

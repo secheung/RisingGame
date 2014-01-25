@@ -26,14 +26,17 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	public static float CAM_X_CHANGE = 0.65f;
 	public static float CAM_Y_CHANGE = 0.65f;
 	public static float CAM_Z_CHANGE = 0.65f;
-	public static float CAM_BUFFER = 1.0f;
+	public static float CAM_BUFFER = 0.7f;
+	public static float CAM_X_DEFAULT = 0.0f;
+	public static float CAM_Y_DEFAULT = 2.0f;
+	public static float CAM_Z_DEFAULT = 1.0f;
 	
 	WorldRenderer worldRenderer;
 	Context context;
 	
-	float camX = 0.0f;
-	float camY = 0.0f;
-	float camZ = 0.0f;
+	float camX = CAM_X_DEFAULT;
+	float camY = CAM_Y_DEFAULT;
+	float camZ = CAM_Z_DEFAULT;
 	
 	int enemyLimit = 1;
 	int enemyIndex;
@@ -131,13 +134,13 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 			camZoomTo(	player.getX()+player.getWidth()/2,
 						player.getY()+player.getHeight()/2,
 						player.getZ()-0.5f,
-						0.7f
+						CAM_BUFFER
 					);
 		} else {
-			camZoomTo(	0.0f,
-						0.0f,
-						0.0f,
-						0.7f
+			camZoomTo(	CAM_X_DEFAULT,
+						CAM_Y_DEFAULT,
+						CAM_Z_DEFAULT,
+						CAM_BUFFER
 				);
 		}
 	}

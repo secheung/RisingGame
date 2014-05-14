@@ -27,10 +27,11 @@ public class Player extends GameObject{
 		FINISH2("finish2",0f,0f,0f),
 		FINISH3("finish3",0f,0f,0f),
 		FINISH4("finish4",0f,0f,0f),
+		FINISH5("finish5",0f,0f,0f),
 		COUNTER1("counter1",0f,0f,0f);
 		
 		private static int STRIKE_NUMBERS = 3;
-		private static int FINISH_NUMBERS = 4;
+		private static int FINISH_NUMBERS = 5;
 		private static int COUNTER_NUMBERS = 1;
 		
 		public static PlayerState getRandomStrike(){
@@ -164,6 +165,7 @@ public class Player extends GameObject{
 		animations.put(PlayerState.FINISH2, new Plane(R.drawable.rising_finish2, name+"_"+PlayerState.FINISH2.getName(), width, height, x, y, z, 4, 8));
 		animations.put(PlayerState.FINISH3, new Plane(R.drawable.rising_finish3, name+"_"+PlayerState.FINISH3.getName(), width, height, x, y, z, 5, 8));
 		animations.put(PlayerState.FINISH4, new Plane(R.drawable.rising_finish4, name+"_"+PlayerState.FINISH4.getName(), width, height, x, y, z, 5, 8));
+		animations.put(PlayerState.FINISH5, new Plane(R.drawable.rising_finish5, name+"_"+PlayerState.FINISH5.getName(), width, height, x, y, z, 5, 8));
 		animations.put(PlayerState.COUNTER1, new Plane(R.drawable.rising_counter1, name+"_"+PlayerState.COUNTER1.getName(), width, height, x, y, z, 6, 6));
 		
 		this.display = animations.get(PlayerState.STAND);
@@ -180,7 +182,7 @@ public class Player extends GameObject{
 
 	@Override
 	public void passTouchEvent(MotionEvent e, WorldRenderer worldRenderer){
-		Plane selectedPlane = worldRenderer.getSelectedPlane(e.getX(), e.getY());
+		//Plane selectedPlane = worldRenderer.getSelectedPlane(e.getX(), e.getY());
 		float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), display);
 		
 		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
@@ -379,7 +381,8 @@ public class Player extends GameObject{
 		return (playerState==PlayerState.FINISH1|| 
 				playerState==PlayerState.FINISH2||
 				playerState==PlayerState.FINISH3||
-				playerState==PlayerState.FINISH4);
+				playerState==PlayerState.FINISH4||
+				playerState==PlayerState.FINISH5);
 	}
 	
 	public boolean isCounterState(){

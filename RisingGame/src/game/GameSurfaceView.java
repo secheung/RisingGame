@@ -5,6 +5,8 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
+import android.widget.EditText;
 
 public class GameSurfaceView extends GLSurfaceView{
 
@@ -13,6 +15,8 @@ public class GameSurfaceView extends GLSurfaceView{
 	private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
     private WorldRenderer worldRenderer;
     private GameLogic gameLogic;
+    
+    public EditText editBox;
 
     public GameSurfaceView(Context context){
 		super(context);
@@ -27,6 +31,9 @@ public class GameSurfaceView extends GLSurfaceView{
 		
 		gameLogic = new GameLogic(context,worldRenderer);
 		gameLogic.execute();
+		
+		editBox = new EditText(context);
+		editBox.setText("Hello Matron");
     }
 
 	@Override

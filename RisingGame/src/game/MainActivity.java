@@ -2,6 +2,8 @@ package game;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.ViewGroup;
+import android.widget.EditText;
 
 public class MainActivity extends Activity {
 
@@ -13,6 +15,8 @@ public class MainActivity extends Activity {
 
 		surfaceView = new GameSurfaceView(this);
 		setContentView(surfaceView);
+		
+		addContentView(surfaceView.editBox, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 	}
 	
     @Override

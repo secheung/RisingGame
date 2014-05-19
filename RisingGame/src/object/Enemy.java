@@ -60,15 +60,15 @@ public class Enemy extends GameObject {
 		this.z = -0.9f+index*0.01f;
 		this.playerRef = player;
 		animations = new HashMap<GameObjectState, Plane>();
-		animations.put(EnemyState.STAND, new Plane(R.drawable.enemy_stance, name+"_"+EnemyState.STAND.getName(), width, height, x, y, z, 4, 7));
-		animations.put(EnemyState.FREEZE, new Plane(R.drawable.enemy_stance, name+"_"+EnemyState.STAND.getName(), width, height, x, y, z, 4, 7));
-		animations.put(EnemyState.RUN, new Plane(R.drawable.enemy_run, name+"_"+EnemyState.RUN.getName(), width, height, x, y, z, 11, 3));
-		animations.put(EnemyState.WALK, new Plane(R.drawable.enemy_run, name+"_"+EnemyState.WALK.getName(), width, height, x, y, z, 11, 3));
-		animations.put(EnemyState.JUMP_BACK, new Plane(R.drawable.enemy_jump_back, name+"_"+EnemyState.JUMP_BACK.getName(), width, height, x, y, z, 2, 13));
-		animations.put(EnemyState.CROSS_ROLL, new Plane(R.drawable.enemy_cross_roll, name+"_"+EnemyState.CROSS_ROLL.getName(), width, height, x, y, z, 4, 5));
-		animations.put(EnemyState.DEAD, new Plane(R.drawable.enemy_stance, name+"_"+EnemyState.DEAD.getName(), width, height, x, y, z, 4, 7));
-		animations.put(EnemyState.STRIKE1, new Plane(R.drawable.enemy_strike1, name+"_"+EnemyState.STRIKE1.getName(), width, height, x, y, z, 4, 6));
-		animations.put(EnemyState.STRUCK1, new Plane(R.drawable.enemy_struck1, name+"_"+EnemyState.STRUCK1.getName(), width, height, x, y, z, 2, 7));
+		animations.put(EnemyState.STAND, new Plane(R.drawable.enemy_stance, name+"_"+EnemyState.STAND.getName(), width, height, 4, 7));
+		animations.put(EnemyState.FREEZE, new Plane(R.drawable.enemy_stance, name+"_"+EnemyState.STAND.getName(), width, height, 4, 7));
+		animations.put(EnemyState.RUN, new Plane(R.drawable.enemy_run, name+"_"+EnemyState.RUN.getName(), width, height, 11, 3));
+		animations.put(EnemyState.WALK, new Plane(R.drawable.enemy_run, name+"_"+EnemyState.WALK.getName(), width, height, 11, 3));
+		animations.put(EnemyState.JUMP_BACK, new Plane(R.drawable.enemy_jump_back, name+"_"+EnemyState.JUMP_BACK.getName(), width, height, 2, 13));
+		animations.put(EnemyState.CROSS_ROLL, new Plane(R.drawable.enemy_cross_roll, name+"_"+EnemyState.CROSS_ROLL.getName(), width, height, 4, 5));
+		animations.put(EnemyState.DEAD, new Plane(R.drawable.enemy_stance, name+"_"+EnemyState.DEAD.getName(), width, height, 4, 7));
+		animations.put(EnemyState.STRIKE1, new Plane(R.drawable.enemy_strike1, name+"_"+EnemyState.STRIKE1.getName(), width, height, 4, 6));
+		animations.put(EnemyState.STRUCK1, new Plane(R.drawable.enemy_struck1, name+"_"+EnemyState.STRUCK1.getName(), width, height, 2, 7));
 		
 		struck = 3;
 		unfreezeTimeCount = 0;

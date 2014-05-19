@@ -11,6 +11,7 @@ import object.Enemy.EnemyState;
 import object.Player.PlayerState;
 import object.GameObject;
 import object.Player;
+import structure.HitBox;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -56,7 +57,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		worldRenderer.addCustomShader(	WorldRenderer.WORLD_SHADER,
 										R.raw.vertex_shader_texture,
 										R.raw.fragment_shader_texture,
-										new String[]{"a_Position","a_Color","a_Normal","a_TexCoordinate"}
+										new String[]{"a_Position","a_Color","a_Normal","a_TexCoordinate","a_useTexture"}
 									);
 		
 		gameObjects = new LinkedHashMap<String,GameObject>();
@@ -120,11 +121,11 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		}
 	}
 	
-	public void draw(){
+	public void updateDrawData(){
 		worldRenderer.setCamera(camX, camY, camZ);
 		Player player = null;
 		for(GameObject gameObject : gameObjects.values()){
-			gameObject.draw(worldRenderer);
+			gameObject.updateDrawData(worldRenderer);
 			if(gameObject instanceof Player){
 				player = (Player)gameObject;
 			}
@@ -260,7 +261,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	    while( game_is_running ) {
 	        while( System.currentTimeMillis() > next_game_tick) {
 	            update();
-	            draw();
+	            updateDrawData();
 	            next_game_tick += SKIP_TICKS;
 	        }
 	    }

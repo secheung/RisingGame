@@ -51,8 +51,8 @@ public abstract class GameObject {
 	public abstract void updateAfterDisplay();
 	public abstract void passTouchEvent(MotionEvent e, WorldRenderer worldRenderer);
 	
-	public void draw(WorldRenderer worldRenderer){
-		worldRenderer.drawObject(display, x, y, z);
+	public void updateDrawData(WorldRenderer worldRenderer){
+		worldRenderer.updateDrawObject(display, x, y, z);
 	}
 	
 	public void loadAnimIntoRenderer(WorldRenderer worldRenderer){

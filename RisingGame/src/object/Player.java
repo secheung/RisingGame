@@ -2,9 +2,13 @@ package object;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import object.Enemy.EnemyState;
 import object.GameObject.Direction;
+import structure.ActionData;
+import structure.HitBox;
 import android.util.Log;
 import android.view.MotionEvent;
 import engine.open2d.draw.Plane;
@@ -130,6 +134,7 @@ public class Player extends GameObject{
 	private static float COLLISION_BUFFER = 1.0f;
 	public static float CANCEL_STRIKE_FRAMES = 8;
 	
+	private List<ActionData> actionData;
 	private Enemy struckEnemy;
 	private PlayerState playerState;
 	private float moveToX;
@@ -153,25 +158,53 @@ public class Player extends GameObject{
 		this.finishIndex = 1;
 		this.counterIndex = 1;
 		
+		actionData = new LinkedList<ActionData>();
+		
 		animations = new HashMap<GameObjectState, Plane>();
-		animations.put(PlayerState.STAND, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.STAND.getName(), width, height, x, y, z, 4, 7));
-		animations.put(PlayerState.DEAD, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.DEAD.getName(), width, height, x, y, z, 4, 7));
-		animations.put(PlayerState.RUN, new Plane(R.drawable.rising_run, name+"_"+PlayerState.RUN.getName(), width, height, x, y, z, 11, 3));
-		animations.put(PlayerState.DODGE, new Plane(R.drawable.rising_dodge, name+"_"+PlayerState.DODGE.getName(), width, height, x, y, z, 3, 3));
-		animations.put(PlayerState.STRIKE1, new Plane(R.drawable.rising_strike1, name+"_"+PlayerState.STRIKE1.getName(), width, height, x, y, z, 2, 7));
-		animations.put(PlayerState.STRIKE2, new Plane(R.drawable.rising_strike2, name+"_"+PlayerState.STRIKE2.getName(), width, height, x, y, z, 2, 7));
-		animations.put(PlayerState.STRIKE3, new Plane(R.drawable.rising_strike3, name+"_"+PlayerState.STRIKE3.getName(), width, height, x, y, z, 2, 7));
-		animations.put(PlayerState.FINISH1, new Plane(R.drawable.rising_finish1, name+"_"+PlayerState.FINISH1.getName(), width, height, x, y, z, 8, 5));
-		animations.put(PlayerState.FINISH2, new Plane(R.drawable.rising_finish2, name+"_"+PlayerState.FINISH2.getName(), width, height, x, y, z, 4, 8));
-		animations.put(PlayerState.FINISH3, new Plane(R.drawable.rising_finish3, name+"_"+PlayerState.FINISH3.getName(), width, height, x, y, z, 5, 8));
-		animations.put(PlayerState.FINISH4, new Plane(R.drawable.rising_finish4, name+"_"+PlayerState.FINISH4.getName(), width, height, x, y, z, 5, 8));
-		animations.put(PlayerState.FINISH5, new Plane(R.drawable.rising_finish5, name+"_"+PlayerState.FINISH5.getName(), width, height, x, y, z, 5, 8));
-		animations.put(PlayerState.COUNTER1, new Plane(R.drawable.rising_counter1, name+"_"+PlayerState.COUNTER1.getName(), width, height, x, y, z, 6, 6));
+		animations.put(PlayerState.STAND, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.STAND.getName(), width, height, 4, 7));
+		
+		ActionData data = new ActionData(name+"_"+PlayerState.STAND.getName(),this);
+		data.addHitBox(0.0f, 0.0f,width - 0.5f,height - 1.58f);
+		actionData.add(data);
+		
+		animations.put(PlayerState.DEAD, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.DEAD.getName(), width, height, 4, 7));
+		animations.put(PlayerState.RUN, new Plane(R.drawable.rising_run, name+"_"+PlayerState.RUN.getName(), width, height, 11, 3));
+		animations.put(PlayerState.DODGE, new Plane(R.drawable.rising_dodge, name+"_"+PlayerState.DODGE.getName(), width, height, 3, 3));
+		animations.put(PlayerState.STRIKE1, new Plane(R.drawable.rising_strike1, name+"_"+PlayerState.STRIKE1.getName(), width, height, 2, 7));
+		animations.put(PlayerState.STRIKE2, new Plane(R.drawable.rising_strike2, name+"_"+PlayerState.STRIKE2.getName(), width, height, 2, 7));
+		animations.put(PlayerState.STRIKE3, new Plane(R.drawable.rising_strike3, name+"_"+PlayerState.STRIKE3.getName(), width, height, 2, 7));
+		animations.put(PlayerState.FINISH1, new Plane(R.drawable.rising_finish1, name+"_"+PlayerState.FINISH1.getName(), width, height, 8, 5));
+		animations.put(PlayerState.FINISH2, new Plane(R.drawable.rising_finish2, name+"_"+PlayerState.FINISH2.getName(), width, height, 4, 8));
+		animations.put(PlayerState.FINISH3, new Plane(R.drawable.rising_finish3, name+"_"+PlayerState.FINISH3.getName(), width, height, 5, 8));
+		animations.put(PlayerState.FINISH4, new Plane(R.drawable.rising_finish4, name+"_"+PlayerState.FINISH4.getName(), width, height, 5, 8));
+		animations.put(PlayerState.FINISH5, new Plane(R.drawable.rising_finish5, name+"_"+PlayerState.FINISH5.getName(), width, height, 5, 8));
+		animations.put(PlayerState.COUNTER1, new Plane(R.drawable.rising_counter1, name+"_"+PlayerState.COUNTER1.getName(), width, height, 6, 6));
 		
 		this.display = animations.get(PlayerState.STAND);
 		this.direction = Direction.RIGHT;
 	}
 
+	public void updateDrawData(WorldRenderer worldRenderer){
+		super.updateDrawData(worldRenderer);
+		for(ActionData data : actionData){
+			data.updateDrawData(worldRenderer);
+		}
+	}
+	
+	public void loadAnimIntoRenderer(WorldRenderer worldRenderer){
+		super.loadAnimIntoRenderer(worldRenderer);
+		for(ActionData data : actionData){
+			data.loadAnimIntoRenderer(worldRenderer);
+		}
+	}
+	
+	public void unloadAnimFromRenderer(WorldRenderer worldRenderer){
+		super.unloadAnimFromRenderer(worldRenderer);
+		for(Plane animation : animations.values()){
+			worldRenderer.removeDrawShape(animation);
+		}
+	}
+	
 	public PlayerState getPlayerState() {
 		return playerState;
 	}

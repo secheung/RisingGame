@@ -5,12 +5,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 import object.Enemy;
 import object.Enemy.EnemyState;
 import object.Player.PlayerState;
 import object.GameObject;
 import object.Player;
+import structure.ActionData;
+import structure.ActionDataTool;
 import structure.HitBox;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -63,6 +66,10 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		gameObjects = new LinkedHashMap<String,GameObject>();
 		
 		Player player = new Player(gameObjects, 3.0f, -1.0f, 3.5f, 3.5f);
+		ActionDataTool parser = new ActionDataTool(context);
+		parser.readFile(R.raw.jack_frame_data);
+		List<ActionData> data = parser.parseFrameData(player);
+		player.setActionData(data);
 		player.loadAnimIntoRenderer(worldRenderer);
 		
 		Enemy enemy = new Enemy(gameObjects, (Player)gameObjects.get("player"), 0, (float)(5.7f), -1.0f, 3.5f, 3.5f);

@@ -1,0 +1,19 @@
+{
+	"stand_action":{
+		"name":"jack_stand",
+		"plane_data":{
+			"width":3.5,
+			"height":3.5,
+			"rows":4,
+			"column":7
+		},
+		"hurt_box":[
+					{"left":0.0,"bottom":0.0,"right":3.5,"top":1.5},
+					{"left":0.0,"bottom":1.0,"right":3.5,"top":2.5}
+		],
+		"hit_box":[
+					{"left":0.0,"bottom":0.0,"right":3.5,"top":1.5},
+					{"left":0.0,"bottom":1.0,"right":3.5,"top":2.5}
+		]
+	}
+}

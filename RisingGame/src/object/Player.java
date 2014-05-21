@@ -7,6 +7,7 @@ import java.util.List;
 
 import object.Enemy.EnemyState;
 import object.GameObject.Direction;
+import object.GameObject.GameObjectState;
 import structure.ActionData;
 import structure.HitBox;
 import android.util.Log;
@@ -135,6 +136,7 @@ public class Player extends GameObject{
 	public static float CANCEL_STRIKE_FRAMES = 8;
 	
 	private List<ActionData> actionData;
+
 	private Enemy struckEnemy;
 	private PlayerState playerState;
 	private float moveToX;
@@ -158,14 +160,14 @@ public class Player extends GameObject{
 		this.finishIndex = 1;
 		this.counterIndex = 1;
 		
-		actionData = new LinkedList<ActionData>();
-		
 		animations = new HashMap<GameObjectState, Plane>();
 		animations.put(PlayerState.STAND, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.STAND.getName(), width, height, 4, 7));
 		
+		/*
 		ActionData data = new ActionData(name+"_"+PlayerState.STAND.getName(),this);
-		data.addHitBox(0.0f, 0.0f,width - 0.5f,height - 1.58f);
+		data.addHitBox(0.0f, 0.0f,width,height);
 		actionData.add(data);
+		*/
 		
 		animations.put(PlayerState.DEAD, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.DEAD.getName(), width, height, 4, 7));
 		animations.put(PlayerState.RUN, new Plane(R.drawable.rising_run, name+"_"+PlayerState.RUN.getName(), width, height, 11, 3));
@@ -203,6 +205,10 @@ public class Player extends GameObject{
 		for(Plane animation : animations.values()){
 			worldRenderer.removeDrawShape(animation);
 		}
+	}
+	
+	public void setActionData(List<ActionData> actionData) {
+		this.actionData = actionData;
 	}
 	
 	public PlayerState getPlayerState() {
@@ -287,7 +293,7 @@ public class Player extends GameObject{
 	@Override
 	public void updateDisplay() {
 		if(display != animations.get(playerState))
-			switchAnimation(playerState);
+			this.switchAnimation(playerState);
 		
 		if(direction==Direction.RIGHT){
 			display.flipTexture(false);
@@ -295,7 +301,12 @@ public class Player extends GameObject{
 			display.flipTexture(true);
 		}
 	}
-		
+	
+	public void switchAnimation(GameObjectState animToSwitch){
+		super.switchAnimation(animToSwitch);
+		//switch action data here
+	}
+	
 	@Override
 	public void updateAfterDisplay() {
 		if(display.isPlayed()){

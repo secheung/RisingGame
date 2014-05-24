@@ -6,18 +6,17 @@ import engine.open2d.draw.Plane;
 public class DataBox {
 
 	
-	protected float red = 1.0f;
-	protected float green = 0.0f;
-	protected float blue = 0.0f;
-	protected float alpha = 0.5f;
+	protected float red;
+	protected float green;
+	protected float blue;
+	protected float alpha;
 	protected String type;
 	
-	private RectF boxData;
-	private Plane drawBox;
+	protected RectF boxData;
+	protected Plane drawBox;
 	
-	public DataBox(float offsetX, float offsetY, float width, float height){
-		boxData = new RectF(offsetX,offsetY,width,height);
-		drawBox = new Plane(type,width,height,red,green,blue,alpha);
+	public DataBox(float left, float top, float right,float bottom){
+		boxData = new RectF(left,top,right,bottom);
 	}
 	
 	public RectF getBoxData() {

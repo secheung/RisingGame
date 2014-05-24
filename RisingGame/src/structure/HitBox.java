@@ -12,8 +12,9 @@ public class HitBox extends DataBox{
 	float alpha = 0.5f;
 	String type = "hitbox";
 	
-	public HitBox(float offsetX, float offsetY, float width, float height){
-		super(offsetX,offsetY,width,height);
+	public HitBox(float left, float top, float right, float bottom){
+		super(left,top,right,bottom);
+		drawBox = new Plane(type,right-left,top-bottom,red,green,blue,alpha);
 	}
 	
 }

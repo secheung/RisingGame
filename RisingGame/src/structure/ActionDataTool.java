@@ -22,10 +22,10 @@ import android.util.Log;
 public class ActionDataTool {
 	private static String NAME = "name";
 	private static String HITBOX = "hit_box";
-	private static String OFFSETX = "left";
-	private static String OFFSETY = "bottom";
-	private static String WIDTH = "right";
-	private static String HEIGHT = "top";
+	private static String LEFT = "left";
+	private static String BOTTOM = "bottom";
+	private static String RIGHT = "right";
+	private static String TOP = "top";
 	
 	
 	Context context;
@@ -101,12 +101,12 @@ public class ActionDataTool {
 		
 		for(int index = 0; index < hitBoxData.length(); index++){
 			JSONObject boundsData = hitBoxData.getJSONObject(index);
-			float offsetX = (float) boundsData.getDouble(OFFSETX);
-			float offsetY = (float) boundsData.getDouble(OFFSETY);
-			float width = (float) boundsData.getDouble(WIDTH);
-			float height = (float) boundsData.getDouble(HEIGHT);
+			float left = (float) boundsData.getDouble(LEFT);
+			float bottom = (float) boundsData.getDouble(BOTTOM);
+			float right = (float) boundsData.getDouble(RIGHT);
+			float top = (float) boundsData.getDouble(TOP);
 			
-			HitBox box = new HitBox(offsetX, offsetY, width, height);
+			HitBox box = new HitBox(left, top, right, bottom);
 			hitBoxes.add(box);
 		}
 		

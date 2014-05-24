@@ -33,8 +33,9 @@ public class ActionData {
 	
 	public void updateDrawData(WorldRenderer worldRenderer){
 		for(HitBox box : hitBoxes){
-			//Log.d("box data", "left: "+box.getBoxData().left+" top: "+box.getBoxData().top);
-			worldRenderer.updateDrawObject(box.getDrawBox(), pairedObj.getX(), pairedObj.getY(),pairedObj.getZ()+0.01f);
+			float boxOffsetX = box.getBoxData().left+pairedObj.getX();
+			float boxOffsetY = box.getBoxData().bottom+pairedObj.getY();
+			worldRenderer.updateDrawObject(box.getDrawBox(), boxOffsetX, boxOffsetY,pairedObj.getZ()+0.01f);
 			box.getDrawBox().drawEnable();
 		}
 	}

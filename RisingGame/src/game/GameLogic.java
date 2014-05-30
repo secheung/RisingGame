@@ -65,18 +65,20 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		
 		gameObjects = new LinkedHashMap<String,GameObject>();
 		
-		Player player = new Player(gameObjects, 3.0f, -1.0f, 3.5f, 3.5f);
 		ActionDataTool parser = new ActionDataTool(context);
 		parser.readFile(R.raw.jack_frame_data);
-		List<ActionData> data = parser.parseFrameData(player);
-		player.setActionData(data);
+		List<ActionData> playerData = parser.parseFrameData();
+		
+		Player player = new Player(gameObjects, playerData, 3.0f, -1.0f);
 		player.loadAnimIntoRenderer(worldRenderer);
 		
+		/*
 		Enemy enemy = new Enemy(gameObjects, (Player)gameObjects.get("player"), 0, (float)(5.7f), -1.0f, 3.5f, 3.5f);
 		enemy.getDisplay().drawDisable();
 		enemy.loadAnimIntoRenderer(worldRenderer);
 		
 		enemyIndex = 1;
+		*/
 		
 		gameObjects.put(player.getName(), player);
 	}
@@ -84,10 +86,10 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	public void update(){
 		if(gameObjects.size() <= enemyLimit && gameRun){
 //			Enemy enemy = new Enemy(gameObjects, (Player)gameObjects.get("player"), enemyIndex, (float)(3.7f*Math.random()-7.4f*Math.random()), -1.0f, 3.5f, 3.5f);
-			Enemy enemy = new Enemy(gameObjects, (Player)gameObjects.get("player"), enemyIndex, (float)(3.7f*Math.random()-7.4f*Math.random()), -1.0f, 3.5f, 3.5f);
-			enemy.loadAnimIntoRenderer(worldRenderer);
-			gameObjects.put(enemy.getName(), enemy);
-			enemyIndex++;
+			//Enemy enemy = new Enemy(gameObjects, (Player)gameObjects.get("player"), enemyIndex, PUT DATA HERE, (float)(3.7f*Math.random()-7.4f*Math.random()), -1.0f);
+			//enemy.loadAnimIntoRenderer(worldRenderer);
+			//gameObjects.put(enemy.getName(), enemy);
+			//enemyIndex++;
 		}
 		
 		ArrayList<String> removeObjects = new ArrayList<String>();

@@ -21,23 +21,32 @@ import game.open2d.R;
 
 public class Player extends GameObject{
 	public static enum PlayerState implements GameObjectState{
-		STAND("stand",0f,0f,0f),
-		RUN("run",0f,0f,0f),
-		DODGE("dodge",0f,0f,0f),
-		DEAD("dead",0f,0f,0f),
-		STRIKE1("strike1",-1.0f,0f,0f),
-		STRIKE2("strike2",-1.0f,0f,0f),
-		STRIKE3("strike3",-1.0f,0f,0f),
-		FINISH1("finish1",0f,0f,0f),
-		FINISH2("finish2",0f,0f,0f),
-		FINISH3("finish3",0f,0f,0f),
-		FINISH4("finish4",0f,0f,0f),
-		FINISH5("finish5",0f,0f,0f),
-		COUNTER1("counter1",0f,0f,0f);
+		STAND("jack_stand"),
+		RUN("jack_run"),
+		DODGE("jack_dodge"),
+		DEAD("jack_dead"),
+		STRIKE1("jack_strike1"),
+		STRIKE2("jack_strike2"),
+		STRIKE3("strike3"),
+		FINISH1("finish1"),
+		FINISH2("finish2"),
+		FINISH3("finish3"),
+		FINISH4("finish4"),
+		FINISH5("finish5"),
+		COUNTER1("counter1");
 		
 		private static int STRIKE_NUMBERS = 3;
 		private static int FINISH_NUMBERS = 5;
 		private static int COUNTER_NUMBERS = 1;
+		
+		public static PlayerState getStateFromName(String name){
+			for(PlayerState playerState : PlayerState.values()){
+				if(name.equals(playerState.getName())){
+					return playerState;
+				}
+			}
+			return null;
+		}
 		
 		public static PlayerState getRandomStrike(){
 			double randNum = Math.random();
@@ -99,43 +108,24 @@ public class Player extends GameObject{
 		}
 		
 		String name;
-		float offSnapX;
-		float offSnapY;
-		float offSnapZ;
-		PlayerState(String n, float x, float y, float z){
+		PlayerState(String n){
 			name = n;
-			offSnapX = x;
-			offSnapY = y;
-			offSnapZ = z;
 		}
 		
 		public String getName(){
 			return name;
 		}
-		
-		public float getOffSnapX(){
-			return offSnapX;
-		}
-		
-		public float getOffSnapY(){
-			return offSnapY;
-		}
-		
-		public float getOffSnapZ(){
-			return offSnapZ;
-		}
 	}
 	
 	public static String OBJNAME = "player";
 	
+	private static PlayerState INIT_STATE = PlayerState.STAND;
 	private static float WALK_SPEED = 0.2f;
 	private static float STRIKE_SPEED = 0.1f;
 	private static float DODGE_SPEED = 0.23f;
 	private static float BUFFER = 0.4f;
 	private static float COLLISION_BUFFER = 1.0f;
 	public static float CANCEL_STRIKE_FRAMES = 8;
-	
-	private List<ActionData> actionData;
 
 	private Enemy struckEnemy;
 	private PlayerState playerState;
@@ -146,10 +136,10 @@ public class Player extends GameObject{
 	private int finishIndex;
 	private int counterIndex;
 	
-	public Player(LinkedHashMap<String,GameObject> gameObjects, float x, float y, float width, float height){
-		super(gameObjects,x,y,width,height);
+	public Player(LinkedHashMap<String,GameObject> gameObjects, List<ActionData> actionData, float x, float y){
+		super(gameObjects,actionData,INIT_STATE,x,y);
 		
-		playerState = PlayerState.STAND;
+		playerState = INIT_STATE;
 		this.name = OBJNAME;
 		
 		this.moveToX = x;
@@ -160,55 +150,41 @@ public class Player extends GameObject{
 		this.finishIndex = 1;
 		this.counterIndex = 1;
 		
-		animations = new HashMap<GameObjectState, Plane>();
-		animations.put(PlayerState.STAND, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.STAND.getName(), width, height, 4, 7));
-		
-		/*
-		ActionData data = new ActionData(name+"_"+PlayerState.STAND.getName(),this);
-		data.addHitBox(0.0f, 0.0f,width,height);
-		actionData.add(data);
-		*/
-		
-		animations.put(PlayerState.DEAD, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.DEAD.getName(), width, height, 4, 7));
-		animations.put(PlayerState.RUN, new Plane(R.drawable.rising_run, name+"_"+PlayerState.RUN.getName(), width, height, 11, 3));
-		animations.put(PlayerState.DODGE, new Plane(R.drawable.rising_dodge, name+"_"+PlayerState.DODGE.getName(), width, height, 3, 3));
-		animations.put(PlayerState.STRIKE1, new Plane(R.drawable.rising_strike1, name+"_"+PlayerState.STRIKE1.getName(), width, height, 2, 7));
-		animations.put(PlayerState.STRIKE2, new Plane(R.drawable.rising_strike2, name+"_"+PlayerState.STRIKE2.getName(), width, height, 2, 7));
-		animations.put(PlayerState.STRIKE3, new Plane(R.drawable.rising_strike3, name+"_"+PlayerState.STRIKE3.getName(), width, height, 2, 7));
-		animations.put(PlayerState.FINISH1, new Plane(R.drawable.rising_finish1, name+"_"+PlayerState.FINISH1.getName(), width, height, 8, 5));
-		animations.put(PlayerState.FINISH2, new Plane(R.drawable.rising_finish2, name+"_"+PlayerState.FINISH2.getName(), width, height, 4, 8));
-		animations.put(PlayerState.FINISH3, new Plane(R.drawable.rising_finish3, name+"_"+PlayerState.FINISH3.getName(), width, height, 5, 8));
-		animations.put(PlayerState.FINISH4, new Plane(R.drawable.rising_finish4, name+"_"+PlayerState.FINISH4.getName(), width, height, 5, 8));
-		animations.put(PlayerState.FINISH5, new Plane(R.drawable.rising_finish5, name+"_"+PlayerState.FINISH5.getName(), width, height, 5, 8));
-		animations.put(PlayerState.COUNTER1, new Plane(R.drawable.rising_counter1, name+"_"+PlayerState.COUNTER1.getName(), width, height, 6, 6));
-		
-		this.display = animations.get(PlayerState.STAND);
+		this.currentAction = this.actionData.get(INIT_STATE);
 		this.direction = Direction.RIGHT;
 	}
-
-	public void updateDrawData(WorldRenderer worldRenderer){
-		super.updateDrawData(worldRenderer);
+	
+	@Override
+	public void setupAnimRef() {
+		animationRef = new HashMap<GameObjectState, Integer>();
+		//animationRef.put(PlayerState.STAND, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.STAND.getName(), width, height, 4, 7));
+		animationRef.put(PlayerState.STAND, R.drawable.jack_stand);
+		animationRef.put(PlayerState.DEAD, R.drawable.rising_stance);
+		animationRef.put(PlayerState.RUN, R.drawable.jack_run);
+		animationRef.put(PlayerState.DODGE, R.drawable.rising_dodge);
+		animationRef.put(PlayerState.STRIKE1, R.drawable.rising_strike1);
+		animationRef.put(PlayerState.STRIKE2, R.drawable.rising_strike2);
+		animationRef.put(PlayerState.STRIKE3, R.drawable.rising_strike3);
+		animationRef.put(PlayerState.FINISH1, R.drawable.rising_finish1);
+		animationRef.put(PlayerState.FINISH2, R.drawable.rising_finish2);
+		animationRef.put(PlayerState.FINISH3, R.drawable.rising_finish3);
+		animationRef.put(PlayerState.FINISH4, R.drawable.rising_finish4);
+		animationRef.put(PlayerState.FINISH5, R.drawable.rising_finish5);
+		animationRef.put(PlayerState.COUNTER1,R.drawable.rising_counter1);
+		
+	}
+	
+	@Override
+	public void mapActionData(List<ActionData> actionData) {
 		for(ActionData data : actionData){
-			data.updateDrawData(worldRenderer);
+			PlayerState state = PlayerState.getStateFromName(data.getName());
+			if(state != null){
+				int refID = animationRef.get(state);
+				data.createAnimation(refID);
+				this.actionData.put(state, data);
+			}
 		}
-	}
-	
-	public void loadAnimIntoRenderer(WorldRenderer worldRenderer){
-		super.loadAnimIntoRenderer(worldRenderer);
-		for(ActionData data : actionData){
-			data.loadAnimIntoRenderer(worldRenderer);
-		}
-	}
-	
-	public void unloadAnimFromRenderer(WorldRenderer worldRenderer){
-		super.unloadAnimFromRenderer(worldRenderer);
-		for(Plane animation : animations.values()){
-			worldRenderer.removeDrawShape(animation);
-		}
-	}
-	
-	public void setActionData(List<ActionData> actionData) {
-		this.actionData = actionData;
+		
 	}
 	
 	public PlayerState getPlayerState() {
@@ -221,7 +197,7 @@ public class Player extends GameObject{
 
 	@Override
 	public void passTouchEvent(MotionEvent e, WorldRenderer worldRenderer){
-		//Plane selectedPlane = worldRenderer.getSelectedPlane(e.getX(), e.getY());
+		Plane display = currentAction.getAnimation();
 		float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), display);
 		
 		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
@@ -267,11 +243,11 @@ public class Player extends GameObject{
 		if(isStrikeState()){
 			if(struckEnemy.getX() < x) {
 				direction = Direction.LEFT;
-				x = struckEnemy.getX()-playerState.getOffSnapX();
+				//x = struckEnemy.getX()-playerState.getOffSnapX();
 				moveToX = getMidX();
 			} else if(struckEnemy.getX() > x){
 				direction = Direction.RIGHT;
-				x = struckEnemy.getX()+playerState.getOffSnapX();
+				//x = struckEnemy.getX()+playerState.getOffSnapX();
 				moveToX = getMidX();
 			}
 		}
@@ -292,7 +268,8 @@ public class Player extends GameObject{
 	
 	@Override
 	public void updateDisplay() {
-		if(display != animations.get(playerState))
+		Plane display = currentAction.getAnimation();
+		if(currentAction != actionData.get(playerState))
 			this.switchAnimation(playerState);
 		
 		if(direction==Direction.RIGHT){
@@ -309,6 +286,7 @@ public class Player extends GameObject{
 	
 	@Override
 	public void updateAfterDisplay() {
+		Plane display = currentAction.getAnimation();
 		if(display.isPlayed()){
 			if(isStrikeState()){
 				display.resetAnimation();
@@ -360,7 +338,7 @@ public class Player extends GameObject{
 	}
 
 	private void executeEnemyInteraction(Enemy enemy){
-		
+		Plane display = currentAction.getAnimation();
 		if(enemy.isStrikeState()){
 			if(enemy.isStrikingPlayer() &&
 				enemy.getDisplay().getFrame() == Enemy.COLLISION_FRAME){

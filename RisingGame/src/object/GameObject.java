@@ -2,7 +2,11 @@ package object;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
+import structure.ActionData;
+
+import android.R;
 import android.util.Log;
 import android.view.MotionEvent;
 import engine.open2d.draw.Plane;
@@ -28,22 +32,34 @@ public abstract class GameObject {
 	protected float width;
 	protected float height;
 	
-	protected Plane display;
-	protected HashMap<GameObjectState, Plane> animations;
+	protected ActionData currentAction;
+	//protected Plane display;
+	protected HashMap<GameObjectState, Integer> animationRef;
 	protected String name;
 	public boolean selected;
 	protected Gesture gesture;
 	
 	protected LinkedHashMap<String,GameObject> gameObjects;
+	protected LinkedHashMap<GameObjectState, ActionData> actionData;
 	
-	public GameObject(LinkedHashMap<String,GameObject> gameObjects, float x, float y, float width, float height){
+	public GameObject(LinkedHashMap<String,GameObject> gameObjects, List<ActionData> actionData, GameObjectState initState, float x, float y){
 		this.x = x;
 		this.y = y;
-		this.width = width;
-		this.height = height;
 		
 		this.gameObjects = gameObjects;
+		this.actionData = new LinkedHashMap<GameObjectState, ActionData>();
+		this.setupAnimRef();
+		this.mapActionData(actionData);
+		
+		currentAction = this.actionData.get(initState);
+
+		this.width = currentAction.getPlaneData().getWidth();
+		this.height = currentAction.getPlaneData().getHeight();
 	}
+	
+	
+	public abstract void setupAnimRef();
+	public abstract void mapActionData(List<ActionData> actionData);
 	
 	public abstract void updateState();
 	public abstract void updateLogic();
@@ -52,26 +68,31 @@ public abstract class GameObject {
 	public abstract void passTouchEvent(MotionEvent e, WorldRenderer worldRenderer);
 	
 	public void updateDrawData(WorldRenderer worldRenderer){
-		worldRenderer.updateDrawObject(display, x, y, z);
+		//worldRenderer.updateDrawObject(display, x, y, z);
+		currentAction.updateDrawData(worldRenderer,this);
 	}
 	
 	public void loadAnimIntoRenderer(WorldRenderer worldRenderer){
-		for(Plane animation : animations.values()){
-			worldRenderer.addDrawShape(animation);
+		for(ActionData data : actionData.values()){
+			data.loadAnimIntoRenderer(worldRenderer);
 		}
 	}
 	
 	public void unloadAnimFromRenderer(WorldRenderer worldRenderer){
-		for(Plane animation : animations.values()){
-			worldRenderer.removeDrawShape(animation);
+		for(ActionData data : actionData.values()){
+			data.unloadAnimFromRenderer(worldRenderer);
 		}
 	}
 	
 	public void switchAnimation(GameObjectState animToSwitch){
-		display.drawDisable();
-		display.resetAnimation();
-		display = animations.get(animToSwitch);
-		display.drawEnable();
+		//Plane display = currentAction.getAnimation();
+		currentAction.drawDisable();
+		currentAction.getAnimation().resetAnimation();
+		currentAction = actionData.get(animToSwitch);
+		currentAction.drawEnable();
+		
+		//Log.d("debug display",""+(display.isDrawEnabled()));
+		//Log.d("debug currentAction",""+(currentAction.getAnimation().isDrawEnabled()));
 	}
 	
 	public void update() {
@@ -94,7 +115,7 @@ public abstract class GameObject {
 	}
 
 	public Plane getDisplay(){
-		return display;
+		return currentAction.getAnimation();
 	}
 	
 	public float getX() {

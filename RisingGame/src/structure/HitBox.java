@@ -6,15 +6,14 @@ import android.graphics.RectF;
 import android.util.Log;
 
 public class HitBox extends DataBox{
-	float red = 1.0f;
-	float green = 0.0f;
-	float blue = 0.0f;
-	float alpha = 0.5f;
-	String type = "hitbox";
+	private float red = 1.0f;
+	private float green = 0.0f;
+	private float blue = 0.0f;
+	private float alpha = 0.5f;
+	private String type = "hitbox";
 	
-	public HitBox(float left, float top, float right, float bottom){
-		super(left,top,right,bottom);
+	public HitBox(float left, float top, float right, float bottom, int activeFrame){
+		super(left,top,right,bottom,activeFrame);
 		drawBox = new Plane(type,right-left,top-bottom,red,green,blue,alpha);
 	}
-	
 }

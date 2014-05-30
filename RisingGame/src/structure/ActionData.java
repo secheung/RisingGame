@@ -49,7 +49,7 @@ public class ActionData {
 		worldRenderer.updateDrawObject(animation, pairedObj.getX(), pairedObj.getY(), pairedObj.getZ());
 		
 		for(HitBox box : hitBoxes){
-			if(box.getActiveFrame() == animation.getFrame()){
+			if(box.getActiveFrame() == animation.getFrame() || box.getActiveFrame() == -1){
 				float boxOffsetX = box.getBoxData().left+pairedObj.getX();
 				float boxOffsetY = box.getBoxData().bottom+pairedObj.getY();
 				worldRenderer.updateDrawObject(box.getDrawBox(), boxOffsetX, boxOffsetY,pairedObj.getZ()+0.01f);
@@ -60,7 +60,7 @@ public class ActionData {
 		}
 		
 		for(HurtBox box : hurtBoxes){
-			if(box.getActiveFrame() == animation.getFrame()){
+			if(box.getActiveFrame() == animation.getFrame() || box.getActiveFrame() == -1){
 				float boxOffsetX = box.getBoxData().left+pairedObj.getX();
 				float boxOffsetY = box.getBoxData().bottom+pairedObj.getY();
 				worldRenderer.updateDrawObject(box.getDrawBox(), boxOffsetX, boxOffsetY,pairedObj.getZ()+0.01f);

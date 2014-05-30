@@ -121,7 +121,12 @@ public class ActionDataTool {
 			float bottom = (float) boundsData.getDouble(BOTTOM);
 			float right = (float) boundsData.getDouble(RIGHT);
 			float top = (float) boundsData.getDouble(TOP);
-			int activeFrames = boundsData.getInt(ACTIVE_FRAME);
+			int activeFrames;
+			if(boundsData.has(ACTIVE_FRAME)){
+				activeFrames = boundsData.getInt(ACTIVE_FRAME);
+			} else {
+				activeFrames = -1;
+			}
 			HitBox box = new HitBox(left, top, right, bottom, activeFrames);
 			hitBoxes.add(box);
 		}
@@ -138,7 +143,12 @@ public class ActionDataTool {
 			float bottom = (float) boundsData.getDouble(BOTTOM);
 			float right = (float) boundsData.getDouble(RIGHT);
 			float top = (float) boundsData.getDouble(TOP);
-			int activeFrames = boundsData.getInt(ACTIVE_FRAME);
+			int activeFrames;
+			if(boundsData.has(ACTIVE_FRAME)){
+				activeFrames = boundsData.getInt(ACTIVE_FRAME);
+			} else {
+				activeFrames = -1;
+			}
 			HurtBox box = new HurtBox(left, top, right, bottom, activeFrames);
 			hurtBoxes.add(box);
 		}

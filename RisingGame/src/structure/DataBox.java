@@ -14,9 +14,12 @@ public class DataBox {
 	
 	protected RectF boxData;
 	protected Plane drawBox;
+	protected int activeFrame;
 	
-	public DataBox(float left, float top, float right,float bottom){
+	
+	public DataBox(float left, float top, float right,float bottom,int activeFrame){
 		boxData = new RectF(left,top,right,bottom);
+		this.activeFrame = activeFrame;
 	}
 	
 	public RectF getBoxData() {
@@ -27,4 +30,7 @@ public class DataBox {
 		return drawBox;
 	}
 	
+	public int getActiveFrame() {
+		return activeFrame;
+	}
 }

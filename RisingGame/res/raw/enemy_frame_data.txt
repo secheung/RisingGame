@@ -1,0 +1,57 @@
+{
+	"stand_action":{
+		"name":"enemy_stand",
+		"plane_data":{
+			"width":3.5,
+			"height":3.5,
+			"rows":4,
+			"columns":7
+		},
+		"hurt_box":[
+					{"left":0.5,"bottom":0.0,"right":3.5,"top":1.5,"active_frame":1},
+					{"left":1.0,"bottom":1.0,"right":2.5,"top":2.5}
+		],
+		"hit_box":[
+					{"left":0.0,"top":1.5,"right":3.5,"bottom":0.0,"active_frame":4},
+					{"left":0.0,"top":3.5,"right":3.5,"bottom":2.0,"active_frame":5},
+					{"left":0.0,"top":3.5,"right":3.5,"bottom":2.0,"active_frame":6},
+					{"left":0.0,"top":3.5,"right":3.5,"bottom":2.0,"active_frame":7}
+		]
+	},
+	
+	"run_action":{
+		"name":"enemy_run",
+		"plane_data":{
+			"width":3.5,
+			"height":3.5,
+			"rows":11,
+			"columns":3
+		},
+		"hurt_box":[
+					{"left":0.0,"bottom":0.0,"right":1.7,"top":1.5},
+					{"left":0.0,"bottom":1.0,"right":3.5,"top":2.5,"active_frame":2}
+		],
+		"hit_box":[
+					{"left":0.0,"top":1.5,"right":3.5,"bottom":0.0,"active_frame":4},
+					{"left":0.0,"top":3.5,"right":3.5,"bottom":2.0}
+		]
+	},
+	
+	"walk_action":{
+		"name":"enemy_walk",
+		"plane_data":{
+			"width":3.5,
+			"height":3.5,
+			"rows":11,
+			"columns":3
+		},
+		"hurt_box":[
+					{"left":0.0,"bottom":0.0,"right":1.7,"top":1.5},
+					{"left":0.0,"bottom":1.0,"right":3.5,"top":2.5,"active_frame":2}
+		],
+		"hit_box":[
+					{"left":0.0,"top":1.5,"right":3.5,"bottom":0.0,"active_frame":4},
+					{"left":0.0,"top":3.5,"right":3.5,"bottom":2.0}
+		]
+	}
+}

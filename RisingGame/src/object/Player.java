@@ -150,7 +150,7 @@ public class Player extends GameObject{
 		this.finishIndex = 1;
 		this.counterIndex = 1;
 		
-		this.currentAction = this.actionData.get(INIT_STATE);
+		//this.currentAction = this.actionData.get(INIT_STATE);
 		this.direction = Direction.RIGHT;
 	}
 	

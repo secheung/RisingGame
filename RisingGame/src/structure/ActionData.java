@@ -45,7 +45,7 @@ public class ActionData {
 	
 	public void updateDrawData(WorldRenderer worldRenderer, GameObject pairedObj){
 		//Log.d("debug", pairedObj.getX()+ " " + pairedObj.getY() + " " + pairedObj.getZ());
-		//Log.d("debug",""+(animation.isDrawEnabled()));
+		//Log.d("debug",animation.name+" "+(animation.isDrawEnabled()));
 		worldRenderer.updateDrawObject(animation, pairedObj.getX(), pairedObj.getY(), pairedObj.getZ());
 		
 		for(HitBox box : hitBoxes){

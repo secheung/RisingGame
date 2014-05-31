@@ -80,7 +80,8 @@ public class Enemy extends GameObject {
 		unfreezeTimeCount = 0;
 		
 		//display = animations.get(EnemyState.STAND);
-		this.currentAction = this.actionData.get(INIT_STATE);
+		//this.currentAction = this.actionData.get(INIT_STATE);
+		
 	}
 
 	@Override
@@ -130,16 +131,18 @@ public class Enemy extends GameObject {
 			if(Math.abs(checkX - playerRef.getMidX()) > FAR_DIST_TO_PLAYER){
 				enemyState = EnemyState.RUN;
 			}
-			
+			/*
 			if(GameTools.boxColDetect(this, playerRef, COLLISION_BUFFER) && Math.random() > 0.90){
 				enemyState = EnemyState.STRIKE1;
 			}
+			*/
 		} else if(enemyState == EnemyState.RUN || enemyState == EnemyState.WALK){
 			executeMovement();
 		}
 		
-		otherAIMoveInteration();
+		//otherAIMoveInteration();
 		
+		/*
 		if(selected && GameTools.boxColDetect(this, playerRef, COLLISION_BUFFER) && !isDodging()){
 			if(playerRef.isFinishState() || playerRef.isCounterState()){
 				enemyState = EnemyState.DEAD;
@@ -158,6 +161,7 @@ public class Enemy extends GameObject {
 				unfreezeTimeCount = playerRef.getDisplay().getTotalFrame();
 			}
 		}
+		*/
 	}
 
 	@Override

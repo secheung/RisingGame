@@ -71,22 +71,22 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		
 		Player player = new Player(gameObjects, playerData, 3.0f, -1.0f);
 		player.loadAnimIntoRenderer(worldRenderer);
+		gameObjects.put(player.getName(), player);
 		
-		/*
-		Enemy enemy = new Enemy(gameObjects, (Player)gameObjects.get("player"), 0, (float)(5.7f), -1.0f, 3.5f, 3.5f);
-		enemy.getDisplay().drawDisable();
-		enemy.loadAnimIntoRenderer(worldRenderer);
 		
 		enemyIndex = 1;
-		*/
-		
-		gameObjects.put(player.getName(), player);
+		parser.readFile(R.raw.enemy_frame_data);
+		List<ActionData> enemyData = parser.parseFrameData();
+		//Enemy enemy = new Enemy(gameObjects, (Player)gameObjects.get("player"), 0, (float)(5.7f), -1.0f, 3.5f, 3.5f);
+		Enemy enemy = new Enemy(gameObjects, enemyData, (Player)gameObjects.get("player"), enemyIndex, 3.7f, -1.0f);
+		//enemy.getDisplay().drawDisable();
+		enemy.loadAnimIntoRenderer(worldRenderer);
+		gameObjects.put(enemy.getName(), enemy);
 	}
 	
 	public void update(){
 		if(gameObjects.size() <= enemyLimit && gameRun){
-//			Enemy enemy = new Enemy(gameObjects, (Player)gameObjects.get("player"), enemyIndex, (float)(3.7f*Math.random()-7.4f*Math.random()), -1.0f, 3.5f, 3.5f);
-			//Enemy enemy = new Enemy(gameObjects, (Player)gameObjects.get("player"), enemyIndex, PUT DATA HERE, (float)(3.7f*Math.random()-7.4f*Math.random()), -1.0f);
+			//Enemy enemy = new Enemy(gameObjects, (Player)gameObjects.get("player"), enemyIndex, (float)(3.7f*Math.random()-7.4f*Math.random()), -1.0f, 3.5f, 3.5f);
 			//enemy.loadAnimIntoRenderer(worldRenderer);
 			//gameObjects.put(enemy.getName(), enemy);
 			//enemyIndex++;
@@ -100,7 +100,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 				if(enemy.getEnemyState() == EnemyState.DEAD){
 					removeObjects.add(gameObject.getName());
 					if(enemyLimit < 4){
-						enemyLimit++;
+						//enemyLimit++;
 					}
 				}
 			} else if (gameObject instanceof Player){
@@ -111,7 +111,8 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 				}
 			}
 		}
-		
+
+		/*
 		if(!gameRun){
 			for(GameObject gameObject : gameObjects.values()){
 				if(gameObject instanceof Enemy){
@@ -119,7 +120,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 				}
 			}
 		}
-		
+		*/
 		for(Object remove:removeObjects.toArray()){
 			GameObject gameObject = gameObjects.get((String)remove);
 			

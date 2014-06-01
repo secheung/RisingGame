@@ -86,7 +86,7 @@ public class ActionDataTool {
 					data.setHitBoxes(hitBoxes);
 				}
 
-				if(actionJSON.has(HITBOX)){
+				if(actionJSON.has(HURTBOX)){
 					List<HurtBox> hurtBoxes = parseHurtBoxData(actionJSON.getJSONArray(HURTBOX));
 					data.setHurtBoxes(hurtBoxes);
 				}

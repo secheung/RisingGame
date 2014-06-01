@@ -258,8 +258,8 @@ public class Enemy extends GameObject {
 		Plane selectedPlane = worldRenderer.getSelectedPlane(e.getX(), e.getY());
 
 		float[] points = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), display);
-		if(enemyState != EnemyState.FREEZE)
-			selected = checkEnemySelection(points[0],points[1]);
+//		if(enemyState != EnemyState.FREEZE)
+//			selected = checkEnemySelection(points[0],points[1]);
 		
 //		if(animations.containsValue(selectedPlane)){
 //			selected = true;

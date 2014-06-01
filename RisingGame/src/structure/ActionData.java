@@ -6,6 +6,7 @@ import java.util.List;
 import android.graphics.RectF;
 import android.util.Log;
 import object.GameObject;
+import object.GameObject.Direction;
 import object.Player.PlayerState;
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
@@ -48,10 +49,17 @@ public class ActionData {
 		//Log.d("debug",animation.name+" "+(animation.isDrawEnabled()));
 		worldRenderer.updateDrawObject(animation, pairedObj.getX(), pairedObj.getY(), pairedObj.getZ());
 		
+		float boxOffsetX = 0;
+		float boxOffsetY = 0;
+		
 		for(HitBox box : hitBoxes){
 			if(box.getActiveFrame() == animation.getFrame() || box.getActiveFrame() == -1){
-				float boxOffsetX = box.getBoxData().left+pairedObj.getX();
-				float boxOffsetY = box.getBoxData().bottom+pairedObj.getY();
+				if(pairedObj.getDirection() == Direction.LEFT){
+					boxOffsetX = pairedObj.getX() + box.getBoxData().left;
+				} else {
+					boxOffsetX = flipBoxCoordX(pairedObj.getX(), pairedObj.getWidth(), box.getBoxData());
+				}
+				boxOffsetY = pairedObj.getY() + box.getBoxData().bottom;
 				worldRenderer.updateDrawObject(box.getDrawBox(), boxOffsetX, boxOffsetY,pairedObj.getZ()+0.01f);
 				box.getDrawBox().drawEnable();
 			} else {
@@ -61,8 +69,12 @@ public class ActionData {
 		
 		for(HurtBox box : hurtBoxes){
 			if(box.getActiveFrame() == animation.getFrame() || box.getActiveFrame() == -1){
-				float boxOffsetX = box.getBoxData().left+pairedObj.getX();
-				float boxOffsetY = box.getBoxData().bottom+pairedObj.getY();
+				if(pairedObj.getDirection() == Direction.LEFT){
+					boxOffsetX = pairedObj.getX() + box.getBoxData().left;
+				} else {
+					boxOffsetX = flipBoxCoordX(pairedObj.getX(), pairedObj.getWidth(), box.getBoxData());
+				}
+				boxOffsetY = pairedObj.getY() + box.getBoxData().bottom;
 				worldRenderer.updateDrawObject(box.getDrawBox(), boxOffsetX, boxOffsetY,pairedObj.getZ()+0.01f);
 				box.getDrawBox().drawEnable();
 			} else {
@@ -117,6 +129,14 @@ public class ActionData {
 		for(HurtBox box : hurtBoxes){
 			box.getDrawBox().drawEnable();
 		}
+	}
+	
+	public float flipBoxCoordX(float objX, float objWidth, RectF box){
+		return objX + objWidth - box.width() - box.left;
+	}
+
+	public float flipBoxCoordY(float objY, float objheight, RectF box){
+		return objY + objheight - box.height() - box.bottom;
 	}
 	
 	public List<HitBox> getHitBoxes() {

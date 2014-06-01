@@ -68,7 +68,6 @@ public abstract class GameObject {
 	public abstract void passTouchEvent(MotionEvent e, WorldRenderer worldRenderer);
 	
 	public void updateDrawData(WorldRenderer worldRenderer){
-		//worldRenderer.updateDrawObject(display, x, y, z);
 		currentAction.updateDrawData(worldRenderer,this);
 	}
 	
@@ -118,6 +117,16 @@ public abstract class GameObject {
 		return currentAction.getAnimation();
 	}
 	
+	public Direction getDirection() {
+		return direction;
+	}
+
+
+	public void setDirection(Direction direction) {
+		this.direction = direction;
+	}
+
+
 	public float getX() {
 		return x;
 	}

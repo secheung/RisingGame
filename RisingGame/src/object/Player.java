@@ -25,82 +25,11 @@ public class Player extends GameObject{
 		RUN("jack_run"),
 		DODGE("jack_dodge"),
 		DEAD("jack_dead"),
-		STRIKE1("jack_strike1"),
-		STRIKE2("jack_strike2"),
-		STRIKE3("strike3"),
-		FINISH1("finish1"),
-		FINISH2("finish2"),
-		FINISH3("finish3"),
-		FINISH4("finish4"),
-		FINISH5("finish5"),
-		COUNTER1("counter1");
-		
-		private static int STRIKE_NUMBERS = 3;
-		private static int FINISH_NUMBERS = 5;
-		private static int COUNTER_NUMBERS = 1;
+		NPUNCH("jack_n_punch");
 		
 		public static PlayerState getStateFromName(String name){
 			for(PlayerState playerState : PlayerState.values()){
 				if(name.equals(playerState.getName())){
-					return playerState;
-				}
-			}
-			return null;
-		}
-		
-		public static PlayerState getRandomStrike(){
-			double randNum = Math.random();
-			int strike_number = (int) (randNum * STRIKE_NUMBERS + 1);
-			
-			return getStrike(strike_number);
-		}
-		
-		public static PlayerState getRandomFinish(){
-			double randNum = Math.random();
-			int finish_number = (int) (randNum * FINISH_NUMBERS + 1);
-			
-			return getFinish(finish_number);
-		}
-		
-		public static PlayerState getStrike(int index){
-			if(index < 1 || index > STRIKE_NUMBERS)
-				return STRIKE2;
-			
-			StringBuffer buffer = new StringBuffer();
-			buffer.append("strike");
-			buffer.append(index);
-			for(PlayerState playerState : PlayerState.values()){
-				if(buffer.toString().equals(playerState.getName())){
-					return playerState;
-				}
-			}
-			return null;
-		}
-		
-		public static PlayerState getFinish(int index){
-			if(index < 1 || index > FINISH_NUMBERS)
-				return FINISH2;
-			
-			StringBuffer buffer = new StringBuffer();
-			buffer.append("finish");
-			buffer.append(index);
-			for(PlayerState playerState : PlayerState.values()){
-				if(buffer.toString().equals(playerState.getName())){
-					return playerState;
-				}
-			}
-			return null;
-		}
-		
-		public static PlayerState getCounter(int index){
-			if(index < 1 || index > COUNTER_NUMBERS)
-				return COUNTER1;
-			
-			StringBuffer buffer = new StringBuffer();
-			buffer.append("counter");
-			buffer.append(index);
-			for(PlayerState playerState : PlayerState.values()){
-				if(buffer.toString().equals(playerState.getName())){
 					return playerState;
 				}
 			}
@@ -116,10 +45,10 @@ public class Player extends GameObject{
 			return name;
 		}
 	}
-	
+
 	public static String OBJNAME = "player";
-	
 	private static PlayerState INIT_STATE = PlayerState.STAND;
+	
 	private static float WALK_SPEED = 0.2f;
 	private static float STRIKE_SPEED = 0.1f;
 	private static float DODGE_SPEED = 0.23f;
@@ -151,6 +80,7 @@ public class Player extends GameObject{
 		this.counterIndex = 1;
 		
 		//this.currentAction = this.actionData.get(INIT_STATE);
+		this.currentAction.drawEnable();
 		this.direction = Direction.RIGHT;
 	}
 	
@@ -162,15 +92,7 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.DEAD, R.drawable.rising_stance);
 		animationRef.put(PlayerState.RUN, R.drawable.jack_run);
 		animationRef.put(PlayerState.DODGE, R.drawable.rising_dodge);
-		animationRef.put(PlayerState.STRIKE1, R.drawable.rising_strike1);
-		animationRef.put(PlayerState.STRIKE2, R.drawable.rising_strike2);
-		animationRef.put(PlayerState.STRIKE3, R.drawable.rising_strike3);
-		animationRef.put(PlayerState.FINISH1, R.drawable.rising_finish1);
-		animationRef.put(PlayerState.FINISH2, R.drawable.rising_finish2);
-		animationRef.put(PlayerState.FINISH3, R.drawable.rising_finish3);
-		animationRef.put(PlayerState.FINISH4, R.drawable.rising_finish4);
-		animationRef.put(PlayerState.FINISH5, R.drawable.rising_finish5);
-		animationRef.put(PlayerState.COUNTER1,R.drawable.rising_counter1);
+		animationRef.put(PlayerState.NPUNCH, R.drawable.jack_n_punch);
 		
 	}
 	
@@ -213,7 +135,7 @@ public class Player extends GameObject{
 		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
 			executeMovement();
 		}
-		
+		/*
 		for(GameObject gameObject : gameObjects.values()){
 			if(gameObject instanceof Enemy){
 				executeEnemyInteraction((Enemy)gameObject);
@@ -229,6 +151,7 @@ public class Player extends GameObject{
 				direction = Direction.LEFT;
 			}
 		}
+		*/
 	}
 	
 	@Override
@@ -239,7 +162,7 @@ public class Player extends GameObject{
 			else if(direction == Direction.LEFT)
 				x -= WALK_SPEED;
 		}
-		
+		/*
 		if(isStrikeState()){
 			if(struckEnemy.getX() < x) {
 				direction = Direction.LEFT;
@@ -255,6 +178,7 @@ public class Player extends GameObject{
 		if(isCounterState()){
 			gesture = Gesture.NONE;
 		}
+		*/
 		
 		if(playerState == PlayerState.DODGE){
 			if(direction == Direction.RIGHT)
@@ -288,6 +212,7 @@ public class Player extends GameObject{
 	public void updateAfterDisplay() {
 		Plane display = currentAction.getAnimation();
 		if(display.isPlayed()){
+			/*
 			if(isStrikeState()){
 				display.resetAnimation();
 				playerState = PlayerState.STAND;
@@ -308,6 +233,7 @@ public class Player extends GameObject{
 				
 				updateCounterIndex();
 			}
+			*/
 			
 			if(	playerState==PlayerState.DODGE){
 				gesture = Gesture.NONE;
@@ -337,6 +263,7 @@ public class Player extends GameObject{
 		}
 	}
 
+	/*
 	private void executeEnemyInteraction(Enemy enemy){
 		Plane display = currentAction.getAnimation();
 		if(enemy.isStrikeState()){
@@ -371,7 +298,8 @@ public class Player extends GameObject{
 			}
 		}
 	}
-
+	
+	/*
 	private void updatePunchIndex() {
 		punchIndex++;
 		if(punchIndex > PlayerState.STRIKE_NUMBERS){
@@ -410,4 +338,5 @@ public class Player extends GameObject{
 	public boolean isCounterState(){
 		return (playerState==PlayerState.COUNTER1);
 	}
+	*/
 }

@@ -69,11 +69,12 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		parser.readFile(R.raw.jack_frame_data);
 		List<ActionData> playerData = parser.parseFrameData();
 		
-		Player player = new Player(gameObjects, playerData, 3.0f, -1.0f);
+		Player player = new Player(gameObjects, playerData, 1.0f, -1.0f);
 		player.loadAnimIntoRenderer(worldRenderer);
 		gameObjects.put(player.getName(), player);
 		
 		
+		/*
 		enemyIndex = 1;
 		parser.readFile(R.raw.enemy_frame_data);
 		List<ActionData> enemyData = parser.parseFrameData();
@@ -82,6 +83,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		//enemy.getDisplay().drawDisable();
 		enemy.loadAnimIntoRenderer(worldRenderer);
 		gameObjects.put(enemy.getName(), enemy);
+		*/
 	}
 	
 	public void update(){
@@ -141,6 +143,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 			}
 		}
 		
+		/*
 		if(player.isFinishState() || player.isCounterState()){
 			camZoomTo(	player.getX()+player.getWidth()/2,
 						player.getY()+player.getHeight()/2,
@@ -154,6 +157,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 						CAM_BUFFER
 				);
 		}
+		*/
 	}
 
 	public void camZoomTo(float x, float y, float z, float buffer){
@@ -216,6 +220,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		}
 	}
 	
+	//USE THIS FOR SWIPES
 	public Gesture gestureProcessing(MotionEvent e){
 		if(e.getAction() == MotionEvent.ACTION_DOWN){
 			gestureX = e.getX();

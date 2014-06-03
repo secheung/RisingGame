@@ -25,7 +25,8 @@ public class Player extends GameObject{
 		RUN("jack_run"),
 		DODGE("jack_dodge"),
 		DEAD("jack_dead"),
-		NPUNCH("jack_n_punch");
+		NTAP("jack_n_tap"),
+		NFSWIPE("jack_n_fswipe");
 		
 		public static PlayerState getStateFromName(String name){
 			for(PlayerState playerState : PlayerState.values()){
@@ -92,7 +93,8 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.DEAD, R.drawable.rising_stance);
 		animationRef.put(PlayerState.RUN, R.drawable.jack_run);
 		animationRef.put(PlayerState.DODGE, R.drawable.rising_dodge);
-		animationRef.put(PlayerState.NPUNCH, R.drawable.jack_n_punch);
+		animationRef.put(PlayerState.NTAP, R.drawable.jack_n_tap);
+		animationRef.put(PlayerState.NFSWIPE, R.drawable.jack_n_fswipe);
 		
 	}
 	
@@ -135,6 +137,15 @@ public class Player extends GameObject{
 		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
 			executeMovement();
 		}
+		
+		if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.LEFT){
+			playerState = PlayerState.NFSWIPE;
+			this.direction = Direction.LEFT;
+		} else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.RIGHT) {
+			playerState = PlayerState.NFSWIPE;
+			this.direction = Direction.RIGHT;
+		}
+		
 		/*
 		for(GameObject gameObject : gameObjects.values()){
 			if(gameObject instanceof Enemy){
@@ -162,6 +173,11 @@ public class Player extends GameObject{
 			else if(direction == Direction.LEFT)
 				x -= WALK_SPEED;
 		}
+		
+		if(playerState == PlayerState.NFSWIPE){
+			moveToX = getMidX();
+		}
+		
 		/*
 		if(isStrikeState()){
 			if(struckEnemy.getX() < x) {
@@ -203,11 +219,6 @@ public class Player extends GameObject{
 		}
 	}
 	
-	public void switchAnimation(GameObjectState animToSwitch){
-		super.switchAnimation(animToSwitch);
-		//switch action data here
-	}
-	
 	@Override
 	public void updateAfterDisplay() {
 		Plane display = currentAction.getAnimation();
@@ -234,6 +245,12 @@ public class Player extends GameObject{
 				updateCounterIndex();
 			}
 			*/
+			
+			if(	playerState==PlayerState.NFSWIPE){
+				gesture = Gesture.NONE;
+				display.resetAnimation();
+				playerState = PlayerState.STAND;
+			}
 			
 			if(	playerState==PlayerState.DODGE){
 				gesture = Gesture.NONE;

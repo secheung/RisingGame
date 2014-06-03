@@ -136,14 +136,14 @@ public class Player extends GameObject{
 	public void updateState() {
 		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
 			executeMovement();
-		}
-		
-		if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.LEFT){
-			playerState = PlayerState.NFSWIPE;
-			this.direction = Direction.LEFT;
-		} else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.RIGHT) {
-			playerState = PlayerState.NFSWIPE;
-			this.direction = Direction.RIGHT;
+			
+			if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.LEFT){
+				playerState = PlayerState.NFSWIPE;
+				this.direction = Direction.LEFT;
+			} else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.RIGHT) {
+				playerState = PlayerState.NFSWIPE;
+				this.direction = Direction.RIGHT;
+			}
 		}
 		
 		/*
@@ -208,9 +208,15 @@ public class Player extends GameObject{
 	
 	@Override
 	public void updateDisplay() {
-		//Plane display = currentAction.getAnimation();
+		Plane display = currentAction.getAnimation();
 		if(currentAction != actionData.get(playerState))
 			this.switchAnimation(playerState);
+		
+		if(direction==Direction.RIGHT){
+			display.flipTexture(false);
+		} else if(direction==Direction.LEFT){
+			display.flipTexture(true);
+		}
 	}
 	
 	@Override

@@ -83,7 +83,7 @@ public abstract class GameObject {
 	}
 	
 	public void switchAnimation(GameObjectState animToSwitch){
-		//Plane display = currentAction.getAnimation();
+		
 		currentAction.drawDisable();
 		currentAction.getAnimation().resetAnimation();
 		currentAction = actionData.get(animToSwitch);
@@ -94,9 +94,6 @@ public abstract class GameObject {
 		} else if(direction==Direction.LEFT){
 			currentAction.getAnimation().flipTexture(true);
 		}
-		
-		//Log.d("debug display",""+(display.isDrawEnabled()));
-		//Log.d("debug currentAction",""+(currentAction.getAnimation().isDrawEnabled()));
 	}
 	
 	public void update() {

@@ -5,7 +5,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import structure.ActionData;
-
 import android.R;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -89,6 +88,12 @@ public abstract class GameObject {
 		currentAction.getAnimation().resetAnimation();
 		currentAction = actionData.get(animToSwitch);
 		currentAction.drawEnable();
+		
+		if(direction==Direction.RIGHT){
+			currentAction.getAnimation().flipTexture(false);
+		} else if(direction==Direction.LEFT){
+			currentAction.getAnimation().flipTexture(true);
+		}
 		
 		//Log.d("debug display",""+(display.isDrawEnabled()));
 		//Log.d("debug currentAction",""+(currentAction.getAnimation().isDrawEnabled()));

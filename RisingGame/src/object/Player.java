@@ -208,15 +208,9 @@ public class Player extends GameObject{
 	
 	@Override
 	public void updateDisplay() {
-		Plane display = currentAction.getAnimation();
+		//Plane display = currentAction.getAnimation();
 		if(currentAction != actionData.get(playerState))
 			this.switchAnimation(playerState);
-		
-		if(direction==Direction.RIGHT){
-			display.flipTexture(false);
-		} else if(direction==Direction.LEFT){
-			display.flipTexture(true);
-		}
 	}
 	
 	@Override

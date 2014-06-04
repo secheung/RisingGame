@@ -21,6 +21,7 @@ import game.open2d.R;
 
 public class Player extends GameObject{
 	public static enum PlayerState implements GameObjectState{
+		TEMP("jack_temp"),
 		STAND("jack_stand"),
 		RUN("jack_run"),
 		DODGE("jack_dodge"),
@@ -50,8 +51,11 @@ public class Player extends GameObject{
 	public static String OBJNAME = "player";
 	private static PlayerState INIT_STATE = PlayerState.STAND;
 	
+	private static final int TEMP_FRAME = 0;
+
 	private static float WALK_SPEED = 0.2f;
 	private static float STRIKE_SPEED = 0.1f;
+	private static float NFSWIPE_SPEED = 0.2f;
 	private static float DODGE_SPEED = 0.23f;
 	private static float BUFFER = 0.4f;
 	private static float COLLISION_BUFFER = 1.0f;
@@ -82,13 +86,14 @@ public class Player extends GameObject{
 		
 		//this.currentAction = this.actionData.get(INIT_STATE);
 		this.currentAction.drawEnable();
-		this.direction = Direction.RIGHT;
+		this.direction = Direction.LEFT;
 	}
 	
 	@Override
 	public void setupAnimRef() {
 		animationRef = new HashMap<GameObjectState, Integer>();
 		//animationRef.put(PlayerState.STAND, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.STAND.getName(), width, height, 4, 7));
+		animationRef.put(PlayerState.TEMP, R.drawable.jack_stand);
 		animationRef.put(PlayerState.STAND, R.drawable.jack_stand);
 		animationRef.put(PlayerState.DEAD, R.drawable.rising_stance);
 		animationRef.put(PlayerState.RUN, R.drawable.jack_run);
@@ -167,6 +172,11 @@ public class Player extends GameObject{
 	
 	@Override
 	public void updateLogic() {
+		if(playerState == PlayerState.TEMP){
+			currentAction.getAnimation().setFrame(TEMP_FRAME);
+			currentAction.getAnimation().setPlayback(Playback.PAUSE);
+		}
+
 		if(playerState == PlayerState.RUN){
 			if(direction == Direction.RIGHT)
 				x += WALK_SPEED;
@@ -176,6 +186,11 @@ public class Player extends GameObject{
 		
 		if(playerState == PlayerState.NFSWIPE){
 			moveToX = getMidX();
+			if(currentAction.getAnimation().getFrame() <= 7 && currentAction.getAnimation().getFrame() >= 5)
+				if(direction == Direction.RIGHT)
+					x += NFSWIPE_SPEED;
+				else if(direction == Direction.LEFT)
+					x -= NFSWIPE_SPEED;
 		}
 		
 		/*

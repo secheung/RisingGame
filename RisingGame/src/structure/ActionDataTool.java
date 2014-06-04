@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +29,7 @@ public class ActionDataTool {
 	private static String RIGHT = "right";
 	private static String TOP = "top";
 	private static String ACTIVE_FRAME = "active_frame";
+	private static String SELECT_BOX = "select";
 	
 	private static String PLANE_WIDTH = "width";
 	private static String PLANE_HEIGHT = "height";
@@ -121,13 +123,20 @@ public class ActionDataTool {
 			float bottom = (float) boundsData.getDouble(BOTTOM);
 			float right = (float) boundsData.getDouble(RIGHT);
 			float top = (float) boundsData.getDouble(TOP);
-			int activeFrames;
+			HashSet<Integer> activeFrames;
 			if(boundsData.has(ACTIVE_FRAME)){
-				activeFrames = boundsData.getInt(ACTIVE_FRAME);
+				activeFrames = new HashSet<Integer>();
+				JSONArray actives = boundsData.getJSONArray(ACTIVE_FRAME);
+				for(int i = 0; i < actives.length(); i++){
+					activeFrames.add(actives.getInt(i));
+				}
 			} else {
-				activeFrames = -1;
+				activeFrames = new HashSet<Integer>();
 			}
 			HitBox box = new HitBox(left, top, right, bottom, activeFrames);
+			if(boundsData.has(SELECT_BOX)){
+				box.setSelected((float)boundsData.getDouble(SELECT_BOX));
+			}
 			hitBoxes.add(box);
 		}
 		
@@ -143,13 +152,20 @@ public class ActionDataTool {
 			float bottom = (float) boundsData.getDouble(BOTTOM);
 			float right = (float) boundsData.getDouble(RIGHT);
 			float top = (float) boundsData.getDouble(TOP);
-			int activeFrames;
+			HashSet<Integer> activeFrames;
 			if(boundsData.has(ACTIVE_FRAME)){
-				activeFrames = boundsData.getInt(ACTIVE_FRAME);
+				activeFrames = new HashSet<Integer>();
+				JSONArray actives = boundsData.getJSONArray(ACTIVE_FRAME);
+				for(int i = 0; i < actives.length(); i++){
+					activeFrames.add(actives.getInt(i));
+				}
 			} else {
-				activeFrames = -1;
+				activeFrames = new HashSet<Integer>();
 			}
 			HurtBox box = new HurtBox(left, top, right, bottom, activeFrames);
+			if(boundsData.has(SELECT_BOX)){
+				box.setSelected((float)boundsData.getDouble(SELECT_BOX));
+			}
 			hurtBoxes.add(box);
 		}
 		

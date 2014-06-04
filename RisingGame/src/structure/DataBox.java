@@ -1,5 +1,7 @@
 package structure;
 
+import java.util.HashSet;
+
 import android.graphics.RectF;
 import engine.open2d.draw.Plane;
 
@@ -14,10 +16,10 @@ public class DataBox {
 	
 	protected RectF boxData;
 	protected Plane drawBox;
-	protected int activeFrame;
+	protected HashSet<Integer> activeFrame;
 	
 	
-	public DataBox(float left, float top, float right,float bottom,int activeFrame){
+	public DataBox(float left, float top, float right,float bottom,HashSet<Integer> activeFrame){
 		boxData = new RectF(left,top,right,bottom);
 		this.activeFrame = activeFrame;
 	}
@@ -30,7 +32,7 @@ public class DataBox {
 		return drawBox;
 	}
 	
-	public int getActiveFrame() {
+	public HashSet<Integer> getActiveFrame() {
 		return activeFrame;
 	}
 }

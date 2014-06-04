@@ -1,5 +1,6 @@
 package structure;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class ActionData {
 		animation = new Plane(refID, name, planeData.getWidth(), planeData.getHeight(), planeData.getRows(), planeData.getColumns());
 	}
 	
-	public void addHitBox(float left, float top, float right, float bottom,int activeFrame){
+	public void addHitBox(float left, float top, float right, float bottom,HashSet<Integer> activeFrame){
 		hitBoxes.add(new HitBox(left,top,right,bottom,activeFrame));
 	}
 	
@@ -53,7 +54,7 @@ public class ActionData {
 		float boxOffsetY = 0;
 		
 		for(HitBox box : hitBoxes){
-			if(box.getActiveFrame() == animation.getFrame() || box.getActiveFrame() == -1){
+			if(box.getActiveFrame().contains(animation.getFrame()) || box.getActiveFrame().isEmpty()){
 				if(pairedObj.getDirection() == Direction.LEFT){
 					boxOffsetX = pairedObj.getX() + box.getBoxData().left;
 				} else {
@@ -68,7 +69,8 @@ public class ActionData {
 		}
 		
 		for(HurtBox box : hurtBoxes){
-			if(box.getActiveFrame() == animation.getFrame() || box.getActiveFrame() == -1){
+			//if(box.getActiveFrame() == animation.getFrame() || box.getActiveFrame() == -1){
+			if(box.getActiveFrame().contains(animation.getFrame()) || box.getActiveFrame().isEmpty()){
 				if(pairedObj.getDirection() == Direction.LEFT){
 					boxOffsetX = pairedObj.getX() + box.getBoxData().left;
 				} else {

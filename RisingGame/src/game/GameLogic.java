@@ -262,6 +262,12 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		
 		Player player = (Player) gameObjects.get(Player.OBJNAME);
 		player.passTouchEvent(e, worldRenderer);
+
+
+		if(player.getPlayerState() == PlayerState.TEMP){
+			float[] coord = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), player.getDisplay());
+			Log.d("debug",coord[0] + " " + coord[1] + " " + coord[2]);
+		}
 	}
 	
 	@Override

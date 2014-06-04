@@ -26,6 +26,7 @@ public class GameSurfaceView extends GLSurfaceView{
 		//WorldRenderer = WorldRenderer.getInstance();
 		worldRenderer = new WorldRenderer(context);
 		worldRenderer.setTextureQuality(TEXTURE_QUALITY);
+		worldRenderer.setBackground(1.0f, 1.0f, 1.0f, 1.0f);
 		setRenderer(worldRenderer);
 		setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 		

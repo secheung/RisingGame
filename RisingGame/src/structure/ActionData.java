@@ -1,5 +1,6 @@
 package structure;
 
+import java.util.Currency;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,6 +25,8 @@ public class ActionData {
 	int frames;
 	Plane animation;
 	PlaneData planeData;
+	
+	boolean flipped = false;
 	//GameObject pairedObj;
 	
 
@@ -41,10 +44,6 @@ public class ActionData {
 		animation = new Plane(refID, name, planeData.getWidth(), planeData.getHeight(), planeData.getRows(), planeData.getColumns());
 	}
 	
-	public void addHitBox(float left, float top, float right, float bottom,HashSet<Integer> activeFrame){
-		hitBoxes.add(new HitBox(left,top,right,bottom,activeFrame));
-	}
-	
 	public void updateDrawData(WorldRenderer worldRenderer, GameObject pairedObj){
 		//Log.d("debug", pairedObj.getX()+ " " + pairedObj.getY() + " " + pairedObj.getZ());
 		//Log.d("debug",animation.name+" "+(animation.isDrawEnabled()));
@@ -55,11 +54,14 @@ public class ActionData {
 		
 		for(HitBox box : hitBoxes){
 			if(box.getActiveFrame().contains(animation.getFrame()) || box.getActiveFrame().isEmpty()){
+				/*
 				if(pairedObj.getDirection() == Direction.LEFT){
 					boxOffsetX = pairedObj.getX() + box.getBoxData().left;
 				} else {
-					boxOffsetX = flipBoxCoordX(pairedObj.getX(), pairedObj.getWidth(), box.getBoxData());
+					boxOffsetX = pairedObj.getX() + flipBoxCoordX(box.getBoxData());
 				}
+				*/
+				boxOffsetX = pairedObj.getX() + box.getBoxData().left;
 				boxOffsetY = pairedObj.getY() + box.getBoxData().bottom;
 				worldRenderer.updateDrawObject(box.getDrawBox(), boxOffsetX, boxOffsetY,pairedObj.getZ()+0.01f);
 				box.getDrawBox().drawEnable();
@@ -71,11 +73,14 @@ public class ActionData {
 		for(HurtBox box : hurtBoxes){
 			//if(box.getActiveFrame() == animation.getFrame() || box.getActiveFrame() == -1){
 			if(box.getActiveFrame().contains(animation.getFrame()) || box.getActiveFrame().isEmpty()){
+				/*
 				if(pairedObj.getDirection() == Direction.LEFT){
 					boxOffsetX = pairedObj.getX() + box.getBoxData().left;
 				} else {
-					boxOffsetX = flipBoxCoordX(pairedObj.getX(), pairedObj.getWidth(), box.getBoxData());
+					boxOffsetX = pairedObj.getX() + flipBoxCoordX(box.getBoxData());
 				}
+				*/
+				boxOffsetX = pairedObj.getX() + box.getBoxData().left;
 				boxOffsetY = pairedObj.getY() + box.getBoxData().bottom;
 				worldRenderer.updateDrawObject(box.getDrawBox(), boxOffsetX, boxOffsetY,pairedObj.getZ()+0.01f);
 				box.getDrawBox().drawEnable();
@@ -133,12 +138,50 @@ public class ActionData {
 		}
 	}
 	
-	public float flipBoxCoordX(float objX, float objWidth, RectF box){
-		return objX + objWidth - box.width() - box.left;
+	public float flipBoxCoordX(RectF box){
+		return planeData.getWidth() - box.width() - box.left;
 	}
 
-	public float flipBoxCoordY(float objY, float objheight, RectF box){
-		return objY + objheight - box.height() - box.bottom;
+	public float flipBoxCoordY(RectF box){
+		return planeData.getHeight() - box.height() - box.bottom;
+	}
+	
+	public void flipHorizontal(boolean flip){
+		if(flipped != flip){
+			animation.flipTexture(flip);
+			for(HitBox box : hitBoxes){
+				RectF boxData = box.getBoxData();
+				float left = planeData.getWidth() - boxData.width() - boxData.left;
+				float right = left + boxData.width();
+				box.getBoxData().set(left, boxData.top, right, boxData.bottom);
+			}
+			
+			for(HurtBox box : hurtBoxes){
+				//RectF boxData = box.getBoxData(); 
+				//box.getBoxData().set(planeData.getWidth() - boxData.width() - boxData.left, boxData.top, planeData.getWidth() - boxData.width() - boxData.right, boxData.bottom);
+				RectF boxData = box.getBoxData(); 
+				float left = planeData.getWidth() - boxData.width() - boxData.left;
+				float right = left + boxData.width();
+				box.getBoxData().set(left, boxData.top, right, boxData.bottom);
+			}
+			flipped = flip;
+		}
+	}
+	
+	public boolean isHitBoxActive(){
+		for(HitBox box : hitBoxes){
+			if(box.getActiveFrame().contains(animation.getFrame()))
+				return true;
+		}
+		return false;
+	}
+
+	public boolean isHurtBoxActive(){
+		for(HurtBox box : hurtBoxes){
+			if(box.getActiveFrame().contains(animation.getFrame()))
+				return true;
+		}
+		return false;
 	}
 	
 	public List<HitBox> getHitBoxes() {

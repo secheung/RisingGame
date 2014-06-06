@@ -51,7 +51,7 @@ public class Player extends GameObject{
 	public static String OBJNAME = "player";
 	private static PlayerState INIT_STATE = PlayerState.STAND;
 	
-	private static final int TEMP_FRAME = 0;
+	private static final int TEMP_FRAME = 12;
 
 	private static float WALK_SPEED = 0.2f;
 	private static float STRIKE_SPEED = 0.1f;
@@ -93,7 +93,7 @@ public class Player extends GameObject{
 	public void setupAnimRef() {
 		animationRef = new HashMap<GameObjectState, Integer>();
 		//animationRef.put(PlayerState.STAND, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.STAND.getName(), width, height, 4, 7));
-		animationRef.put(PlayerState.TEMP, R.drawable.jack_stand);
+		animationRef.put(PlayerState.TEMP, R.drawable.jack_n_fswipe);
 		animationRef.put(PlayerState.STAND, R.drawable.jack_stand);
 		animationRef.put(PlayerState.DEAD, R.drawable.rising_stance);
 		animationRef.put(PlayerState.RUN, R.drawable.jack_run);
@@ -191,6 +191,13 @@ public class Player extends GameObject{
 					x += NFSWIPE_SPEED;
 				else if(direction == Direction.LEFT)
 					x -= NFSWIPE_SPEED;
+			
+			
+			if(currentAction.isHitBoxActive()){
+				this.setHitActive(true);
+			} else {
+				this.setHitActive(false);
+			}
 		}
 		
 		/*
@@ -228,9 +235,11 @@ public class Player extends GameObject{
 			this.switchAnimation(playerState);
 		
 		if(direction==Direction.RIGHT){
-			display.flipTexture(false);
+			//display.flipTexture(false);
+			currentAction.flipHorizontal(false);
 		} else if(direction==Direction.LEFT){
-			display.flipTexture(true);
+			//display.flipTexture(true);
+			currentAction.flipHorizontal(true);
 		}
 	}
 	

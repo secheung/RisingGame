@@ -2,6 +2,7 @@ package object;
 
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
+import engine.open2d.texture.AnimatedTexture.Playback;
 import game.GameTools;
 import game.GameTools.Gesture;
 import game.open2d.R;
@@ -10,15 +11,19 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import android.graphics.RectF;
 import android.util.Log;
 import android.view.MotionEvent;
 import object.GameObject.Direction;
 import object.GameObject.GameObjectState;
 import object.Player.PlayerState;
 import structure.ActionData;
+import structure.HitBox;
+import structure.HurtBox;
 
 public class Enemy extends GameObject {
 	public static enum EnemyState implements GameObjectState{
+		TEMP("enemy_temp"),
 		STAND("enemy_stand"),
 		STRIKE1("enemy_strike"),
 		STRUCK1("enemy_struck1"),
@@ -52,6 +57,9 @@ public class Enemy extends GameObject {
 	private static String OBJNAME = "enemy";
 	
 	private static EnemyState INIT_STATE = EnemyState.STAND;
+	
+	private static final int TEMP_FRAME = 0;
+	
 	private static float RUN_SPEED = 0.16f;
 	private static float WALK_SPEED = 0.08f;
 	private static float JUMP_BACK_SPEED = 0.15f;
@@ -82,11 +90,14 @@ public class Enemy extends GameObject {
 		//display = animations.get(EnemyState.STAND);
 		//this.currentAction = this.actionData.get(INIT_STATE);
 		
+		currentAction.drawEnable();
+		
 	}
 
 	@Override
 	public void setupAnimRef() {
 		animationRef = new HashMap<GameObjectState, Integer>();
+		animationRef.put(EnemyState.TEMP, R.drawable.enemy_stance);
 		animationRef.put(EnemyState.STAND, R.drawable.enemy_stance);
 		animationRef.put(EnemyState.FREEZE, R.drawable.enemy_stance);
 		animationRef.put(EnemyState.RUN, R.drawable.enemy_run);
@@ -124,13 +135,15 @@ public class Enemy extends GameObject {
 		}
 
 		if(enemyState == EnemyState.STAND){
+			
 			if(Math.abs(checkX - playerRef.getMidX()) > CLOSE_DIST_TO_PLAYER){
-				enemyState = EnemyState.WALK;
+				//enemyState = EnemyState.WALK;
 			}
 			
 			if(Math.abs(checkX - playerRef.getMidX()) > FAR_DIST_TO_PLAYER){
-				enemyState = EnemyState.RUN;
+				//enemyState = EnemyState.RUN;
 			}
+			
 			/*
 			if(GameTools.boxColDetect(this, playerRef, COLLISION_BUFFER) && Math.random() > 0.90){
 				enemyState = EnemyState.STRIKE1;
@@ -138,6 +151,18 @@ public class Enemy extends GameObject {
 			*/
 		} else if(enemyState == EnemyState.RUN || enemyState == EnemyState.WALK){
 			executeMovement();
+		}
+		
+		if(playerRef.getHitActive()){
+			ActionData playerAction = playerRef.getCurrentAction();
+			for(HurtBox hurtBox : currentAction.getHurtBoxes()){
+				for(HitBox hitBox : playerAction.getHitBoxes()){
+					//asdf   //need to flip box position based on direction player is facing 
+					if(GameTools.boxColDetect(hurtBox.getBoxData(), this, hitBox.getBoxData(), playerRef)){
+						Log.d("is hit", "getting hit");
+					}
+				}
+			}
 		}
 		
 		//otherAIMoveInteration();
@@ -167,6 +192,11 @@ public class Enemy extends GameObject {
 	@Override
 	public void updateLogic() {
 		Plane display = currentAction.getAnimation();
+		if(enemyState== EnemyState.TEMP){
+			currentAction.getAnimation().setFrame(TEMP_FRAME);
+			currentAction.getAnimation().setPlayback(Playback.PAUSE);
+		}
+		
 		if(enemyState == EnemyState.STRUCK1){
 			if(display.getFrame() < Player.CANCEL_STRIKE_FRAMES){
 				selected = false;

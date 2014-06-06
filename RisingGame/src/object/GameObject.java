@@ -36,6 +36,7 @@ public abstract class GameObject {
 	protected HashMap<GameObjectState, Integer> animationRef;
 	protected String name;
 	public boolean selected;
+	protected boolean hitActive;
 	protected Gesture gesture;
 	
 	protected LinkedHashMap<String,GameObject> gameObjects;
@@ -54,6 +55,7 @@ public abstract class GameObject {
 
 		this.width = currentAction.getPlaneData().getWidth();
 		this.height = currentAction.getPlaneData().getHeight();
+		this.hitActive = false;
 	}
 	
 	
@@ -175,6 +177,24 @@ public abstract class GameObject {
 
 	public void setHeight(float height) {
 		this.height = height;
+	}
+
+	public ActionData getCurrentAction() {
+		return currentAction;
+	}
+
+
+	public void setCurrentAction(ActionData currentAction) {
+		this.currentAction = currentAction;
+	}
+
+
+	public boolean getHitActive() {
+		return hitActive;
+	}
+
+	public void setHitActive(boolean hitActive) {
+		this.hitActive = hitActive;
 	}
 	
 }

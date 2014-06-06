@@ -1,5 +1,6 @@
 package game;
 
+import android.graphics.RectF;
 import android.util.Log;
 import object.GameObject;
 
@@ -20,6 +21,32 @@ public class GameTools {
 	public static final int SWIPE_RIGHT = -30;
 	public static final int SWIPE_UP = 30;
 	public static final int SWIPE_DOWN = -30;
+	
+	public static boolean boxColDetect(RectF box1, GameObject object1, RectF box2, GameObject object2){
+		float left1 = object1.getX() + box1.left;
+		float right1 = object1.getX() + box1.right;
+		float top1 = object1.getY() + box1.top;
+		float bottom1 = object1.getY()+box1.bottom;
+		
+		float left2 = object2.getX() + box2.left;
+		float right2 = object2.getX() + box2.right;
+		float top2 = object2.getY() + box2.top;
+		float bottom2 = object2.getY() + box2.bottom;
+		
+		if (bottom1 > top2) return false;
+		if (top1 < bottom2) return false;
+		if (right1 < left2) return false;
+		if (left1 > right2) return false;
+		
+		return true;
+		
+		/*
+		box1.set(object1.getX() + box1.left, object1.getY() + box1.top, object1.getX() + box1.right, object1.getY() + box1.bottom);
+		box2.set(object2.getX() + box2.left, object2.getY() + box2.top, object2.getX() + box2.right, object2.getY() + box2.bottom);
+		
+		return RectF.intersects(box1, box2);
+		*/
+	}
 	
 	public static boolean boxColDetect(GameObject object1, GameObject object2){
 		float left1 = object1.getX();

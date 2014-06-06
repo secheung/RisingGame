@@ -74,16 +74,16 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		gameObjects.put(player.getName(), player);
 		
 		
-		/*
+
 		enemyIndex = 1;
 		parser.readFile(R.raw.enemy_frame_data);
 		List<ActionData> enemyData = parser.parseFrameData();
 		//Enemy enemy = new Enemy(gameObjects, (Player)gameObjects.get("player"), 0, (float)(5.7f), -1.0f, 3.5f, 3.5f);
-		Enemy enemy = new Enemy(gameObjects, enemyData, (Player)gameObjects.get("player"), enemyIndex, 3.7f, -1.0f);
+		Enemy enemy = new Enemy(gameObjects, enemyData, (Player)gameObjects.get("player"), enemyIndex, 1.0f, -1.0f);
 		//enemy.getDisplay().drawDisable();
 		enemy.loadAnimIntoRenderer(worldRenderer);
 		gameObjects.put(enemy.getName(), enemy);
-		*/
+
 	}
 	
 	public void update(){

@@ -139,6 +139,10 @@ public class Player extends GameObject{
 
 	@Override
 	public void updateState() {
+		if(hitStopFrames > 0){
+			return;
+		}
+		
 		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
 			executeMovement();
 			
@@ -172,6 +176,17 @@ public class Player extends GameObject{
 	
 	@Override
 	public void updateLogic() {
+		if(currentAction.isHitBoxActive()){
+			this.setHitActive(true);
+		} else {
+			this.setHitActive(false);
+		}
+		//should hitstop return from function?
+		if(hitStopFrames > 0){
+			hitStopFrames--;
+			return;
+		}
+		
 		if(playerState == PlayerState.TEMP){
 			currentAction.getAnimation().setFrame(TEMP_FRAME);
 			currentAction.getAnimation().setPlayback(Playback.PAUSE);
@@ -186,17 +201,11 @@ public class Player extends GameObject{
 		
 		if(playerState == PlayerState.NFSWIPE){
 			moveToX = getMidX();
-			if(currentAction.getAnimation().getFrame() <= 7 && currentAction.getAnimation().getFrame() >= 5)
+			if(currentAction.getAnimation().getFrame() <= 7 && currentAction.getAnimation().getFrame() >= 5){
 				if(direction == Direction.RIGHT)
 					x += NFSWIPE_SPEED;
 				else if(direction == Direction.LEFT)
 					x -= NFSWIPE_SPEED;
-			
-			
-			if(currentAction.isHitBoxActive()){
-				this.setHitActive(true);
-			} else {
-				this.setHitActive(false);
 			}
 		}
 		
@@ -230,15 +239,19 @@ public class Player extends GameObject{
 	
 	@Override
 	public void updateDisplay() {
-		Plane display = currentAction.getAnimation();
+		if(hitStopFrames > 0){
+			currentAction.getAnimation().setPlayback(Playback.PAUSE);
+			return;
+		} else {
+			currentAction.getAnimation().setPlayback(Playback.PLAY);
+		}
+		
 		if(currentAction != actionData.get(playerState))
 			this.switchAnimation(playerState);
 		
 		if(direction==Direction.RIGHT){
-			//display.flipTexture(false);
 			currentAction.flipHorizontal(false);
 		} else if(direction==Direction.LEFT){
-			//display.flipTexture(true);
 			currentAction.flipHorizontal(true);
 		}
 	}

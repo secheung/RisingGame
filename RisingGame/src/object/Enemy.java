@@ -27,6 +27,7 @@ public class Enemy extends GameObject {
 		STAND("enemy_stand"),
 		STRIKE1("enemy_strike"),
 		STRUCK1("enemy_struck1"),
+		KNOCK_BACK("enemy_knock_back"),
 		RUN("enemy_run"),
 		WALK("enemy_walk"),
 		JUMP_BACK("enemy_jump_back"),
@@ -67,7 +68,7 @@ public class Enemy extends GameObject {
 	private static float FAR_DIST_TO_PLAYER = 2.5f;
 	private static float CLOSE_DIST_TO_PLAYER = 1.5f;
 	private static float COLLISION_BUFFER = 1.0f;
-	private static float KNOCK_BACK = 0.0f;
+	private static float KNOCK_BACK_SPEED = 0.0f;
 	public static float COLLISION_FRAME = 20.0f;
 	
 	Player playerRef;
@@ -91,6 +92,7 @@ public class Enemy extends GameObject {
 		//this.currentAction = this.actionData.get(INIT_STATE);
 		
 		currentAction.drawEnable();
+		this.direction = Direction.LEFT;
 		
 	}
 
@@ -107,6 +109,8 @@ public class Enemy extends GameObject {
 		animationRef.put(EnemyState.DEAD, R.drawable.enemy_stance);
 		animationRef.put(EnemyState.STRIKE1, R.drawable.enemy_strike1);
 		animationRef.put(EnemyState.STRUCK1, R.drawable.enemy_struck1);
+		
+		animationRef.put(EnemyState.KNOCK_BACK, R.drawable.enemy_knock_back);
 		
 	}
 
@@ -126,7 +130,8 @@ public class Enemy extends GameObject {
 	public void updateState() {
 		float checkX = getMidX();
 		
-		if(!isStrikeState() && !isDodging()){
+		//if(!isStrikeState() && !isDodging()){
+		if(enemyState != EnemyState.KNOCK_BACK){
 			if(playerRef.getMidX() > checkX){
 				direction = Direction.RIGHT;
 			} else if(playerRef.getMidX() < checkX){
@@ -153,16 +158,13 @@ public class Enemy extends GameObject {
 			executeMovement();
 		}
 		
-		if(playerRef.getHitActive()){
-			ActionData playerAction = playerRef.getCurrentAction();
-			for(HurtBox hurtBox : currentAction.getHurtBoxes()){
-				for(HitBox hitBox : playerAction.getHitBoxes()){
-					//asdf   //need to flip box position based on direction player is facing 
-					if(GameTools.boxColDetect(hurtBox.getBoxData(), this, hitBox.getBoxData(), playerRef)){
-						Log.d("is hit", "getting hit");
-					}
-				}
+		if(isHit() && playerRef.getPlayerState() == PlayerState.NFSWIPE){
+			if(playerRef.getDirection() == Direction.RIGHT){
+				direction = Direction.LEFT;
+			} else if(playerRef.getDirection() == Direction.LEFT){
+				direction = Direction.RIGHT;
 			}
+			enemyState = EnemyState.KNOCK_BACK;
 		}
 		
 		//otherAIMoveInteration();
@@ -201,10 +203,6 @@ public class Enemy extends GameObject {
 			if(display.getFrame() < Player.CANCEL_STRIKE_FRAMES){
 				selected = false;
 			}
-			if(direction == Direction.RIGHT)
-				x -= KNOCK_BACK;
-			else if(direction == Direction.LEFT)
-				x += KNOCK_BACK;
 		}else if(isStrikeState()){
 			
 		}else if(enemyState == EnemyState.RUN){
@@ -229,27 +227,33 @@ public class Enemy extends GameObject {
 				x -= CROSS_ROLL_SPEED;
 		}else if(enemyState == EnemyState.FREEZE){
 			unfreezeTimeCount--;
+		}else if(enemyState == EnemyState.KNOCK_BACK){
+			if(direction == Direction.RIGHT){
+				x -= KNOCK_BACK_SPEED;
+			}
+			else if(direction == Direction.LEFT){
+				x += KNOCK_BACK_SPEED;
+			}
 		}
 	}
 
 	@Override
 	public void updateDisplay() {
-		Plane display = currentAction.getAnimation();
 		if(currentAction != actionData.get(enemyState))
 			switchAnimation(enemyState);
 		
 		if(direction==Direction.RIGHT){
-			display.flipTexture(false);
+			currentAction.flipHorizontal(false);
 		} else if(direction==Direction.LEFT){
-			display.flipTexture(true);
+			currentAction.flipHorizontal(true);
 		}
 		
 		if(enemyState == EnemyState.DEAD){
-			display.drawDisable();
+			currentAction.drawDisable();
 		}
 		
 		if(enemyState == EnemyState.FREEZE){
-			display.drawDisable();
+			currentAction.drawDisable();
 		}
 	}
 
@@ -314,6 +318,23 @@ public class Enemy extends GameObject {
 		if(GameTools.boxColDetect(this, playerRef, COLLISION_BUFFER)){
 			enemyState = EnemyState.STAND;
 		}
+	}
+	
+	public boolean isHit(){
+		if(playerRef.getHitActive() && playerRef.getHitStopFrames() == 0){
+			ActionData playerAction = playerRef.getCurrentAction();
+			for(HurtBox hurtBox : currentAction.getHurtBoxes()){
+				for(HitBox hitBox : playerAction.getHitBoxes()){
+					if(GameTools.boxColDetect(hurtBox.getBoxData(), this, hitBox.getBoxData(), playerRef)){
+						Log.d("player hits enemy", "active hit");
+						playerRef.setHitStopFrames(playerAction.getHitstop());
+						return true;
+					}
+				}
+			}
+		}
+		
+		return false;
 	}
 	
 	public void otherAIMoveInteration(){

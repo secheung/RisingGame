@@ -97,11 +97,12 @@
 			"rows":4,
 			"columns":6
 		},
+		"hit_stop":5,
 		"hurt_box":[
 		],
 		"hit_box":[
-			{"left":2.35,"bottom":2.175,"right":3.1,"top":2.75,"active_frame":[12]},
-			{"left":1.6,"bottom":1.9,"right":2.35,"top":2.475,"active_frame":[12]}
+			{"left":2.35,"bottom":2.175,"right":3.1,"top":2.75,"active_frame":[11]},
+			{"left":1.6,"bottom":1.9,"right":2.35,"top":2.475,"active_frame":[11]}
 		]
 	}
 }

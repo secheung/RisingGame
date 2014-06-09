@@ -24,6 +24,7 @@ public class ActionDataTool {
 	private static String NAME = "name";
 	private static String HITBOX = "hit_box";
 	private static String HURTBOX = "hurt_box";
+	private static String HITSTOP = "hit_stop";
 	private static String LEFT = "left";
 	private static String BOTTOM = "bottom";
 	private static String RIGHT = "right";
@@ -91,6 +92,12 @@ public class ActionDataTool {
 				if(actionJSON.has(HURTBOX)){
 					List<HurtBox> hurtBoxes = parseHurtBoxData(actionJSON.getJSONArray(HURTBOX));
 					data.setHurtBoxes(hurtBoxes);
+				}
+				
+				if(actionJSON.has(HITSTOP)){
+					int hitstop = actionJSON.getInt(HITSTOP);
+					data.setHitstop(hitstop);
+					
 				}
 				
 				PlaneData planeData = parsePlaneData(actionJSON.getJSONObject("plane_data"));

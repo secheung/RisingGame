@@ -26,6 +26,8 @@ public class ActionData {
 	Plane animation;
 	PlaneData planeData;
 	
+	int hitstop;
+	
 	boolean flipped = false;
 	//GameObject pairedObj;
 	
@@ -38,6 +40,8 @@ public class ActionData {
 		this.name = name;
 		hitBoxes = new LinkedList<HitBox>();
 		hurtBoxes = new LinkedList<HurtBox>();
+		
+		this.hitstop = -1;
 	}
 	
 	public void createAnimation(int refID){
@@ -222,6 +226,14 @@ public class ActionData {
 
 	public void setPlaneData(PlaneData planeData) {
 		this.planeData = planeData;
+	}
+
+	public int getHitstop() {
+		return hitstop;
+	}
+
+	public void setHitstop(int hitstop) {
+		this.hitstop = hitstop;
 	}
 
 	/*

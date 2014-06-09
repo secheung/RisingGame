@@ -19,6 +19,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.webkit.WebView.FindListener;
+import android.widget.TextView;
 import engine.open2d.renderer.WorldRenderer;
 import game.GameTools.Gesture;
 import game.open2d.R;

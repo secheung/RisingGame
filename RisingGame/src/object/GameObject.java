@@ -39,6 +39,7 @@ public abstract class GameObject {
 	protected boolean hitActive;
 	protected Gesture gesture;
 	
+	protected int hitStopFrames;
 	protected LinkedHashMap<String,GameObject> gameObjects;
 	protected LinkedHashMap<GameObjectState, ActionData> actionData;
 	
@@ -56,6 +57,7 @@ public abstract class GameObject {
 		this.width = currentAction.getPlaneData().getWidth();
 		this.height = currentAction.getPlaneData().getHeight();
 		this.hitActive = false;
+		this.hitStopFrames = 0;
 	}
 	
 	
@@ -195,6 +197,16 @@ public abstract class GameObject {
 
 	public void setHitActive(boolean hitActive) {
 		this.hitActive = hitActive;
+	}
+
+
+	public int getHitStopFrames() {
+		return hitStopFrames;
+	}
+
+
+	public void setHitStopFrames(int hitStopFrames) {
+		this.hitStopFrames = hitStopFrames;
 	}
 	
 }

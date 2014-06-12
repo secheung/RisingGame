@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import engine.open2d.draw.Plane;
+import engine.open2d.texture.AnimatedTexture.Playback;
 
 import android.content.Context;
 import android.util.Log;
@@ -36,8 +37,8 @@ public class ActionDataTool {
 	private static String PLANE_HEIGHT = "height";
 	private static String PLANE_ROWS = "rows";
 	private static String PLANE_COLUMNS = "columns";
-	
-	
+	private static String PLANE_PLAY_BACK = "play_back";
+
 	Context context;
 	String currentFile;
 	public ActionDataTool(Context context){
@@ -61,7 +62,7 @@ public class ActionDataTool {
 			Log.e("STREAM ERROR", e.getMessage());
 			return;
 		}
-		
+
 		this.currentFile = text.toString();
 
 	}
@@ -117,7 +118,13 @@ public class ActionDataTool {
 		int rows = planeData.getInt(PLANE_ROWS);
 		int columns = planeData.getInt(PLANE_COLUMNS);
 		
-		return new PlaneData(width,height,rows,columns);
+		Playback playback = Playback.PLAY;
+		if(planeData.has(PLANE_PLAY_BACK)){
+			String name = planeData.getString(PLANE_PLAY_BACK);
+			playback = Playback.getPlaybackFromName(name);
+		}
+
+		return new PlaneData(width,height,rows,columns,playback);
 	}
 
 	

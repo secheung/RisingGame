@@ -220,7 +220,7 @@ public class Player extends GameObject{
 		
 		if(playerState == PlayerState.TEMP){
 			currentAction.getAnimation().setFrame(TEMP_FRAME);
-			currentAction.getAnimation().setPlayback(Playback.PAUSE);
+			//currentAction.getAnimation().setPlayback(Playback.PAUSE);
 		}
 
 		if(playerState == PlayerState.RUN){
@@ -289,11 +289,8 @@ public class Player extends GameObject{
 			currentAction.getAnimation().setPlayback(Playback.PAUSE);
 			return;
 		} else {
-			currentAction.getAnimation().setPlayback(Playback.PLAY);
-		}
-
-		if(playerState == PlayerState.JUMP || playerState == PlayerState.NFSWIPE){
-			currentAction.getAnimation().setPlayback(Playback.PLAY_ONCE);
+			Playback defaultPlayback = currentAction.getPlaneData().getPlayback();
+			currentAction.getAnimation().setPlayback(defaultPlayback);
 		}
 		
 		if(direction==Direction.RIGHT){

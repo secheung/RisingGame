@@ -5,7 +5,8 @@
 			"width":3.5,
 			"height":3.5,
 			"rows":4,
-			"columns":6
+			"columns":6,
+			"play_back":"pause"
 		},
 		"hurt_box":[
 		],
@@ -79,7 +80,8 @@
 			"width":3.5,
 			"height":3.5,
 			"rows":2,
-			"columns":3
+			"columns":3,
+			"play_back":"play_once"
 		},
 		"hurt_box":[
 		]
@@ -113,7 +115,8 @@
 			"width":3.5,
 			"height":3.5,
 			"rows":4,
-			"columns":6
+			"columns":6,
+			"play_back":"play_once"
 		},
 		"hit_stop":5,
 		"hurt_box":[

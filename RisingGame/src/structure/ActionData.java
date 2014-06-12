@@ -13,6 +13,7 @@ import object.Player.PlayerState;
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
 import engine.open2d.texture.AnimatedTexture;
+import engine.open2d.texture.AnimatedTexture.Playback;
 import game.open2d.R;
 
 public class ActionData {
@@ -46,6 +47,7 @@ public class ActionData {
 	
 	public void createAnimation(int refID){
 		animation = new Plane(refID, name, planeData.getWidth(), planeData.getHeight(), planeData.getRows(), planeData.getColumns());
+		animation.setPlayback(planeData.getPlayback());
 	}
 	
 	public void updateDrawData(WorldRenderer worldRenderer, GameObject pairedObj){

@@ -15,7 +15,9 @@ import android.view.MotionEvent;
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
 import engine.open2d.texture.AnimatedTexture.Playback;
+import game.GameLogic;
 import game.GameTools;
+import game.GestureListener;
 import game.GameTools.Gesture;
 import game.open2d.R;
 
@@ -24,6 +26,7 @@ public class Player extends GameObject{
 		TEMP("jack_temp"),
 		STAND("jack_stand"),
 		RUN("jack_run"),
+		JUMP("jack_jump_startup"),
 		DODGE("jack_dodge"),
 		DEAD("jack_dead"),
 		NTAP("jack_n_tap"),
@@ -60,6 +63,7 @@ public class Player extends GameObject{
 	private static float BUFFER = 0.4f;
 	private static float COLLISION_BUFFER = 1.0f;
 	public static float CANCEL_STRIKE_FRAMES = 8;
+	private static float JUMP_SPEED = 0.75f;
 
 	private Enemy struckEnemy;
 	private PlayerState playerState;
@@ -97,6 +101,7 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.STAND, R.drawable.jack_stand);
 		animationRef.put(PlayerState.DEAD, R.drawable.rising_stance);
 		animationRef.put(PlayerState.RUN, R.drawable.jack_run);
+		animationRef.put(PlayerState.JUMP, R.drawable.jack_jump_startup);
 		animationRef.put(PlayerState.DODGE, R.drawable.rising_dodge);
 		animationRef.put(PlayerState.NTAP, R.drawable.jack_n_tap);
 		animationRef.put(PlayerState.NFSWIPE, R.drawable.jack_n_fswipe);
@@ -137,6 +142,21 @@ public class Player extends GameObject{
 		display.unprojectDisable();
 	}
 
+	public void passDoubleTouchEvent(GestureListener g,  WorldRenderer worldRenderer){
+		Plane display = currentAction.getAnimation();
+		float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(g.getDoubleTapX(), g.getDoubleTapY(), display);
+
+		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
+			if(unprojectedPoints[1] > (this.getY()+this.getHeight())){
+				yVelocity = JUMP_SPEED;
+				y += yVelocity;
+				this.playerState = PlayerState.JUMP;
+			}
+		}
+
+		display.unprojectDisable();
+	}
+
 	@Override
 	public void updateState() {
 		if(hitStopFrames > 0){
@@ -155,6 +175,17 @@ public class Player extends GameObject{
 			}
 		}
 		
+		if(playerState == PlayerState.JUMP){
+			if(this.getY() <= GameLogic.FLOOR){
+				y = GameLogic.FLOOR;
+				yVelocity = 0;
+				playerState = PlayerState.STAND;
+				gesture = Gesture.NONE;
+				moveToX = getMidX();
+				moveToY = getMidY();
+			}
+		}
+
 		/*
 		for(GameObject gameObject : gameObjects.values()){
 			if(gameObject instanceof Enemy){
@@ -199,6 +230,18 @@ public class Player extends GameObject{
 				x -= WALK_SPEED;
 		}
 		
+		if(playerState == PlayerState.JUMP){
+			yVelocity -= GameLogic.GRAVITY;
+			y += yVelocity;
+
+			//if(!(moveToX > getMidX() - Player.BUFFER && moveToX < getMidX() + Player.BUFFER)) {
+				if(direction == Direction.RIGHT)
+					x += WALK_SPEED;
+				else if(direction == Direction.LEFT)
+					x -= WALK_SPEED;
+			//}
+		}
+
 		if(playerState == PlayerState.NFSWIPE){
 			moveToX = getMidX();
 			if(currentAction.getAnimation().getFrame() <= 7 && currentAction.getAnimation().getFrame() >= 5){
@@ -208,7 +251,7 @@ public class Player extends GameObject{
 					x -= NFSWIPE_SPEED;
 			}
 		}
-		
+
 		/*
 		if(isStrikeState()){
 			if(struckEnemy.getX() < x) {
@@ -221,7 +264,7 @@ public class Player extends GameObject{
 				moveToX = getMidX();
 			}
 		}
-		
+
 		if(isCounterState()){
 			gesture = Gesture.NONE;
 		}
@@ -235,6 +278,9 @@ public class Player extends GameObject{
 			moveToX = getMidX();
 			moveToY = getMidY();
 		}
+		
+		if(currentAction != actionData.get(playerState))
+			this.switchAnimation(playerState);
 	}
 	
 	@Override
@@ -245,9 +291,10 @@ public class Player extends GameObject{
 		} else {
 			currentAction.getAnimation().setPlayback(Playback.PLAY);
 		}
-		
-		if(currentAction != actionData.get(playerState))
-			this.switchAnimation(playerState);
+
+		if(playerState == PlayerState.JUMP || playerState == PlayerState.NFSWIPE){
+			currentAction.getAnimation().setPlayback(Playback.PLAY_ONCE);
+		}
 		
 		if(direction==Direction.RIGHT){
 			currentAction.flipHorizontal(false);
@@ -259,6 +306,7 @@ public class Player extends GameObject{
 	@Override
 	public void updateAfterDisplay() {
 		Plane display = currentAction.getAnimation();
+
 		if(display.isPlayed()){
 			/*
 			if(isStrikeState()){
@@ -282,7 +330,6 @@ public class Player extends GameObject{
 				updateCounterIndex();
 			}
 			*/
-			
 			if(	playerState==PlayerState.NFSWIPE){
 				gesture = Gesture.NONE;
 				display.resetAnimation();

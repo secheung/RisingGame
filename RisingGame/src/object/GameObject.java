@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
 import game.GameTools.Gesture;
+import game.GestureListener;
 
 public abstract class GameObject {
 	public interface GameObjectState{};
@@ -28,6 +29,10 @@ public abstract class GameObject {
 	protected float y;
 	protected float z;
 	
+	protected float xVelocity;
+	protected float yVelocity;
+	protected float zVelocity;
+
 	protected float width;
 	protected float height;
 	
@@ -47,6 +52,10 @@ public abstract class GameObject {
 		this.x = x;
 		this.y = y;
 		
+		this.xVelocity = 0;
+		this.yVelocity = 0;
+		this.zVelocity = 0;
+
 		this.gameObjects = gameObjects;
 		this.actionData = new LinkedHashMap<GameObjectState, ActionData>();
 		this.setupAnimRef();
@@ -69,6 +78,7 @@ public abstract class GameObject {
 	public abstract void updateDisplay();
 	public abstract void updateAfterDisplay();
 	public abstract void passTouchEvent(MotionEvent e, WorldRenderer worldRenderer);
+	public abstract void passDoubleTouchEvent(GestureListener g, WorldRenderer worldRenderer);
 	
 	public void updateDrawData(WorldRenderer worldRenderer){
 		currentAction.updateDrawData(worldRenderer,this);

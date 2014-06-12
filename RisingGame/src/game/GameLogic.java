@@ -39,6 +39,9 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	public static float CAM_Y_DEFAULT = 2.0f;
 	public static float CAM_Z_DEFAULT = 1.0f;
 	
+	public static float GRAVITY = 0.098f;
+	public static float FLOOR = -1.0f;
+	
 	WorldRenderer worldRenderer;
 	Context context;
 	
@@ -73,7 +76,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		parser.readFile(R.raw.jack_frame_data);
 		List<ActionData> playerData = parser.parseFrameData();
 		
-		Player player = new Player(gameObjects, playerData, 1.0f, -1.0f);
+		Player player = new Player(gameObjects, playerData, 1.0f, FLOOR);
 		player.loadAnimIntoRenderer(worldRenderer);
 		gameObjects.put(player.getName(), player);
 		
@@ -275,7 +278,9 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	}
 	
 	public void passDoubleTouchEvents(GestureListener gesture){
-		Log.d("doubletap", gesture.getDoubleTapX()+" "+gesture.getDoubleTapY());
+		//Log.d("doubletap", gesture.getDoubleTapX()+" "+gesture.getDoubleTapY());
+		Player player = (Player) gameObjects.get(Player.OBJNAME);
+		player.passDoubleTouchEvent(gesture, worldRenderer);
 	}
 
 	@Override

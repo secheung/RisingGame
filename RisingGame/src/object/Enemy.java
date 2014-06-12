@@ -4,6 +4,7 @@ import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
 import engine.open2d.texture.AnimatedTexture.Playback;
 import game.GameTools;
+import game.GestureListener;
 import game.GameTools.Gesture;
 import game.open2d.R;
 
@@ -302,6 +303,10 @@ public class Enemy extends GameObject {
 		if(gesture != Gesture.NONE){
 			selected = false;
 		}
+	}
+
+	public void passDoubleTouchEvent(GestureListener g,  WorldRenderer worldRenderer){
+
 	}
 
 	public void executeMovement(){

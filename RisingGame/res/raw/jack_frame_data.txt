@@ -72,14 +72,14 @@
 	},
 
 	"jump_action":{
-		"name":"jack_jump",
+		"name":"jack_jump_startup",
 		"xChange":0,
 		"yChange":1.5,
 		"plane_data":{
 			"width":3.5,
 			"height":3.5,
-			"rows":5,
-			"columns":5
+			"rows":2,
+			"columns":3
 		},
 		"hurt_box":[
 		]

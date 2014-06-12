@@ -2,8 +2,11 @@ package game;
 
 import engine.open2d.renderer.WorldRenderer;
 import android.app.Activity;
+import android.gesture.GestureOverlayView.OnGestureListener;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.ViewGroup;
+import android.view.GestureDetector.OnDoubleTapListener;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -59,5 +62,4 @@ public class MainActivity extends Activity {
         super.onResume();
         surfaceView.onResume();
     }
-
 }

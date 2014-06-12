@@ -3,12 +3,8 @@ package game;
 import engine.open2d.renderer.WorldRenderer;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
-import android.text.TextPaint;
-import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.TextView;
 
 public class GameSurfaceView extends GLSurfaceView{
 
@@ -17,8 +13,11 @@ public class GameSurfaceView extends GLSurfaceView{
 	private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
     private WorldRenderer worldRenderer;
 
+    private GestureDetector gestureDetector;
+    private GestureListener gestureListener;
+
 	private GameLogic gameLogic;
-    
+
     public GameSurfaceView(Context context){
 		super(context);
 
@@ -31,7 +30,10 @@ public class GameSurfaceView extends GLSurfaceView{
 		worldRenderer.setTrackFPS(true);
 		setRenderer(worldRenderer);
 		setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-		
+
+		gestureListener = new GestureListener();
+		gestureDetector = new GestureDetector(context,gestureListener);
+
 		gameLogic = new GameLogic(context,worldRenderer);
 		gameLogic.execute();
     }
@@ -41,6 +43,10 @@ public class GameSurfaceView extends GLSurfaceView{
 		//requestRender();
 		worldRenderer.passTouchEvents(e);
 		gameLogic.passTouchEvents(e);
+
+		if(gestureDetector.onTouchEvent(e)){
+			gameLogic.passDoubleTouchEvents(gestureListener);
+		}
 
 		return true;
 	}

@@ -26,6 +26,8 @@ import game.GameTools.Gesture;
 import game.open2d.R;
 
 public class GameLogic extends AsyncTask<Void, Void, Void>{
+	private static final int DOUBLE_TAP_INTERVAL_MIN_CHECK = 3;
+	private static final int DOUBLE_TAP_INTERVAL_MAX_CHECK = 5;
 	private static final int GESTURE_INTERVAL_MIN_CHECK = 2;
 	private static final int GESTURE_INTERVAL_MAX_CHECK = 11;
 	
@@ -272,6 +274,10 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		}
 	}
 	
+	public void passDoubleTouchEvents(GestureListener gesture){
+		Log.d("doubletap", gesture.getDoubleTapX()+" "+gesture.getDoubleTapY());
+	}
+
 	@Override
 	protected Void doInBackground(Void... params) {
 		//TODO fix up later - find method for manual renders

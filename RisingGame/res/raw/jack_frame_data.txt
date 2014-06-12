@@ -70,6 +70,20 @@
 		"hit_box":[
 		]
 	},
+
+	"jump_action":{
+		"name":"jack_jump",
+		"xChange":0,
+		"yChange":1.5,
+		"plane_data":{
+			"width":3.5,
+			"height":3.5,
+			"rows":5,
+			"columns":5
+		},
+		"hurt_box":[
+		]
+	},
 	
 	"n_tap_action":{
 		"name":"jack_n_tap",
@@ -91,6 +105,10 @@
 	
 	"n_fswipe_action":{
 		"name":"jack_n_fswipe",
+		"xChange":0.2,
+		"yChange":0.0,
+		"xForce":1.0,
+		"yForce":0.7,
 		"plane_data":{
 			"width":3.5,
 			"height":3.5,

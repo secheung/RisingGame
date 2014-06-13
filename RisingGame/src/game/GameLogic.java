@@ -39,8 +39,10 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	public static float CAM_Y_DEFAULT = 2.0f;
 	public static float CAM_Z_DEFAULT = 1.0f;
 	
-	public static float GRAVITY = 0.098f;
+	public static float GRAVITY = -0.098f;
 	public static float FLOOR = -1.0f;
+	public static float WALL_RIGHT = 5.0f;
+	public static float WALL_LEFT = -5.0f;
 	
 	WorldRenderer worldRenderer;
 	Context context;
@@ -269,7 +271,6 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		
 		Player player = (Player) gameObjects.get(Player.OBJNAME);
 		player.passTouchEvent(e, worldRenderer);
-
 
 		if(player.getPlayerState() == PlayerState.TEMP){
 			float[] coord = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), player.getDisplay());

@@ -3,6 +3,7 @@ package object;
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
 import engine.open2d.texture.AnimatedTexture.Playback;
+import game.GameLogic;
 import game.GameTools;
 import game.GestureListener;
 import game.GameTools.Gesture;
@@ -69,7 +70,9 @@ public class Enemy extends GameObject {
 	private static float FAR_DIST_TO_PLAYER = 2.5f;
 	private static float CLOSE_DIST_TO_PLAYER = 1.5f;
 	private static float COLLISION_BUFFER = 1.0f;
-	private static float KNOCK_BACK_SPEED = 0.0f;
+	private static float KNOCK_BACK_SPEED = 1.0f;
+	private static float KNOCK_BACK_DECEL = -0.1f;
+	private static float JUMP_SPEED = 0.45f;
 	public static float COLLISION_FRAME = 20.0f;
 	
 	Player playerRef;
@@ -143,11 +146,11 @@ public class Enemy extends GameObject {
 		if(enemyState == EnemyState.STAND){
 			
 			if(Math.abs(checkX - playerRef.getMidX()) > CLOSE_DIST_TO_PLAYER){
-				//enemyState = EnemyState.WALK;
+				enemyState = EnemyState.WALK;
 			}
 			
 			if(Math.abs(checkX - playerRef.getMidX()) > FAR_DIST_TO_PLAYER){
-				//enemyState = EnemyState.RUN;
+				enemyState = EnemyState.RUN;
 			}
 			
 			/*
@@ -162,12 +165,19 @@ public class Enemy extends GameObject {
 		if(isHit() && playerRef.getPlayerState() == PlayerState.NFSWIPE){
 			if(playerRef.getDirection() == Direction.RIGHT){
 				direction = Direction.LEFT;
+				initXAccel(KNOCK_BACK_SPEED);
 			} else if(playerRef.getDirection() == Direction.LEFT){
 				direction = Direction.RIGHT;
+				initXAccel(-KNOCK_BACK_SPEED);
 			}
+			initYAccel(JUMP_SPEED);
 			enemyState = EnemyState.KNOCK_BACK;
 		}
 		
+		if(enemyState == EnemyState.KNOCK_BACK){
+			if(xVelocity == 0 && yVelocity == 0)
+				enemyState = EnemyState.STAND;
+		}
 		//otherAIMoveInteration();
 		
 		/*
@@ -190,10 +200,18 @@ public class Enemy extends GameObject {
 			}
 		}
 		*/
+		
+		if(currentAction != actionData.get(enemyState))
+			switchAnimation(enemyState);
 	}
 
 	@Override
 	public void updateLogic() {
+		if(hitStopFrames > 0){
+			hitStopFrames--;
+			return;
+		}
+		
 		Plane display = currentAction.getAnimation();
 		if(enemyState== EnemyState.TEMP){
 			currentAction.getAnimation().setFrame(TEMP_FRAME);
@@ -229,19 +247,46 @@ public class Enemy extends GameObject {
 		}else if(enemyState == EnemyState.FREEZE){
 			unfreezeTimeCount--;
 		}else if(enemyState == EnemyState.KNOCK_BACK){
-			if(direction == Direction.RIGHT){
-				x -= KNOCK_BACK_SPEED;
+			if(direction == Direction.LEFT){
+				if(x+width >= GameLogic.WALL_RIGHT){
+					x = GameLogic.WALL_RIGHT - width;
+				}
+
+				if(xVelocity <= 0){
+					xVelocity = 0;
+				} else {
+					executeXAccel(KNOCK_BACK_DECEL);
+				}
+			} else if(direction == Direction.RIGHT){
+				if(x <= GameLogic.WALL_LEFT){
+					x = GameLogic.WALL_LEFT;
+				}
+				
+				if(xVelocity >= 0){
+					xVelocity = 0;
+				} else {
+					executeXAccel(-KNOCK_BACK_DECEL);
+				}
 			}
-			else if(direction == Direction.LEFT){
-				x += KNOCK_BACK_SPEED;
+			
+			if(this.getY() <= GameLogic.FLOOR){
+				yVelocity = 0;
+				y = GameLogic.FLOOR;
+			} else {
+				executeYAccel(GameLogic.GRAVITY);
 			}
 		}
 	}
 
 	@Override
 	public void updateDisplay() {
-		if(currentAction != actionData.get(enemyState))
-			switchAnimation(enemyState);
+		if(hitStopFrames > 0){
+			currentAction.getAnimation().setPlayback(Playback.PAUSE);
+			return;
+		} else {
+			Playback defaultPlayback = currentAction.getPlaneData().getPlayback();
+			currentAction.getAnimation().setPlayback(defaultPlayback);
+		}
 		
 		if(direction==Direction.RIGHT){
 			currentAction.flipHorizontal(false);
@@ -331,8 +376,9 @@ public class Enemy extends GameObject {
 			for(HurtBox hurtBox : currentAction.getHurtBoxes()){
 				for(HitBox hitBox : playerAction.getHitBoxes()){
 					if(GameTools.boxColDetect(hurtBox.getBoxData(), this, hitBox.getBoxData(), playerRef)){
-						Log.d("player hits enemy", "active hit");
+						//Log.d("player hits enemy", "active hit");
 						playerRef.setHitStopFrames(playerAction.getHitstop());
+						this.setHitStopFrames(playerAction.getHitstop());
 						return true;
 					}
 				}

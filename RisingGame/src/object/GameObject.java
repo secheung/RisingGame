@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
 import game.GameTools.Gesture;
+import game.GameLogic;
 import game.GestureListener;
 
 public abstract class GameObject {
@@ -115,6 +116,40 @@ public abstract class GameObject {
 		updateLogic();
 		updateDisplay();
 		updateAfterDisplay();
+	}
+	
+	public void initYAccel(float speed){
+		yVelocity = speed;
+		y += yVelocity;
+	}
+	
+	public void executeYAccel(float accel){
+		yVelocity += accel;
+		y += yVelocity;
+	}
+
+	public void initXAccel(float speed){
+		xVelocity = speed;
+		x += xVelocity;
+		/*
+		if(direction == Direction.RIGHT){
+			x += xVelocity;
+		}else if(direction == Direction.LEFT){
+			x -= xVelocity;
+		}
+		*/
+	}
+	
+	public void executeXAccel(float accel){
+		xVelocity += accel;
+		x += xVelocity;
+		/*
+		if(direction == Direction.RIGHT){
+			x += xVelocity;
+		}else if(direction == Direction.LEFT){
+			x -= xVelocity;
+		}
+		*/
 	}
 	
 	public void setGesture(Gesture gesture){

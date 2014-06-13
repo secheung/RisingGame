@@ -114,8 +114,8 @@
 		"plane_data":{
 			"width":3.5,
 			"height":3.5,
-			"rows":4,
-			"columns":6,
+			"rows":2,
+			"columns":11,
 			"play_back":"play_once"
 		},
 		"hit_stop":5,

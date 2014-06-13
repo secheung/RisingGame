@@ -148,8 +148,7 @@ public class Player extends GameObject{
 
 		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
 			if(unprojectedPoints[1] > (this.getY()+this.getHeight())){
-				yVelocity = JUMP_SPEED;
-				y += yVelocity;
+				initYAccel(JUMP_SPEED);
 				this.playerState = PlayerState.JUMP;
 			}
 		}
@@ -220,6 +219,7 @@ public class Player extends GameObject{
 		
 		if(playerState == PlayerState.TEMP){
 			currentAction.getAnimation().setFrame(TEMP_FRAME);
+			direction = Direction.RIGHT;
 			//currentAction.getAnimation().setPlayback(Playback.PAUSE);
 		}
 
@@ -231,15 +231,12 @@ public class Player extends GameObject{
 		}
 		
 		if(playerState == PlayerState.JUMP){
-			yVelocity -= GameLogic.GRAVITY;
-			y += yVelocity;
+			executeYAccel(GameLogic.GRAVITY);
 
-			//if(!(moveToX > getMidX() - Player.BUFFER && moveToX < getMidX() + Player.BUFFER)) {
-				if(direction == Direction.RIGHT)
-					x += WALK_SPEED;
-				else if(direction == Direction.LEFT)
-					x -= WALK_SPEED;
-			//}
+			if(direction == Direction.RIGHT)
+				x += WALK_SPEED;
+			else if(direction == Direction.LEFT)
+				x -= WALK_SPEED;
 		}
 
 		if(playerState == PlayerState.NFSWIPE){

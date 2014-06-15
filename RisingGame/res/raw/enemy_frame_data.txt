@@ -76,6 +76,8 @@
 			{"left":1.0,"bottom":0.0,"right":3.5,"top":3.5}
 		],
 		"hit_box":[
-		]
+		],
+		"x_accel":-0.1,
+		"y_accel":0.7
 	}
 }

@@ -25,23 +25,25 @@ import structure.HurtBox;
 
 public class Enemy extends GameObject {
 	public static enum EnemyState implements GameObjectState{
-		TEMP("enemy_temp"),
-		STAND("enemy_stand"),
-		STRIKE1("enemy_strike"),
-		STRUCK1("enemy_struck1"),
-		KNOCK_BACK("enemy_knock_back"),
-		RUN("enemy_run"),
-		WALK("enemy_walk"),
-		JUMP_BACK("enemy_jump_back"),
-		CROSS_ROLL("enemy_cross_roll"),
-		DODGE("enemy_dodge"),
-		FREEZE("enemy_freeze"),
-		DEAD("enemy_dead");
+		TEMP("temp"),
+		STAND("stand"),
+		STRIKE1("strike"),
+		STRUCK1("struck1"),
+		KNOCK_BACK("knock_back"),
+		RUN("run"),
+		WALK("walk"),
+		JUMP_BACK("jump_back"),
+		CROSS_ROLL("cross_roll"),
+		DODGE("dodge"),
+		FREEZE("freeze"),
+		DEAD("dead");
 		
+		static String OBJECT = "enemy";
 		String name;
-		public static EnemyState getStateFromName(String name){
+		
+		public static EnemyState getStateFromTotalName(String name){
 			for(EnemyState enemyState : EnemyState.values()){
-				if(name.equals(enemyState.getName())){
+				if(name.equals(enemyState.getTotalName())){
 					return enemyState;
 				}
 			}
@@ -50,6 +52,10 @@ public class Enemy extends GameObject {
 		
 		EnemyState(String n){
 			name = n;
+		}
+		
+		public String getTotalName(){
+			return OBJECT+"_"+name;
 		}
 		
 		public String getName(){
@@ -121,7 +127,7 @@ public class Enemy extends GameObject {
 	@Override
 	public void mapActionData(List<ActionData> actionData) {
 		for(ActionData data : actionData){
-			EnemyState state = EnemyState.getStateFromName(data.getName());
+			EnemyState state = EnemyState.getStateFromTotalName(data.getName());
 			if(state != null){
 				int refID = animationRef.get(state);
 				data.createAnimation(refID);
@@ -162,22 +168,30 @@ public class Enemy extends GameObject {
 			executeMovement();
 		}
 		
-		if(isHit() && playerRef.getPlayerState() == PlayerState.NFSWIPE){
+		//if(isHit() && playerRef.getPlayerState() == PlayerState.NFSWIPE){
+		if(isHit()){
 			if(playerRef.getDirection() == Direction.RIGHT){
 				direction = Direction.LEFT;
-				initXAccel(KNOCK_BACK_SPEED);
+				//initXAccel(KNOCK_BACK_SPEED);
+				initXAccel(playerRef.getCurrentAction().getxInitSpeed());
 			} else if(playerRef.getDirection() == Direction.LEFT){
 				direction = Direction.RIGHT;
-				initXAccel(-KNOCK_BACK_SPEED);
+				//initXAccel(-KNOCK_BACK_SPEED);
+				initXAccel(-playerRef.getCurrentAction().getxInitSpeed());
 			}
-			initYAccel(JUMP_SPEED);
-			enemyState = EnemyState.KNOCK_BACK;
+			initYAccel(playerRef.getCurrentAction().getyInitSpeed());
+			enemyState = EnemyState.getStateFromTotalName(EnemyState.OBJECT+"_"+playerRef.getCurrentAction().getHitState());
+			//enemyState = EnemyState.KNOCK_BACK;
 		}
 		
 		if(enemyState == EnemyState.KNOCK_BACK){
 			if(xVelocity == 0 && yVelocity == 0)
 				enemyState = EnemyState.STAND;
 		}
+
+		if(currentAction != actionData.get(enemyState))
+			switchAnimation(enemyState);
+		
 		//otherAIMoveInteration();
 		
 		/*
@@ -200,9 +214,6 @@ public class Enemy extends GameObject {
 			}
 		}
 		*/
-		
-		if(currentAction != actionData.get(enemyState))
-			switchAnimation(enemyState);
 	}
 
 	@Override
@@ -255,7 +266,8 @@ public class Enemy extends GameObject {
 				if(xVelocity <= 0){
 					xVelocity = 0;
 				} else {
-					executeXAccel(KNOCK_BACK_DECEL);
+					//executeXAccel(KNOCK_BACK_DECEL);
+					executeXAccel(currentAction.getxAccel());
 				}
 			} else if(direction == Direction.RIGHT){
 				if(x <= GameLogic.WALL_LEFT){
@@ -265,11 +277,12 @@ public class Enemy extends GameObject {
 				if(xVelocity >= 0){
 					xVelocity = 0;
 				} else {
-					executeXAccel(-KNOCK_BACK_DECEL);
+					//executeXAccel(-KNOCK_BACK_DECEL);
+					executeXAccel(-currentAction.getxAccel());
 				}
 			}
 			
-			if(this.getY() <= GameLogic.FLOOR){
+			if(this.getY() <= GameLogic.FLOOR && yVelocity <= 0){
 				yVelocity = 0;
 				y = GameLogic.FLOOR;
 			} else {
@@ -373,8 +386,8 @@ public class Enemy extends GameObject {
 	public boolean isHit(){
 		if(playerRef.getHitActive() && playerRef.getHitStopFrames() == 0){
 			ActionData playerAction = playerRef.getCurrentAction();
-			for(HurtBox hurtBox : currentAction.getHurtBoxes()){
-				for(HitBox hitBox : playerAction.getHitBoxes()){
+			for(HitBox hitBox : playerAction.getHitBoxes()){
+				for(HurtBox hurtBox : currentAction.getHurtBoxes()){
 					if(GameTools.boxColDetect(hurtBox.getBoxData(), this, hitBox.getBoxData(), playerRef)){
 						//Log.d("player hits enemy", "active hit");
 						playerRef.setHitStopFrames(playerAction.getHitstop());

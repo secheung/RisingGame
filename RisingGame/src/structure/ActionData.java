@@ -28,6 +28,11 @@ public class ActionData {
 	PlaneData planeData;
 	
 	int hitstop;
+	String hitState;
+	float xInitSpeed;
+	float yInitSpeed;
+	float xAccel;
+	float yAccel;
 	
 	boolean flipped = false;
 	//GameObject pairedObj;
@@ -236,6 +241,46 @@ public class ActionData {
 
 	public void setHitstop(int hitstop) {
 		this.hitstop = hitstop;
+	}
+
+	public String getHitState() {
+		return hitState;
+	}
+
+	public void setHitState(String hitState) {
+		this.hitState = hitState;
+	}
+
+	public float getxInitSpeed() {
+		return xInitSpeed;
+	}
+
+	public void setxInitSpeed(float xInitSpeed) {
+		this.xInitSpeed = xInitSpeed;
+	}
+
+	public float getyInitSpeed() {
+		return yInitSpeed;
+	}
+
+	public void setyInitSpeed(float yInitSpeed) {
+		this.yInitSpeed = yInitSpeed;
+	}
+
+	public float getxAccel() {
+		return xAccel;
+	}
+
+	public void setxAccel(float xAccel) {
+		this.xAccel = xAccel;
+	}
+
+	public float getyAccel() {
+		return yAccel;
+	}
+
+	public void setyAccel(float yAccel) {
+		this.yAccel = yAccel;
 	}
 
 	/*

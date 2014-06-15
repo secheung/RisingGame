@@ -63,6 +63,7 @@ public abstract class GameObject {
 		this.mapActionData(actionData);
 		
 		currentAction = this.actionData.get(initState);
+		gesture = Gesture.NONE;
 
 		this.width = currentAction.getPlaneData().getWidth();
 		this.height = currentAction.getPlaneData().getHeight();
@@ -120,7 +121,7 @@ public abstract class GameObject {
 	
 	public void initYAccel(float speed){
 		yVelocity = speed;
-		y += yVelocity;
+		//y += yVelocity;
 	}
 	
 	public void executeYAccel(float accel){
@@ -130,26 +131,12 @@ public abstract class GameObject {
 
 	public void initXAccel(float speed){
 		xVelocity = speed;
-		x += xVelocity;
-		/*
-		if(direction == Direction.RIGHT){
-			x += xVelocity;
-		}else if(direction == Direction.LEFT){
-			x -= xVelocity;
-		}
-		*/
+		//x += xVelocity;
 	}
 	
 	public void executeXAccel(float accel){
 		xVelocity += accel;
 		x += xVelocity;
-		/*
-		if(direction == Direction.RIGHT){
-			x += xVelocity;
-		}else if(direction == Direction.LEFT){
-			x -= xVelocity;
-		}
-		*/
 	}
 	
 	public void setGesture(Gesture gesture){

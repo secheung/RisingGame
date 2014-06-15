@@ -23,27 +23,34 @@ import game.open2d.R;
 
 public class Player extends GameObject{
 	public static enum PlayerState implements GameObjectState{
-		TEMP("jack_temp"),
-		STAND("jack_stand"),
-		RUN("jack_run"),
-		JUMP("jack_jump_startup"),
-		DODGE("jack_dodge"),
-		DEAD("jack_dead"),
-		NTAP("jack_n_tap"),
-		NFSWIPE("jack_n_fswipe");
+		TEMP("temp"),
+		STAND("stand"),
+		RUN("run"),
+		JUMP("jump_startup"),
+		DODGE("dodge"),
+		DEAD("dead"),
+		NTAP("n_tap"),
+		NFSWIPE("n_fswipe"),
+		NUSWIPE("n_uswipe");
 		
-		public static PlayerState getStateFromName(String name){
+		static String OBJECT = "jack";
+		String name;
+		
+		public static PlayerState getStateFromTotalName(String name){
 			for(PlayerState playerState : PlayerState.values()){
-				if(name.equals(playerState.getName())){
+				if(name.equals(playerState.getTotalName())){
 					return playerState;
 				}
 			}
 			return null;
 		}
 		
-		String name;
 		PlayerState(String n){
 			name = n;
+		}
+		
+		public String getTotalName(){
+			return OBJECT+"_"+name;
 		}
 		
 		public String getName(){
@@ -105,13 +112,14 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.DODGE, R.drawable.rising_dodge);
 		animationRef.put(PlayerState.NTAP, R.drawable.jack_n_tap);
 		animationRef.put(PlayerState.NFSWIPE, R.drawable.jack_n_fswipe);
+		animationRef.put(PlayerState.NUSWIPE, R.drawable.jack_n_uswipe);
 		
 	}
 	
 	@Override
 	public void mapActionData(List<ActionData> actionData) {
 		for(ActionData data : actionData){
-			PlayerState state = PlayerState.getStateFromName(data.getName());
+			PlayerState state = PlayerState.getStateFromTotalName(data.getName());
 			if(state != null){
 				int refID = animationRef.get(state);
 				data.createAnimation(refID);
@@ -164,8 +172,10 @@ public class Player extends GameObject{
 		
 		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
 			executeMovement();
-			
-			if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.LEFT){
+
+			if(GameTools.gestureBreakdownVertical(gesture) == Gesture.UP) {
+				playerState = PlayerState.NUSWIPE;
+			}else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.LEFT){
 				playerState = PlayerState.NFSWIPE;
 				this.direction = Direction.LEFT;
 			} else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.RIGHT) {
@@ -175,7 +185,7 @@ public class Player extends GameObject{
 		}
 		
 		if(playerState == PlayerState.JUMP){
-			if(this.getY() <= GameLogic.FLOOR){
+			if(this.getY() <= GameLogic.FLOOR && yVelocity <= 0){
 				y = GameLogic.FLOOR;
 				yVelocity = 0;
 				playerState = PlayerState.STAND;
@@ -249,6 +259,10 @@ public class Player extends GameObject{
 			}
 		}
 
+		if(playerState == PlayerState.NUSWIPE){
+			moveToX = getMidX();
+		}
+		
 		/*
 		if(isStrikeState()){
 			if(struckEnemy.getX() < x) {
@@ -325,6 +339,12 @@ public class Player extends GameObject{
 			}
 			*/
 			if(	playerState==PlayerState.NFSWIPE){
+				gesture = Gesture.NONE;
+				display.resetAnimation();
+				playerState = PlayerState.STAND;
+			}
+			
+			if(	playerState==PlayerState.NUSWIPE){
 				gesture = Gesture.NONE;
 				display.resetAnimation();
 				playerState = PlayerState.STAND;

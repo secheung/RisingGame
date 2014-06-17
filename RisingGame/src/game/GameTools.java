@@ -14,7 +14,27 @@ public class GameTools {
 		DOWN,
 		DOWN_LEFT,
 		LEFT,
-		UP_LEFT
+		UP_LEFT;
+		
+		float xDiffSize = 0;
+		float yDiffSize = 0;
+		public Gesture setXDiffSize(float diff){
+			xDiffSize = diff;
+			return this;
+		}
+		
+		public float getXDiffSize(){
+			return xDiffSize;
+		}
+		
+		public Gesture setYDiffSize(float diff){
+			yDiffSize = diff;
+			return this;
+		}
+		
+		public float getYDiffSize(){
+			return yDiffSize;
+		}
 	}
 	
 	public static final int SWIPE_LEFT = 30;
@@ -111,13 +131,13 @@ public class GameTools {
 		Gesture vertical = gestureDetectionVertical(prevY,curY);
 		
 		if(horizontal == Gesture.RIGHT && vertical == Gesture.UP)
-			return Gesture.UP_RIGHT;
+			return Gesture.UP_RIGHT.setXDiffSize(horizontal.getXDiffSize()).setYDiffSize(vertical.getYDiffSize());
 		else if(horizontal == Gesture.RIGHT && vertical == Gesture.DOWN)
-			return Gesture.DOWN_RIGHT;
+			return Gesture.DOWN_RIGHT.setXDiffSize(horizontal.getXDiffSize()).setYDiffSize(vertical.getYDiffSize());
 		else if(horizontal == Gesture.LEFT&& vertical == Gesture.UP)
-			return Gesture.UP_LEFT;
+			return Gesture.UP_LEFT.setXDiffSize(horizontal.getXDiffSize()).setYDiffSize(vertical.getYDiffSize());
 		else if(horizontal == Gesture.LEFT&& vertical == Gesture.DOWN)
-			return Gesture.DOWN_LEFT;
+			return Gesture.DOWN_LEFT.setXDiffSize(horizontal.getXDiffSize()).setYDiffSize(vertical.getYDiffSize());
 		
 		if(horizontal == Gesture.NONE)
 			return vertical;
@@ -130,9 +150,9 @@ public class GameTools {
 	public static Gesture gestureDetectionHorizontal(float prevX, float curX){
 		float xDiff = prevX - curX;
 		if(xDiff > SWIPE_LEFT){
-			return Gesture.LEFT;
+			return Gesture.LEFT.setXDiffSize(xDiff);
 		} else if(xDiff < SWIPE_RIGHT){
-			return Gesture.RIGHT;
+			return Gesture.RIGHT.setXDiffSize(xDiff);
 		}
 		
 		return Gesture.NONE;
@@ -141,9 +161,9 @@ public class GameTools {
 	public static Gesture gestureDetectionVertical(float prevY, float curY){
 		float yDiff = prevY - curY;
 		if(yDiff > SWIPE_UP){
-			return Gesture.UP;
+			return Gesture.UP.setYDiffSize(yDiff);
 		} else if(yDiff < SWIPE_DOWN){
-			return Gesture.DOWN;
+			return Gesture.DOWN.setYDiffSize(yDiff);
 		}
 		
 		return Gesture.NONE;

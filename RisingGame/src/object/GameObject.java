@@ -2,10 +2,12 @@ package object;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import structure.ActionData;
-import android.R;
+import structure.HitBox;
+import structure.HurtBox;
 import android.util.Log;
 import android.view.MotionEvent;
 import engine.open2d.draw.Plane;
@@ -23,6 +25,8 @@ public abstract class GameObject {
 		UP,
 		DOWN
 	}
+	
+	public static int INPUT_LIST_SIZE = 2;
 	
 	protected Direction direction;
 	
@@ -43,7 +47,8 @@ public abstract class GameObject {
 	protected String name;
 	public boolean selected;
 	protected boolean hitActive;
-	protected Gesture gesture;
+	protected LinkedList<Gesture> inputList;
+	//protected Gesture gesture;
 	
 	protected int hitStopFrames;
 	protected LinkedHashMap<String,GameObject> gameObjects;
@@ -63,7 +68,8 @@ public abstract class GameObject {
 		this.mapActionData(actionData);
 		
 		currentAction = this.actionData.get(initState);
-		gesture = Gesture.NONE;
+		//gesture = Gesture.NONE;
+		inputList = new LinkedList<Gesture>();
 
 		this.width = currentAction.getPlaneData().getWidth();
 		this.height = currentAction.getPlaneData().getHeight();
@@ -139,8 +145,26 @@ public abstract class GameObject {
 		x += xVelocity;
 	}
 	
+	public void addGesture(Gesture gesture){
+		if(inputList.size() <= INPUT_LIST_SIZE){
+			inputList.add(gesture);
+		}
+	}
+	
+	/*
 	public void setGesture(Gesture gesture){
 		this.gesture = gesture; 
+	}
+	*/
+	
+	public boolean isOnGround(){
+		List<HurtBox> hurtBoxes = currentAction.getHurtBoxes();
+		for(HurtBox box : hurtBoxes){
+			if(y+box.getBoxData().bottom <= GameLogic.FLOOR)
+				return true;
+		}
+		
+		return false;
 	}
 	
 	public String getName() {

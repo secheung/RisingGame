@@ -4,10 +4,11 @@
 		"plane_data":{
 			"width":3.5,
 			"height":3.5,
-			"rows":4,
-			"columns":6
+			"rows":2,
+			"columns":5
 		},
 		"hurt_box":[
+			{"left":1.1,"bottom":1.25,"right":2.9,"top":2.5}
 		],
 		"hit_box":[
 		]
@@ -22,7 +23,7 @@
 			"columns":7
 		},
 		"hurt_box":[
-					{"left":0.0,"bottom":0.0,"right":3.5,"top":3.5}
+					{"left":0.0,"bottom":1.5,"right":3.5,"top":3.5}
 		],
 		"hit_box":[
 		]
@@ -41,8 +42,6 @@
 					{"left":0.0,"bottom":1.0,"right":3.5,"top":2.5,"active_frame":[2]}
 		],
 		"hit_box":[
-					{"left":0.0,"top":1.5,"right":3.5,"bottom":0.0,"active_frame":[4]},
-					{"left":0.0,"top":3.5,"right":3.5,"bottom":2.0}
 		]
 	},
 	
@@ -63,8 +62,7 @@
 					{"left":0.0,"top":3.5,"right":3.5,"bottom":2.0}
 		]
 	},
-	
-	"knockback_action":{
+	"knock_back_action":{
 		"name":"enemy_knock_back",
 		"plane_data":{
 			"width":3.5,
@@ -73,7 +71,23 @@
 			"columns":5
 		},
 		"hurt_box":[
-			{"left":1.0,"bottom":0.0,"right":3.5,"top":3.5}
+			{"left":1.1,"bottom":1.25,"right":2.9,"top":2.5}
+		],
+		"hit_box":[
+		],
+		"x_accel":-0.1,
+		"y_accel":0.7
+	},
+	"wall_bounce_action":{
+		"name":"enemy_wall_bounce",
+		"plane_data":{
+			"width":3.5,
+			"height":3.5,
+			"rows":2,
+			"columns":5
+		},
+		"hurt_box":[
+			{"left":1.0,"bottom":1.25,"right":3.5,"top":3.5}
 		],
 		"hit_box":[
 		],

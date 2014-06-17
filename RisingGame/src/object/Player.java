@@ -61,7 +61,7 @@ public class Player extends GameObject{
 	public static String OBJNAME = "player";
 	private static PlayerState INIT_STATE = PlayerState.STAND;
 	
-	private static final int TEMP_FRAME = 12;
+	private static final int TEMP_FRAME = 10;
 
 	private static float WALK_SPEED = 0.2f;
 	private static float STRIKE_SPEED = 0.1f;
@@ -104,7 +104,7 @@ public class Player extends GameObject{
 	public void setupAnimRef() {
 		animationRef = new HashMap<GameObjectState, Integer>();
 		//animationRef.put(PlayerState.STAND, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.STAND.getName(), width, height, 4, 7));
-		animationRef.put(PlayerState.TEMP, R.drawable.jack_n_fswipe);
+		animationRef.put(PlayerState.TEMP, R.drawable.jack_n_uswipe);
 		animationRef.put(PlayerState.STAND, R.drawable.jack_stand);
 		animationRef.put(PlayerState.DEAD, R.drawable.rising_stance);
 		animationRef.put(PlayerState.RUN, R.drawable.jack_run);
@@ -170,17 +170,27 @@ public class Player extends GameObject{
 			return;
 		}
 		
+		Gesture gesture = Gesture.NONE;
 		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
 			executeMovement();
-
-			if(GameTools.gestureBreakdownVertical(gesture) == Gesture.UP) {
-				playerState = PlayerState.NUSWIPE;
-			}else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.LEFT){
-				playerState = PlayerState.NFSWIPE;
-				this.direction = Direction.LEFT;
-			} else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.RIGHT) {
-				playerState = PlayerState.NFSWIPE;
-				this.direction = Direction.RIGHT;
+			
+			if(!inputList.isEmpty()){
+				gesture = inputList.getFirst();
+				inputList.removeFirst();
+			}
+			
+			if(Math.abs(gesture.getXDiffSize()) > Math.abs(gesture.getYDiffSize())){
+				if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.LEFT){
+					playerState = PlayerState.NFSWIPE;
+					this.direction = Direction.LEFT;
+				} else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.RIGHT) {
+					playerState = PlayerState.NFSWIPE;
+					this.direction = Direction.RIGHT;
+				}
+			} else {
+				if(GameTools.gestureBreakdownVertical(gesture) == Gesture.UP) {
+					playerState = PlayerState.NUSWIPE;
+				}
 			}
 		}
 		
@@ -339,19 +349,19 @@ public class Player extends GameObject{
 			}
 			*/
 			if(	playerState==PlayerState.NFSWIPE){
-				gesture = Gesture.NONE;
+				//gesture = Gesture.NONE;
 				display.resetAnimation();
 				playerState = PlayerState.STAND;
 			}
 			
 			if(	playerState==PlayerState.NUSWIPE){
-				gesture = Gesture.NONE;
+				//gesture = Gesture.NONE;
 				display.resetAnimation();
 				playerState = PlayerState.STAND;
 			}
 			
 			if(	playerState==PlayerState.DODGE){
-				gesture = Gesture.NONE;
+				//gesture = Gesture.NONE;
 				display.resetAnimation();
 				playerState = PlayerState.STAND;				
 			}

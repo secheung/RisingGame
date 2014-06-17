@@ -4,8 +4,8 @@
 		"plane_data":{
 			"width":3.5,
 			"height":3.5,
-			"rows":4,
-			"columns":6,
+			"rows":3,
+			"columns":7,
 			"play_back":"pause"
 		},
 		"hurt_box":[
@@ -136,18 +136,17 @@
 			"width":3.5,
 			"height":3.5,
 			"rows":3,
-			"columns":5,
+			"columns":6,
 			"play_back":"play_once"
 		},
 		"hit_stop":1,
 		"hurt_box":[
 		],
 		"hit_box":[
-			{"left":2.35,"bottom":2.175,"right":3.1,"top":2.75,"active_frame":[4]},
-			{"left":1.6,"bottom":1.9,"right":2.35,"top":2.475,"active_frame":[4]}
+			{"left":2.35,"bottom":0.0,"right":2.9,"top":3.25,"active_frame":[9]}
 		],
 		"x_init_speed":0.6,
-		"y_init_speed":1.1,
+		"y_init_speed":0.95,
 		"hit_state":"knock_back"
 	}
 }

@@ -30,6 +30,7 @@ public class Enemy extends GameObject {
 		STRIKE1("strike"),
 		STRUCK1("struck1"),
 		KNOCK_BACK("knock_back"),
+		WALL_BOUNCE("wall_bounce"),
 		RUN("run"),
 		WALK("walk"),
 		JUMP_BACK("jump_back"),
@@ -109,7 +110,7 @@ public class Enemy extends GameObject {
 	@Override
 	public void setupAnimRef() {
 		animationRef = new HashMap<GameObjectState, Integer>();
-		animationRef.put(EnemyState.TEMP, R.drawable.enemy_stance);
+		animationRef.put(EnemyState.TEMP, R.drawable.enemy_knock_back);
 		animationRef.put(EnemyState.STAND, R.drawable.enemy_stance);
 		animationRef.put(EnemyState.FREEZE, R.drawable.enemy_stance);
 		animationRef.put(EnemyState.RUN, R.drawable.enemy_run);
@@ -121,6 +122,7 @@ public class Enemy extends GameObject {
 		animationRef.put(EnemyState.STRUCK1, R.drawable.enemy_struck1);
 		
 		animationRef.put(EnemyState.KNOCK_BACK, R.drawable.enemy_knock_back);
+		animationRef.put(EnemyState.WALL_BOUNCE, R.drawable.enemy_knock_back);
 		
 	}
 
@@ -135,9 +137,13 @@ public class Enemy extends GameObject {
 			}
 		}
 	}
-	
+
 	@Override
 	public void updateState() {
+		if(hitStopFrames > 0){
+			return;
+		}
+		
 		float checkX = getMidX();
 		
 		//if(!isStrikeState() && !isDodging()){
@@ -170,6 +176,10 @@ public class Enemy extends GameObject {
 		
 		//if(isHit() && playerRef.getPlayerState() == PlayerState.NFSWIPE){
 		if(isHit()){
+			//Log.d("player hits enemy", "active hit");
+			playerRef.setHitStopFrames(playerRef.currentAction.getHitstop());
+			this.setHitStopFrames(playerRef.currentAction.getHitstop());
+			
 			if(playerRef.getDirection() == Direction.RIGHT){
 				direction = Direction.LEFT;
 				//initXAccel(KNOCK_BACK_SPEED);
@@ -222,15 +232,14 @@ public class Enemy extends GameObject {
 			hitStopFrames--;
 			return;
 		}
-		
-		Plane display = currentAction.getAnimation();
+
 		if(enemyState== EnemyState.TEMP){
 			currentAction.getAnimation().setFrame(TEMP_FRAME);
-			currentAction.getAnimation().setPlayback(Playback.PAUSE);
+			direction = Direction.RIGHT;
 		}
 		
 		if(enemyState == EnemyState.STRUCK1){
-			if(display.getFrame() < Player.CANCEL_STRIKE_FRAMES){
+			if(currentAction.getAnimation().getFrame() < Player.CANCEL_STRIKE_FRAMES){
 				selected = false;
 			}
 		}else if(isStrikeState()){
@@ -266,7 +275,6 @@ public class Enemy extends GameObject {
 				if(xVelocity <= 0){
 					xVelocity = 0;
 				} else {
-					//executeXAccel(KNOCK_BACK_DECEL);
 					executeXAccel(currentAction.getxAccel());
 				}
 			} else if(direction == Direction.RIGHT){
@@ -277,12 +285,11 @@ public class Enemy extends GameObject {
 				if(xVelocity >= 0){
 					xVelocity = 0;
 				} else {
-					//executeXAccel(-KNOCK_BACK_DECEL);
 					executeXAccel(-currentAction.getxAccel());
 				}
 			}
 			
-			if(this.getY() <= GameLogic.FLOOR && yVelocity <= 0){
+			if(isOnGround() && yVelocity <= 0){
 				yVelocity = 0;
 				y = GameLogic.FLOOR;
 			} else {
@@ -358,9 +365,9 @@ public class Enemy extends GameObject {
 //			selected = true;
 //		}
 		
-		if(gesture != Gesture.NONE){
-			selected = false;
-		}
+//		if(gesture != Gesture.NONE){
+//			selected = false;
+//		}
 	}
 
 	public void passDoubleTouchEvent(GestureListener g,  WorldRenderer worldRenderer){
@@ -389,9 +396,6 @@ public class Enemy extends GameObject {
 			for(HitBox hitBox : playerAction.getHitBoxes()){
 				for(HurtBox hurtBox : currentAction.getHurtBoxes()){
 					if(GameTools.boxColDetect(hurtBox.getBoxData(), this, hitBox.getBoxData(), playerRef)){
-						//Log.d("player hits enemy", "active hit");
-						playerRef.setHitStopFrames(playerAction.getHitstop());
-						this.setHitStopFrames(playerAction.getHitstop());
 						return true;
 					}
 				}

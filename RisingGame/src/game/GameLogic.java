@@ -83,7 +83,6 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		gameObjects.put(player.getName(), player);
 		
 		
-
 		enemyIndex = 1;
 		parser.readFile(R.raw.enemy_frame_data);
 		List<ActionData> enemyData = parser.parseFrameData();
@@ -92,7 +91,6 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		//enemy.getDisplay().drawDisable();
 		enemy.loadAnimIntoRenderer(worldRenderer);
 		gameObjects.put(enemy.getName(), enemy);
-
 	}
 	
 	public void update(){
@@ -259,7 +257,8 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 			}
 		} else if(e.getAction() == MotionEvent.ACTION_UP){
 			for(GameObject gameObject : gameObjects.values()){
-				gameObject.setGesture(gesture);
+				//gameObject.setGesture(gesture);
+				gameObject.addGesture(gesture);
 			}
 			
 			if(gesture == Gesture.UP){

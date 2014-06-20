@@ -30,6 +30,7 @@ public class Enemy extends GameObject {
 		STRIKE1("strike"),
 		STRUCK1("struck1"),
 		KNOCK_BACK("knock_back"),
+		KNOCK_DOWN("knock_down"),
 		WALL_BOUNCE("wall_bounce"),
 		RUN("run"),
 		WALK("walk"),
@@ -122,6 +123,7 @@ public class Enemy extends GameObject {
 		animationRef.put(EnemyState.STRUCK1, R.drawable.enemy_struck1);
 		
 		animationRef.put(EnemyState.KNOCK_BACK, R.drawable.enemy_knock_back);
+		animationRef.put(EnemyState.KNOCK_DOWN, R.drawable.enemy_knock_down);
 		animationRef.put(EnemyState.WALL_BOUNCE, R.drawable.enemy_knock_back);
 		
 	}
@@ -147,7 +149,7 @@ public class Enemy extends GameObject {
 		float checkX = getMidX();
 		
 		//if(!isStrikeState() && !isDodging()){
-		if(enemyState != EnemyState.KNOCK_BACK){
+		if(enemyState != EnemyState.KNOCK_BACK && enemyState != EnemyState.KNOCK_DOWN && enemyState != EnemyState.WALL_BOUNCE){
 			if(playerRef.getMidX() > checkX){
 				direction = Direction.RIGHT;
 			} else if(playerRef.getMidX() < checkX){
@@ -182,25 +184,51 @@ public class Enemy extends GameObject {
 			
 			if(playerRef.getDirection() == Direction.RIGHT){
 				direction = Direction.LEFT;
-				//initXAccel(KNOCK_BACK_SPEED);
-				initXAccel(playerRef.getCurrentAction().getxInitSpeed());
+				//initXAccel(playerRef.getCurrentAction().getxInitSpeed());
 			} else if(playerRef.getDirection() == Direction.LEFT){
 				direction = Direction.RIGHT;
-				//initXAccel(-KNOCK_BACK_SPEED);
-				initXAccel(-playerRef.getCurrentAction().getxInitSpeed());
+				//initXAccel(-playerRef.getCurrentAction().getxInitSpeed());
 			}
-			initYAccel(playerRef.getCurrentAction().getyInitSpeed());
+			//initYAccel(playerRef.getCurrentAction().getyInitSpeed());
 			enemyState = EnemyState.getStateFromTotalName(EnemyState.OBJECT+"_"+playerRef.getCurrentAction().getHitState());
-			//enemyState = EnemyState.KNOCK_BACK;
+			initSpeed = true;
+		} else if(enemyState == EnemyState.KNOCK_BACK){
+			Log.d(enemyState.toString(), "xVel:"+xVelocity);
+			if(x+width >= GameLogic.WALL_RIGHT || x <= GameLogic.WALL_LEFT){
+				enemyState = EnemyState.WALL_BOUNCE;
+				initSpeed = true;
+			}
+			/*
+			if(direction == Direction.LEFT){
+				if(x+width >= GameLogic.WALL_RIGHT){
+					enemyState = EnemyState.WALL_BOUNCE;
+					initSpeed = true;
+				}
+			} else if(direction == Direction.RIGHT){
+				if(x <= GameLogic.WALL_LEFT){
+					enemyState = EnemyState.WALL_BOUNCE;
+					initSpeed = true;
+				}
+			}
+			*/
+			
+			if(isOnGround()){
+				initSpeed = true;
+				enemyState = EnemyState.KNOCK_DOWN;
+			}
+		} else if(enemyState == EnemyState.WALL_BOUNCE){
+			Log.d(enemyState.toString(), "xVel:"+xVelocity);
+			if(isOnGround()){
+				initSpeed = true;
+				enemyState = EnemyState.KNOCK_DOWN;
+			}
+		} else if(enemyState == EnemyState.KNOCK_DOWN){
+			Log.d(enemyState.toString(), "xVel:"+xVelocity);
 		}
 		
-		if(enemyState == EnemyState.KNOCK_BACK){
-			if(xVelocity == 0 && yVelocity == 0)
-				enemyState = EnemyState.STAND;
+		if(currentAction != actionData.get(enemyState)){
+			switchAction(enemyState);
 		}
-
-		if(currentAction != actionData.get(enemyState))
-			switchAnimation(enemyState);
 		
 		//otherAIMoveInteration();
 		
@@ -267,10 +295,14 @@ public class Enemy extends GameObject {
 		}else if(enemyState == EnemyState.FREEZE){
 			unfreezeTimeCount--;
 		}else if(enemyState == EnemyState.KNOCK_BACK){
+			executeKnockBack();
+			/*
 			if(direction == Direction.LEFT){
-				if(x+width >= GameLogic.WALL_RIGHT){
-					x = GameLogic.WALL_RIGHT - width;
-				}
+				
+				//if(x+width >= GameLogic.WALL_RIGHT){
+				//	x = GameLogic.WALL_RIGHT - width;
+				//}
+				
 
 				if(xVelocity <= 0){
 					xVelocity = 0;
@@ -278,9 +310,9 @@ public class Enemy extends GameObject {
 					executeXAccel(currentAction.getxAccel());
 				}
 			} else if(direction == Direction.RIGHT){
-				if(x <= GameLogic.WALL_LEFT){
-					x = GameLogic.WALL_LEFT;
-				}
+				//if(x <= GameLogic.WALL_LEFT){
+				//	x = GameLogic.WALL_LEFT;
+				//}
 				
 				if(xVelocity >= 0){
 					xVelocity = 0;
@@ -295,6 +327,11 @@ public class Enemy extends GameObject {
 			} else {
 				executeYAccel(GameLogic.GRAVITY);
 			}
+			*/
+		} else if(enemyState == EnemyState.WALL_BOUNCE){
+			executeWallBounce();
+		} else if(enemyState == EnemyState.KNOCK_DOWN){
+			executeKnockDown();
 		}
 	}
 
@@ -339,6 +376,10 @@ public class Enemy extends GameObject {
 			display.resetAnimation();
 			enemyState = EnemyState.STAND;
 		} else if(enemyState == EnemyState.STRUCK1){
+			display.resetAnimation();
+			struck -= 1;
+			enemyState = EnemyState.STAND;
+		} else if(enemyState == EnemyState.KNOCK_DOWN){
 			display.resetAnimation();
 			struck -= 1;
 			enemyState = EnemyState.STAND;
@@ -388,6 +429,102 @@ public class Enemy extends GameObject {
 		if(GameTools.boxColDetect(this, playerRef, COLLISION_BUFFER)){
 			enemyState = EnemyState.STAND;
 		}
+	}
+	
+	//public void executeXAccelDirection(){
+	public void executeKnockBack(){
+		if(initSpeed){
+			if(direction == Direction.LEFT){
+				//initXPhys(-currentAction.getxInitSpeed(), -currentAction.getxAccel());
+				initXPhys(playerRef.getCurrentAction().getxInitSpeed(), -currentAction.getxAccel());
+			} else if(direction == Direction.RIGHT){
+				//initXPhys(currentAction.getxInitSpeed(), currentAction.getxAccel());
+				initXPhys(-playerRef.getCurrentAction().getxInitSpeed(), currentAction.getxAccel());
+			}
+			initSpeed = false;
+			initYPhys(playerRef.getCurrentAction().getyInitSpeed(), GameLogic.GRAVITY);
+			return;
+		}
+
+		
+		if(Math.abs(xVelocity) >= 0 && Math.abs(xVelocity) <= 0.05){
+			xVelocity = 0;
+		} else {
+			executeXPhys();
+		}
+		
+		executeYPhys();
+	}
+
+	public void executeWallBounce(){
+		if(initSpeed){
+			if(direction == Direction.LEFT){
+				//initXPhys(-currentAction.getxInitSpeed(), -currentAction.getxAccel());
+				initXPhys(-xVelocity, -currentAction.getxAccel());
+			} else if(direction == Direction.RIGHT){
+				//initXPhys(currentAction.getxInitSpeed(), currentAction.getxAccel());
+				initXPhys(-xVelocity, currentAction.getxAccel());
+			}
+			initYPhys(yVelocity, GameLogic.GRAVITY);
+			initSpeed = false;
+			return;
+		}
+		
+		if(Math.abs(xVelocity) >= 0 && Math.abs(xVelocity) <= 0.05){
+			xVelocity = 0;
+		} else {
+			executeXPhys();
+		}
+		executeYPhys();
+	}
+	
+	public void executeKnockDown(){
+		if(initSpeed){
+			initSpeed = false;
+			if(direction == Direction.LEFT){
+				initXPhys(xVelocity, -currentAction.getxAccel());
+			} else if(direction == Direction.RIGHT){
+				initXPhys(xVelocity, currentAction.getxAccel());
+			}
+			
+			y = GameLogic.FLOOR;
+			yVelocity = 0;
+			yAccel = 0;
+			return;
+		}
+		
+		/*
+		if(direction == Direction.RIGHT){
+			if(!initSpeed && xVelocity >= 0){
+				xVelocity = 0;
+			}
+		} else if(direction == Direction.LEFT){
+			if (!initSpeed && xVelocity <= 0){
+				xVelocity = 0;
+			}
+		}
+		*/
+
+		if(direction == Direction.LEFT){
+			if(x+width >= GameLogic.WALL_RIGHT){
+				x = GameLogic.WALL_RIGHT - width;
+				initXPhys(0, 0);
+			}
+			
+			if (!initSpeed && xVelocity <= 0){
+				initXPhys(0, 0);
+			}
+		} else if(direction == Direction.RIGHT){
+			if(x <= GameLogic.WALL_LEFT){
+				x = GameLogic.WALL_LEFT;
+				initXPhys(0, 0);
+			}
+			
+			if(!initSpeed && xVelocity >= 0){
+				initXPhys(0, 0);
+			}
+		}
+		executeXPhys();
 	}
 	
 	public boolean isHit(){

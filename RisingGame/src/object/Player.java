@@ -156,8 +156,8 @@ public class Player extends GameObject{
 
 		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
 			if(unprojectedPoints[1] > (this.getY()+this.getHeight())){
-				initYAccel(JUMP_SPEED);
 				this.playerState = PlayerState.JUMP;
+				initSpeed = true;
 			}
 		}
 
@@ -251,7 +251,12 @@ public class Player extends GameObject{
 		}
 		
 		if(playerState == PlayerState.JUMP){
-			executeYAccel(GameLogic.GRAVITY);
+			if(initSpeed){
+				initSpeed = false;
+				initYPhys(JUMP_SPEED, GameLogic.GRAVITY);
+			} else{
+				executeYPhys();
+			}
 
 			if(direction == Direction.RIGHT)
 				x += WALK_SPEED;
@@ -301,7 +306,7 @@ public class Player extends GameObject{
 		}
 		
 		if(currentAction != actionData.get(playerState))
-			this.switchAnimation(playerState);
+			this.switchAction(playerState);
 	}
 	
 	@Override

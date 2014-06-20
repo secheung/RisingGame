@@ -62,6 +62,23 @@
 					{"left":0.0,"top":3.5,"right":3.5,"bottom":2.0}
 		]
 	},
+	"knock_down_action":{
+		"name":"enemy_knock_down",
+		"plane_data":{
+			"width":3.5,
+			"height":3.5,
+			"rows":3,
+			"columns":6,
+			"play_back":"play_once"
+		},
+		"hurt_box":[
+			{"left":1.1,"bottom":1.25,"right":2.9,"top":2.5}
+		],
+		"hit_box":[
+		],
+		"x_accel":0.1,
+		"y_accel":0.0
+	},
 	"knock_back_action":{
 		"name":"enemy_knock_back",
 		"plane_data":{
@@ -75,7 +92,9 @@
 		],
 		"hit_box":[
 		],
-		"x_accel":-0.1,
+		"x_init_speed":-1.0,
+		"y_init_speed":0.7,
+		"x_accel":0.1,
 		"y_accel":0.7
 	},
 	"wall_bounce_action":{
@@ -84,13 +103,16 @@
 			"width":3.5,
 			"height":3.5,
 			"rows":2,
-			"columns":5
+			"columns":5,
+			"play_back":"play_once"
 		},
 		"hurt_box":[
-			{"left":1.0,"bottom":1.25,"right":3.5,"top":3.5}
+			{"left":1.1,"bottom":1.25,"right":2.9,"top":2.5}
 		],
 		"hit_box":[
 		],
+		"x_init_speed":0.7,
+		"y_init_speed":0.0,
 		"x_accel":-0.1,
 		"y_accel":0.7
 	}

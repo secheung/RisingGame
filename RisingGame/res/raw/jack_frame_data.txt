@@ -120,11 +120,11 @@
 		"hurt_box":[
 		],
 		"hit_box":[
-			{"left":2.35,"bottom":2.175,"right":3.1,"top":2.75,"active_frame":[11]},
-			{"left":1.6,"bottom":1.9,"right":2.35,"top":2.475,"active_frame":[11]}
+			{"left":2.35,"bottom":2.175,"right":3.1,"top":2.75,"active_frame":[11,12,13]},
+			{"left":1.6,"bottom":1.9,"right":2.35,"top":2.475,"active_frame":[11,12,13]}
 		],
 		"x_init_speed":1.0,
-		"y_init_speed":0.7,
+		"y_init_speed":0.1,
 		"hit_state":"knock_back"
 	},
 	
@@ -143,10 +143,10 @@
 		"hurt_box":[
 		],
 		"hit_box":[
-			{"left":2.35,"bottom":0.0,"right":2.9,"top":3.25,"active_frame":[9]}
+			{"left":2.35,"bottom":0.0,"right":2.9,"top":3.25,"active_frame":[11]}
 		],
-		"x_init_speed":0.6,
-		"y_init_speed":0.95,
+		"x_init_speed":0.65,
+		"y_init_speed":0.75,
 		"hit_state":"knock_back"
 	}
 }

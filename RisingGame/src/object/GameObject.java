@@ -38,6 +38,10 @@ public abstract class GameObject {
 	protected float yVelocity;
 	protected float zVelocity;
 
+	protected float xAccel;
+	protected float yAccel;
+	protected float zAccel;
+	
 	protected float width;
 	protected float height;
 	
@@ -45,6 +49,7 @@ public abstract class GameObject {
 	//protected Plane display;
 	protected HashMap<GameObjectState, Integer> animationRef;
 	protected String name;
+	protected boolean initSpeed;
 	public boolean selected;
 	protected boolean hitActive;
 	protected LinkedList<Gesture> inputList;
@@ -62,6 +67,10 @@ public abstract class GameObject {
 		this.yVelocity = 0;
 		this.zVelocity = 0;
 
+		this.xAccel = 0;
+		this.yAccel = 0;
+		this.zAccel = 0;
+		
 		this.gameObjects = gameObjects;
 		this.actionData = new LinkedHashMap<GameObjectState, ActionData>();
 		this.setupAnimRef();
@@ -74,6 +83,7 @@ public abstract class GameObject {
 		this.width = currentAction.getPlaneData().getWidth();
 		this.height = currentAction.getPlaneData().getHeight();
 		this.hitActive = false;
+		this.initSpeed = false;
 		this.hitStopFrames = 0;
 	}
 	
@@ -104,11 +114,11 @@ public abstract class GameObject {
 		}
 	}
 	
-	public void switchAnimation(GameObjectState animToSwitch){
+	public void switchAction(GameObjectState actionToSwitch){
 		
 		currentAction.drawDisable();
 		currentAction.getAnimation().resetAnimation();
-		currentAction = actionData.get(animToSwitch);
+		currentAction = actionData.get(actionToSwitch);
 		currentAction.drawEnable();
 		
 		if(direction==Direction.RIGHT){
@@ -124,27 +134,49 @@ public abstract class GameObject {
 		updateDisplay();
 		updateAfterDisplay();
 	}
-	
-	public void initYAccel(float speed){
-		yVelocity = speed;
-		//y += yVelocity;
-	}
-	
-	public void executeYAccel(float accel){
-		yVelocity += accel;
-		y += yVelocity;
+
+	public void initXPhys(float speed, float accel){
+		xVelocity = speed;
+		xAccel = accel;
 	}
 
+	public void initYPhys(float speed, float accel){
+		yVelocity = speed;
+		yAccel = accel;
+	}
+	
+	public void executeXPhys(){
+		xVelocity += xAccel;
+		x += xVelocity;		
+	}
+	
+	public void executeYPhys(){
+		yVelocity += yAccel;
+		y += yVelocity;		
+	}
+	
+	/*
 	public void initXAccel(float speed){
 		xVelocity = speed;
 		//x += xVelocity;
 	}
-	
+
 	public void executeXAccel(float accel){
 		xVelocity += accel;
 		x += xVelocity;
 	}
-	
+
+	public void initYAccel(float speed){
+		yVelocity = speed;
+		//y += yVelocity;
+	}
+
+	public void executeYAccel(float accel){
+		yVelocity += accel;
+		y += yVelocity;
+	}
+	*/
+
 	public void addGesture(Gesture gesture){
 		if(inputList.size() <= INPUT_LIST_SIZE){
 			inputList.add(gesture);

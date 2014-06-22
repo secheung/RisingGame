@@ -33,7 +33,6 @@ public class ActionDataTool {
 	private static String ACTIVE_FRAME = "active_frame";
 	private static String SELECT_BOX = "select";
 	
-	private static String HIT_STATE = "hit_state";
 	private static String X_INIT_SPEED = "x_init_speed";
 	private static String Y_INIT_SPEED = "y_init_speed";
 	private static String X_ACCEL = "x_accel";
@@ -45,6 +44,10 @@ public class ActionDataTool {
 	private static String PLANE_COLUMNS = "columns";
 	private static String PLANE_PLAY_BACK = "play_back";
 
+	public static String HIT_STATE = "hit_state";
+	public static String WALL_ACTION = "wall_action";
+	public static String GROUND_ACTION = "ground_action";
+	
 	Context context;
 	String currentFile;
 	public ActionDataTool(Context context){
@@ -108,8 +111,18 @@ public class ActionDataTool {
 				}
 				
 				if(actionJSON.has(HIT_STATE)){
-					String hitState = actionJSON.getString(HIT_STATE);
-					data.setHitState(hitState);
+					String value = actionJSON.getString(HIT_STATE);
+					data.addActionChange(HIT_STATE, value);
+				}
+				
+				if(actionJSON.has(GROUND_ACTION)){
+					String value = actionJSON.getString(GROUND_ACTION);
+					data.addActionChange(GROUND_ACTION, value);
+				}
+				
+				if(actionJSON.has(WALL_ACTION)){
+					String value = actionJSON.getString(WALL_ACTION);
+					data.addActionChange(WALL_ACTION, value);
 				}
 				
 				if(actionJSON.has(X_INIT_SPEED)){
@@ -131,6 +144,8 @@ public class ActionDataTool {
 					float yAccel = (float)actionJSON.getDouble(Y_ACCEL);
 					data.setyAccel(yAccel);
 				}
+				
+				
 				
 				PlaneData planeData = parsePlaneData(actionJSON.getJSONObject("plane_data"));
 				data.setPlaneData(planeData);

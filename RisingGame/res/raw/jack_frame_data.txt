@@ -124,7 +124,7 @@
 			{"left":1.6,"bottom":1.9,"right":2.35,"top":2.475,"active_frame":[11,12,13]}
 		],
 		"x_init_speed":1.0,
-		"y_init_speed":0.1,
+		"y_init_speed":0.35,
 		"hit_state":"knock_back"
 	},
 	
@@ -147,6 +147,6 @@
 		],
 		"x_init_speed":0.65,
 		"y_init_speed":0.75,
-		"hit_state":"knock_back"
+		"hit_state":"knock_up"
 	}
 }

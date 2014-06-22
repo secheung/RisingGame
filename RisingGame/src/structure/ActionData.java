@@ -2,6 +2,7 @@ package structure;
 
 import java.util.Currency;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,11 +29,13 @@ public class ActionData {
 	PlaneData planeData;
 	
 	int hitstop;
-	String hitState;
 	float xInitSpeed;
 	float yInitSpeed;
 	float xAccel;
 	float yAccel;
+	
+	Hashtable<String,String> actionChange;
+	
 	
 	boolean flipped = false;
 	//GameObject pairedObj;
@@ -46,6 +49,7 @@ public class ActionData {
 		this.name = name;
 		hitBoxes = new LinkedList<HitBox>();
 		hurtBoxes = new LinkedList<HurtBox>();
+		actionChange = new Hashtable<String, String>();
 		
 		this.hitstop = -1;
 	}
@@ -243,14 +247,6 @@ public class ActionData {
 		this.hitstop = hitstop;
 	}
 
-	public String getHitState() {
-		return hitState;
-	}
-
-	public void setHitState(String hitState) {
-		this.hitState = hitState;
-	}
-
 	public float getxInitSpeed() {
 		return xInitSpeed;
 	}
@@ -281,6 +277,18 @@ public class ActionData {
 
 	public void setyAccel(float yAccel) {
 		this.yAccel = yAccel;
+	}
+
+	public void addActionChange(String state, String nextState){
+		actionChange.put(state, nextState);
+	}
+	
+	public String getActionChangeState(String state){
+		return actionChange.get(state);
+	}
+
+	public Hashtable<String,String> getActionChange(){
+		return actionChange;
 	}
 
 	/*

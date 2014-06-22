@@ -191,6 +191,12 @@ public class Player extends GameObject{
 				if(GameTools.gestureBreakdownVertical(gesture) == Gesture.UP) {
 					playerState = PlayerState.NUSWIPE;
 				}
+				
+				if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.LEFT){
+					this.direction = Direction.LEFT;
+				} else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.RIGHT) {
+					this.direction = Direction.RIGHT;
+				}
 			}
 		}
 		

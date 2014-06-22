@@ -199,6 +199,20 @@ public abstract class GameObject {
 		return false;
 	}
 	
+	public boolean isAtWall(){
+		return (x+width >= GameLogic.WALL_RIGHT || x <= GameLogic.WALL_LEFT);
+	}
+	
+	public boolean isStopped(){
+		if(xAccel > 0 && xVelocity > 0){
+			return true;
+		}else if(xAccel < 0 && xVelocity < 0){
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public String getName() {
 		return name;
 	}

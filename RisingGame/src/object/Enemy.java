@@ -127,7 +127,7 @@ public class Enemy extends GameObject {
 		animationRef.put(EnemyState.KNOCK_BACK, R.drawable.enemy_knock_back);
 		animationRef.put(EnemyState.KNOCK_DOWN, R.drawable.enemy_knock_down);
 		animationRef.put(EnemyState.KNOCK_UP, R.drawable.enemy_knock_up);
-		animationRef.put(EnemyState.WALL_BOUNCE, R.drawable.enemy_knock_back);
+		animationRef.put(EnemyState.WALL_BOUNCE, R.drawable.enemy_wall_bounce);
 		
 	}
 
@@ -433,6 +433,9 @@ public class Enemy extends GameObject {
 			return;
 		}
 
+		if(isAtWall()){
+			initXPhys(0, 0);
+		}
 		
 		if(isStopped()){
 			initXPhys(0, 0);
@@ -444,6 +447,10 @@ public class Enemy extends GameObject {
 	}
 	
 	public void executeWallBounce(){
+		//if(!currentAction.getAnimation().isPlayed())
+		if(currentAction.getAnimation().getFrame() < 9)
+			return;
+		
 		if(initSpeed){
 			if(direction == Direction.LEFT){
 				//initXPhys(-currentAction.getxInitSpeed(), -currentAction.getxAccel());
@@ -480,16 +487,8 @@ public class Enemy extends GameObject {
 			return;
 		}
 
-		if(direction == Direction.LEFT){
-			if(x+width >= GameLogic.WALL_RIGHT){
-				x = GameLogic.WALL_RIGHT - width;
-				initXPhys(0, 0);
-			}
-		} else if(direction == Direction.RIGHT){
-			if(x <= GameLogic.WALL_LEFT){
-				x = GameLogic.WALL_LEFT;
-				initXPhys(0, 0);
-			}
+		if(isAtWall()){
+			initXPhys(0, 0);
 		}
 
 		if(isStopped()){

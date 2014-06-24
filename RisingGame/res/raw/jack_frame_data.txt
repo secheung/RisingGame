@@ -71,8 +71,7 @@
 		"hit_box":[
 		]
 	},
-
-	"jump_action":{
+	"jump_startup_action":{
 		"name":"jack_jump_startup",
 		"xChange":0,
 		"yChange":1.5,
@@ -86,7 +85,20 @@
 		"hurt_box":[
 		]
 	},
-	
+	"jump_land_action":{
+		"name":"jack_jump_land",
+		"xChange":0,
+		"yChange":0,
+		"plane_data":{
+			"width":3.5,
+			"height":3.5,
+			"rows":2,
+			"columns":7,
+			"play_back":"play_once"
+		},
+		"hurt_box":[
+		]
+	},
 	"n_tap_action":{
 		"name":"jack_n_tap",
 		"plane_data":{
@@ -124,7 +136,7 @@
 			{"left":1.6,"bottom":1.9,"right":2.35,"top":2.475,"active_frame":[11,12,13]}
 		],
 		"x_init_speed":1.0,
-		"y_init_speed":0.35,
+		"y_init_speed":0.1,
 		"hit_state":"knock_back"
 	},
 	
@@ -135,18 +147,18 @@
 		"plane_data":{
 			"width":3.5,
 			"height":3.5,
-			"rows":3,
-			"columns":6,
+			"rows":4,
+			"columns":5,
 			"play_back":"play_once"
 		},
 		"hit_stop":1,
 		"hurt_box":[
 		],
 		"hit_box":[
-			{"left":2.35,"bottom":0.0,"right":2.9,"top":3.25,"active_frame":[11]}
+			{"left":2.35,"bottom":0.0,"right":2.9,"top":3.25,"active_frame":[6,7]}
 		],
-		"x_init_speed":0.65,
-		"y_init_speed":0.75,
+		"x_init_speed":0.7,
+		"y_init_speed":0.85,
 		"hit_state":"knock_up"
 	}
 }

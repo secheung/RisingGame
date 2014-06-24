@@ -27,6 +27,7 @@ public class Player extends GameObject{
 		STAND("stand"),
 		RUN("run"),
 		JUMP("jump_startup"),
+		LAND("jump_land"),
 		DODGE("dodge"),
 		DEAD("dead"),
 		NTAP("n_tap"),
@@ -109,6 +110,7 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.DEAD, R.drawable.rising_stance);
 		animationRef.put(PlayerState.RUN, R.drawable.jack_run);
 		animationRef.put(PlayerState.JUMP, R.drawable.jack_jump_startup);
+		animationRef.put(PlayerState.LAND, R.drawable.jack_jump_land);
 		animationRef.put(PlayerState.DODGE, R.drawable.rising_dodge);
 		animationRef.put(PlayerState.NTAP, R.drawable.jack_n_tap);
 		animationRef.put(PlayerState.NFSWIPE, R.drawable.jack_n_fswipe);
@@ -158,6 +160,11 @@ public class Player extends GameObject{
 			if(unprojectedPoints[1] > (this.getY()+this.getHeight())){
 				this.playerState = PlayerState.JUMP;
 				initSpeed = true;
+				if(unprojectedPoints[0] > getMidX()){
+					direction = Direction.RIGHT;
+				} else if(unprojectedPoints[0] < getMidX()){
+					direction = Direction.LEFT;
+				}
 			}
 		}
 
@@ -192,22 +199,17 @@ public class Player extends GameObject{
 					playerState = PlayerState.NUSWIPE;
 				}
 				
-				if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.LEFT){
+				if(gesture.getXDiffSize() > 0){
 					this.direction = Direction.LEFT;
-				} else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.RIGHT) {
+				} else if(gesture.getXDiffSize() < 0) {
 					this.direction = Direction.RIGHT;
 				}
 			}
 		}
 		
 		if(playerState == PlayerState.JUMP){
-			if(this.getY() <= GameLogic.FLOOR && yVelocity <= 0){
-				y = GameLogic.FLOOR;
-				yVelocity = 0;
-				playerState = PlayerState.STAND;
-				gesture = Gesture.NONE;
-				moveToX = getMidX();
-				moveToY = getMidY();
+			if(!initSpeed && this.getY() <= GameLogic.FLOOR && yVelocity <= 0){
+				playerState = PlayerState.LAND;
 			}
 		}
 
@@ -268,6 +270,13 @@ public class Player extends GameObject{
 				x += WALK_SPEED;
 			else if(direction == Direction.LEFT)
 				x -= WALK_SPEED;
+		}
+
+		if(playerState == PlayerState.LAND){
+			y = GameLogic.FLOOR;
+			initYPhys(0,0);
+			moveToX = getMidX();
+			moveToY = getMidY();
 		}
 
 		if(playerState == PlayerState.NFSWIPE){
@@ -367,6 +376,11 @@ public class Player extends GameObject{
 			
 			if(	playerState==PlayerState.NUSWIPE){
 				//gesture = Gesture.NONE;
+				display.resetAnimation();
+				playerState = PlayerState.STAND;
+			}
+			
+			if(playerState==PlayerState.LAND){
 				display.resetAnimation();
 				playerState = PlayerState.STAND;
 			}

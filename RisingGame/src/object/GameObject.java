@@ -200,7 +200,14 @@ public abstract class GameObject {
 	}
 	
 	public boolean isAtWall(){
-		return (x+width >= GameLogic.WALL_RIGHT || x <= GameLogic.WALL_LEFT);
+		//return (x+width >= GameLogic.WALL_RIGHT || x <= GameLogic.WALL_LEFT);
+		List<HurtBox> hurtBoxes = currentAction.getHurtBoxes();
+		for(HurtBox box : hurtBoxes){
+			if(x+box.getBoxData().right >= GameLogic.WALL_RIGHT || x+box.getBoxData().left <= GameLogic.WALL_LEFT)
+				return true;
+		}
+		
+		return false;
 	}
 	
 	public boolean isStopped(){

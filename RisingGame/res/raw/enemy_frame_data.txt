@@ -84,8 +84,8 @@
 		"plane_data":{
 			"width":3.5,
 			"height":3.5,
-			"rows":1,
-			"columns":5,
+			"rows":3,
+			"columns":4,
 			"play_back":"play_once"
 		},
 		"hurt_box":[

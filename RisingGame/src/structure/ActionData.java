@@ -1,21 +1,12 @@
 package structure;
 
-import java.util.Currency;
-import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 
 import android.graphics.RectF;
-import android.util.Log;
 import object.GameObject;
-import object.GameObject.Direction;
-import object.Player.PlayerState;
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
-import engine.open2d.texture.AnimatedTexture;
-import engine.open2d.texture.AnimatedTexture.Playback;
-import game.open2d.R;
 
 public class ActionData {
 	private final static String LOG_PREFIX = "ACTION_DATA";
@@ -28,14 +19,8 @@ public class ActionData {
 	Plane animation;
 	PlaneData planeData;
 	
-	int hitstop;
-	float xInitSpeed;
-	float yInitSpeed;
-	float xAccel;
-	float yAccel;
-	
-	Hashtable<String,String> actionChange;
-	
+	ActionProperties actionProperties;
+	InteractionProperties interProperties;
 	
 	boolean flipped = false;
 	//GameObject pairedObj;
@@ -49,9 +34,9 @@ public class ActionData {
 		this.name = name;
 		hitBoxes = new LinkedList<HitBox>();
 		hurtBoxes = new LinkedList<HurtBox>();
-		actionChange = new Hashtable<String, String>();
 		
-		this.hitstop = -1;
+		actionProperties = new ActionProperties();
+		interProperties = new InteractionProperties();
 	}
 	
 	public void createAnimation(int refID){
@@ -239,10 +224,23 @@ public class ActionData {
 		this.planeData = planeData;
 	}
 
-	public int getHitstop() {
-		return hitstop;
+	public ActionProperties getActionProperties() {
+		return actionProperties;
 	}
 
+	public void setActionProperties(ActionProperties actionProperties) {
+		this.actionProperties = actionProperties;
+	}
+
+	public InteractionProperties getInterProperties() {
+		return interProperties;
+	}
+
+	public void setInterProperties(InteractionProperties interProperties) {
+		this.interProperties = interProperties;
+	}
+
+	/*
 	public void setHitstop(int hitstop) {
 		this.hitstop = hitstop;
 	}
@@ -287,10 +285,10 @@ public class ActionData {
 		return actionChange.get(state);
 	}
 
-	public Hashtable<String,String> getActionChange(){
+	public LinkedHashMap<String,String> getActionChange(){
 		return actionChange;
 	}
-
+	*/
 	/*
 	public GameObject getPairedObj() {
 		return pairedObj;

@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,7 +26,6 @@ public class ActionDataTool {
 	private static String NAME = "name";
 	private static String HITBOX = "hit_box";
 	private static String HURTBOX = "hurt_box";
-	private static String HITSTOP = "hit_stop";
 	private static String LEFT = "left";
 	private static String BOTTOM = "bottom";
 	private static String RIGHT = "right";
@@ -38,15 +38,25 @@ public class ActionDataTool {
 	private static String X_ACCEL = "x_accel";
 	private static String Y_ACCEL = "y_accel";
 	
+	private static String HIT_STOP = "hit_stop";
+	
 	private static String PLANE_WIDTH = "width";
 	private static String PLANE_HEIGHT = "height";
 	private static String PLANE_ROWS = "rows";
 	private static String PLANE_COLUMNS = "columns";
 	private static String PLANE_PLAY_BACK = "play_back";
 
-	public static String HIT_STATE = "hit_state";
-	public static String WALL_ACTION = "wall_action";
-	public static String GROUND_ACTION = "ground_action";
+	private static String ACTION_PROPERTIES = "action_properties";
+	private static String INTERACTION_PROPERTIES = "interaction_properties";
+	
+	private static String MODIFIERS = "modifiers";
+	public static String ACTIVE_AFTER = "active_after";
+	public static String REVERSE_X = "reverse_x";
+	
+	public static String TRIGGER_CHANGE = "trigger_change";
+	public static String HIT_TRIGGER = "hit_trigger";
+	public static String WALL_TRIGGER = "wall_trigger";
+	public static String GROUND_TRIGGER = "ground_trigger";
 	
 	Context context;
 	String currentFile;
@@ -104,15 +114,28 @@ public class ActionDataTool {
 					data.setHurtBoxes(hurtBoxes);
 				}
 				
+				if(actionJSON.has(ACTION_PROPERTIES)){
+					ActionProperties properties = parseActionProperties(actionJSON.getJSONObject(ACTION_PROPERTIES));
+					data.setActionProperties(properties);
+				}
+
+				if(actionJSON.has(INTERACTION_PROPERTIES)){
+					ActionProperties properties = parseActionProperties(actionJSON.getJSONObject(INTERACTION_PROPERTIES));
+					InteractionProperties interProperties = new InteractionProperties();
+					interProperties.copyActionProperties(properties);
+					data.setInterProperties(interProperties);
+				}
+
+				/*
 				if(actionJSON.has(HITSTOP)){
 					int hitstop = actionJSON.getInt(HITSTOP);
 					data.setHitstop(hitstop);
 					
 				}
 				
-				if(actionJSON.has(HIT_STATE)){
-					String value = actionJSON.getString(HIT_STATE);
-					data.addActionChange(HIT_STATE, value);
+				if(actionJSON.has(HIT_ACTION)){
+					String value = actionJSON.getString(HIT_ACTION);
+					data.addActionChange(HIT_ACTION, value);
 				}
 				
 				if(actionJSON.has(GROUND_ACTION)){
@@ -144,7 +167,7 @@ public class ActionDataTool {
 					float yAccel = (float)actionJSON.getDouble(Y_ACCEL);
 					data.setyAccel(yAccel);
 				}
-				
+				*/
 				
 				
 				PlaneData planeData = parsePlaneData(actionJSON.getJSONObject("plane_data"));
@@ -230,5 +253,68 @@ public class ActionDataTool {
 		}
 		
 		return hurtBoxes;
+	}
+	
+	public ActionProperties parseActionProperties(JSONObject propertyData) throws JSONException{
+		ActionProperties actionProperties = new ActionProperties();
+		
+		if(propertyData.has(X_INIT_SPEED)){
+			actionProperties.setxInitSpeed((float)propertyData.getDouble(X_INIT_SPEED));
+		}
+		
+		if(propertyData.has(Y_INIT_SPEED)){
+			actionProperties.setyInitSpeed((float)propertyData.getDouble(Y_INIT_SPEED));
+		}
+		
+		if(propertyData.has(X_ACCEL)){
+			actionProperties.setxAccel((float)propertyData.getDouble(X_ACCEL));
+		}
+		
+		if(propertyData.has(Y_ACCEL)){
+			actionProperties.setyAccel((float)propertyData.getDouble(Y_ACCEL));
+		}
+		
+		if(propertyData.has(TRIGGER_CHANGE)){
+			JSONObject triggerJSON = propertyData.getJSONObject(TRIGGER_CHANGE);
+			if(triggerJSON.has(HIT_TRIGGER)){
+				String value = triggerJSON.getString(HIT_TRIGGER);
+				actionProperties.addTrigger(HIT_TRIGGER, value);
+			}
+
+			if(triggerJSON.has(GROUND_TRIGGER)){
+				String value = triggerJSON.getString(GROUND_TRIGGER);
+				actionProperties.addTrigger(GROUND_TRIGGER, value);
+			}
+			
+			if(triggerJSON.has(WALL_TRIGGER)){
+				String value = triggerJSON.getString(WALL_TRIGGER);
+				actionProperties.addTrigger(WALL_TRIGGER, value);
+			}
+		}
+		
+		if(propertyData.has(MODIFIERS)){
+			JSONObject modifiersJSON = propertyData.getJSONObject(MODIFIERS);
+			if(modifiersJSON.has(ACTIVE_AFTER)){
+				int value = modifiersJSON.getInt(ACTIVE_AFTER);
+				actionProperties.addModifier(ACTIVE_AFTER, value);
+			}
+			
+			if(modifiersJSON.has(REVERSE_X)){
+				int value = modifiersJSON.getInt(REVERSE_X);
+				actionProperties.addModifier(REVERSE_X, value);
+			}
+		}
+		
+		return actionProperties;
+	}
+	
+	public InteractionProperties parseInteractionProperties(JSONObject interData) throws JSONException{
+		InteractionProperties interProperties = new InteractionProperties();
+		
+		if(interData.has(HIT_STOP)){
+			interProperties.setHitStop(interData.getInt(HIT_STOP));
+		}
+		
+		return interProperties;
 	}
 }

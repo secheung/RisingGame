@@ -70,11 +70,36 @@
 			"play_back":"play_once"
 		},
 		"hurt_box":[
+			{"left":1.1,"bottom":1.25,"right":2.9,"top":2.5}
 		],
 		"hit_box":[
 		],
-		"x_accel":0.05,
-		"y_accel":0.0
+		"action_properties":{
+			"x_accel":0.05,
+			"y_accel":0.0
+		}
+	},
+	"knock_down_forward_action":{
+		"name":"enemy_knock_down_forward",
+		"plane_data":{
+			"width":3.5,
+			"height":3.5,
+			"rows":1,
+			"columns":5,
+			"play_back":"play_once"
+		},
+		"hurt_box":[
+			{"left":1.1,"bottom":1.25,"right":2.9,"top":2.5}
+		],
+		"hit_box":[
+		],
+		"action_properties":{
+			"modifiers":{
+				"reverse_x":1
+			},
+			"x_accel":-0.05,
+			"y_accel":0.0
+		}
 	},
 	"knock_up_action":{
 		"name":"enemy_knock_up",
@@ -90,9 +115,13 @@
 		],
 		"hit_box":[
 		],
-		"x_accel":0.1,
-		"y_accel":0.0,
-		"ground_action":"knock_down"
+		"action_properties":{
+			"x_accel":0.1,
+			"y_accel":-0.098,
+			"trigger_change":{
+				"ground_trigger":"knock_down"
+			}
+		}
 	},
 	"knock_back_action":{
 		"name":"enemy_knock_back",
@@ -107,10 +136,13 @@
 		],
 		"hit_box":[
 		],
-		"x_accel":0.1,
-		"y_accel":0.7,
-		"wall_action":"wall_bounce",
-		"ground_action":"knock_down"
+		"action_properties":{
+			"x_accel":0.1,
+			"y_accel":-0.098,
+			"trigger_change":{
+				"ground_trigger":"knock_down"
+			}
+		}
 	},
 	"wall_bounce_action":{
 		"name":"enemy_wall_bounce",
@@ -126,8 +158,16 @@
 		],
 		"hit_box":[
 		],
-		"x_accel":-0.1,
-		"y_accel":0.7,
-		"ground_action":"knock_down"
+		"action_properties":{
+			"modifiers":{
+				"active_after":9,
+				"reverse_x":1
+			},
+			"x_accel":-0.1,
+			"y_accel":-0.098,
+			"trigger_change":{
+				"ground_trigger":"knock_down_forward"
+			}
+		}
 	}
 }

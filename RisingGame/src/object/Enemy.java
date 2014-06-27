@@ -23,6 +23,7 @@ import structure.ActionData;
 import structure.ActionDataTool;
 import structure.HitBox;
 import structure.HurtBox;
+import structure.InteractionProperties;
 
 public class Enemy extends GameObject {
 	public static enum EnemyState implements GameObjectState{
@@ -32,6 +33,7 @@ public class Enemy extends GameObject {
 		STRUCK1("struck1"),
 		KNOCK_BACK("knock_back"),
 		KNOCK_DOWN("knock_down"),
+		KNOCK_DOWN_FORWARD("knock_down_forward"),
 		KNOCK_UP("knock_up"),
 		WALL_BOUNCE("wall_bounce"),
 		RUN("run"),
@@ -126,6 +128,7 @@ public class Enemy extends GameObject {
 		
 		animationRef.put(EnemyState.KNOCK_BACK, R.drawable.enemy_knock_back);
 		animationRef.put(EnemyState.KNOCK_DOWN, R.drawable.enemy_knock_down);
+		animationRef.put(EnemyState.KNOCK_DOWN_FORWARD, R.drawable.enemy_knock_down_forward);
 		animationRef.put(EnemyState.KNOCK_UP, R.drawable.enemy_knock_up);
 		animationRef.put(EnemyState.WALL_BOUNCE, R.drawable.enemy_wall_bounce);
 		
@@ -153,7 +156,8 @@ public class Enemy extends GameObject {
 		
 		//if(!isStrikeState() && !isDodging()){
 		if(		enemyState != EnemyState.KNOCK_BACK &&
-				enemyState != EnemyState.KNOCK_DOWN && 
+				enemyState != EnemyState.KNOCK_DOWN &&
+				enemyState != EnemyState.KNOCK_DOWN_FORWARD &&
 				enemyState != EnemyState.WALL_BOUNCE &&
 				enemyState != EnemyState.KNOCK_UP){
 			if(playerRef.getMidX() > checkX){
@@ -183,70 +187,45 @@ public class Enemy extends GameObject {
 		}
 
 		if(isHit()){
-			//Log.d("player hits enemy", "active hit");
-			playerRef.setHitStopFrames(playerRef.currentAction.getHitstop());
-			this.setHitStopFrames(playerRef.currentAction.getHitstop());
+			interProperties = playerRef.getCurrentAction().getInterProperties();
+			
+			playerRef.setHitStopFrames(interProperties.getHitStop());
+			this.setHitStopFrames(interProperties.getHitStop());
 			
 			if(playerRef.getDirection() == Direction.RIGHT){
 				direction = Direction.LEFT;
 			} else if(playerRef.getDirection() == Direction.LEFT){
 				direction = Direction.RIGHT;
 			}
-			enemyState = EnemyState.getStateFromTotalName(EnemyState.OBJECT+"_"+playerRef.getCurrentAction().getActionChangeState(ActionDataTool.HIT_STATE));
+
+			enemyState = EnemyState.getStateFromTotalName(EnemyState.OBJECT+"_"+interProperties.getTriggerState(ActionDataTool.HIT_TRIGGER));
 			initSpeed = true;
 		}
 		
-		if(currentAction.getActionChange().containsKey(ActionDataTool.WALL_ACTION)){
+		if(currentLogic.getTriggers().containsKey(ActionDataTool.WALL_TRIGGER)){
 			if(isAtWall()){
-				String state = currentAction.getActionChangeState(ActionDataTool.WALL_ACTION); 
+				//String state = currentAction.getActionChangeState(ActionDataTool.WALL_TRIGGER); 
+				String state = currentLogic.getTrigger(ActionDataTool.WALL_TRIGGER);
 				enemyState = EnemyState.getStateFromTotalName(EnemyState.OBJECT+"_"+state);
+				interProperties = null;
 				initSpeed = true;
 			}
 		}
 		
-		if(currentAction.getActionChange().containsKey(ActionDataTool.GROUND_ACTION)){
+		if(currentLogic.getTriggers().containsKey(ActionDataTool.GROUND_TRIGGER)){
 			if(isOnGround()){
-				String state = currentAction.getActionChangeState(ActionDataTool.GROUND_ACTION); 
+				String state = currentLogic.getTrigger(ActionDataTool.GROUND_TRIGGER);
 				enemyState = EnemyState.getStateFromTotalName(EnemyState.OBJECT+"_"+state);
+				interProperties = null;
 				initSpeed = true;
 			}
 		}
 		
-		/* else if(enemyState == EnemyState.KNOCK_BACK){
-			Log.d(enemyState.toString(), "xVel:"+xVelocity);
-			if(x+width >= GameLogic.WALL_RIGHT || x <= GameLogic.WALL_LEFT){
-				enemyState = EnemyState.WALL_BOUNCE;
-				initSpeed = true;
-			}
-
-			if(isOnGround()){
-				initSpeed = true;
-				enemyState = EnemyState.KNOCK_DOWN;
-			}
-		} else if(enemyState == EnemyState.KNOCK_UP){
-			Log.d(enemyState.toString(), "xVel:"+xVelocity);
-			if(x+width >= GameLogic.WALL_RIGHT || x <= GameLogic.WALL_LEFT){
-				enemyState = EnemyState.WALL_BOUNCE;
-				initSpeed = true;
-			}
-
-			if(isOnGround()){
-				initSpeed = true;
-				enemyState = EnemyState.KNOCK_DOWN;
-			}
-		} else if(enemyState == EnemyState.WALL_BOUNCE){
-			Log.d(enemyState.toString(), "xVel:"+xVelocity);
-			if(isOnGround()){
-				initSpeed = true;
-				enemyState = EnemyState.KNOCK_DOWN;
-			}
-		} else if(enemyState == EnemyState.KNOCK_DOWN){
-			Log.d(enemyState.toString(),"xVel:"+xVelocity);
-		}
-		*/
 		if(currentAction != actionData.get(enemyState)){
 			switchAction(enemyState);
 		}
+		
+		//Log.d("enemyState",enemyState.toString());
 	}
 
 	@Override
@@ -290,13 +269,17 @@ public class Enemy extends GameObject {
 		}else if(enemyState == EnemyState.FREEZE){
 			unfreezeTimeCount--;
 		}else if(enemyState == EnemyState.KNOCK_BACK){
-			executeKnockBack();
+			//executeKnockBack();
+			executeLogic();
 		}else if(enemyState == EnemyState.KNOCK_UP){
-			executeKnockUp();
+			//executeKnockUp();
+			executeLogic();
 		} else if(enemyState == EnemyState.WALL_BOUNCE){
-			executeWallBounce();
-		} else if(enemyState == EnemyState.KNOCK_DOWN){
-			executeKnockDown();
+			//executeWallBounce();
+			executeLogic();
+		} else if(enemyState == EnemyState.KNOCK_DOWN || enemyState == EnemyState.KNOCK_DOWN_FORWARD){
+			//xexecuteKnockDown();
+			executeLogic();
 		}
 	}
 
@@ -344,7 +327,7 @@ public class Enemy extends GameObject {
 			display.resetAnimation();
 			struck -= 1;
 			enemyState = EnemyState.STAND;
-		} else if(enemyState == EnemyState.KNOCK_DOWN){
+		} else if(enemyState == EnemyState.KNOCK_DOWN || enemyState == EnemyState.KNOCK_DOWN_FORWARD){
 			display.resetAnimation();
 			struck -= 1;
 			enemyState = EnemyState.STAND;
@@ -396,6 +379,36 @@ public class Enemy extends GameObject {
 		}
 	}
 	
+	public void executeLogic(){
+		if(currentAction.getAnimation().getFrame() < currentLogic.getActiveAfter()){
+			return;
+		}
+		
+		if(initSpeed){
+			if(direction == Direction.LEFT){
+				initXPhys(-currentLogic.getxInitSpeed(), -currentLogic.getxAccel());
+			} else if(direction == Direction.RIGHT){
+				initXPhys(currentLogic.getxInitSpeed(), currentLogic.getxAccel());
+			}
+			initYPhys(currentLogic.getyInitSpeed(), currentLogic.getyAccel());
+			initSpeed = false;
+			return;
+		}
+
+		if(isStopped() || isAtWall()){
+			initXPhys(0, 0);
+		} else {
+			executeXPhys();
+		}
+		
+		if(isOnGround()){
+			y = GameLogic.FLOOR;
+			initYPhys(0, 0);
+		}else{
+			executeYPhys();
+		}
+	}
+	/*
 	public void executeKnockBack(){
 		if(initSpeed){
 			if(direction == Direction.LEFT){
@@ -497,7 +510,7 @@ public class Enemy extends GameObject {
 			executeXPhys();
 		}
 	}
-	
+	*/
 	public boolean isHit(){
 		if(playerRef.getHitActive() && playerRef.getHitStopFrames() == 0){
 			ActionData playerAction = playerRef.getCurrentAction();

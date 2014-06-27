@@ -6,8 +6,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import structure.ActionData;
+import structure.ActionDataTool;
+import structure.ActionProperties;
+import structure.GameObjectLogic;
 import structure.HitBox;
 import structure.HurtBox;
+import structure.InteractionProperties;
 import android.util.Log;
 import android.view.MotionEvent;
 import engine.open2d.draw.Plane;
@@ -46,6 +50,10 @@ public abstract class GameObject {
 	protected float height;
 	
 	protected ActionData currentAction;
+	protected GameObjectLogic currentLogic;
+
+	protected InteractionProperties interProperties;
+	
 	//protected Plane display;
 	protected HashMap<GameObjectState, Integer> animationRef;
 	protected String name;
@@ -75,8 +83,9 @@ public abstract class GameObject {
 		this.actionData = new LinkedHashMap<GameObjectState, ActionData>();
 		this.setupAnimRef();
 		this.mapActionData(actionData);
-		
+
 		currentAction = this.actionData.get(initState);
+		currentLogic = new GameObjectLogic();
 		//gesture = Gesture.NONE;
 		inputList = new LinkedList<Gesture>();
 
@@ -115,7 +124,7 @@ public abstract class GameObject {
 	}
 	
 	public void switchAction(GameObjectState actionToSwitch){
-		
+		//Log.d(this.name, actionToSwitch.toString());
 		currentAction.drawDisable();
 		currentAction.getAnimation().resetAnimation();
 		currentAction = actionData.get(actionToSwitch);
@@ -125,6 +134,21 @@ public abstract class GameObject {
 			currentAction.getAnimation().flipTexture(false);
 		} else if(direction==Direction.LEFT){
 			currentAction.getAnimation().flipTexture(true);
+		}
+		
+		ActionProperties actProperties = currentAction.getActionProperties();
+		currentLogic.reset();
+		currentLogic.addTriggers(actProperties);
+		if(interProperties != null){
+			currentLogic.addTriggers(interProperties);
+			currentLogic.buildInterInitSpeedLogic(interProperties, actProperties);
+		}else{
+			interProperties = null;
+			currentLogic.buildContSpeedLogic(this, actProperties);
+		}
+		
+		if(actProperties.hasModifier(ActionDataTool.ACTIVE_AFTER)){
+			currentLogic.setActiveAfter(actProperties.getModifier(ActionDataTool.ACTIVE_AFTER));
 		}
 	}
 	
@@ -203,7 +227,15 @@ public abstract class GameObject {
 		//return (x+width >= GameLogic.WALL_RIGHT || x <= GameLogic.WALL_LEFT);
 		List<HurtBox> hurtBoxes = currentAction.getHurtBoxes();
 		for(HurtBox box : hurtBoxes){
-			if(x+box.getBoxData().right >= GameLogic.WALL_RIGHT || x+box.getBoxData().left <= GameLogic.WALL_LEFT)
+			//if(x+box.getBoxData().right >= GameLogic.WALL_RIGHT || x+box.getBoxData().left <= GameLogic.WALL_LEFT)
+			if(xVelocity > 0 && x+box.getBoxData().right >= GameLogic.WALL_RIGHT)
+				return true;
+			
+			if(xVelocity < 0 && x+box.getBoxData().left <= GameLogic.WALL_LEFT)
+				return true;
+			
+			if	(xVelocity == 0 && 
+				(x+box.getBoxData().right >= GameLogic.WALL_RIGHT || x+box.getBoxData().left <= GameLogic.WALL_LEFT))
 				return true;
 		}
 		
@@ -316,6 +348,36 @@ public abstract class GameObject {
 
 	public void setHitStopFrames(int hitStopFrames) {
 		this.hitStopFrames = hitStopFrames;
+	}
+
+
+	public float getxVelocity() {
+		return xVelocity;
+	}
+
+
+	public void setxVelocity(float xVelocity) {
+		this.xVelocity = xVelocity;
+	}
+
+
+	public float getyVelocity() {
+		return yVelocity;
+	}
+
+
+	public void setyVelocity(float yVelocity) {
+		this.yVelocity = yVelocity;
+	}
+
+
+	public float getzVelocity() {
+		return zVelocity;
+	}
+
+
+	public void setzVelocity(float zVelocity) {
+		this.zVelocity = zVelocity;
 	}
 	
 }

@@ -128,16 +128,21 @@
 			"columns":11,
 			"play_back":"play_once"
 		},
-		"hit_stop":1,
 		"hurt_box":[
 		],
 		"hit_box":[
 			{"left":2.35,"bottom":2.175,"right":3.1,"top":2.75,"active_frame":[11,12,13]},
 			{"left":1.6,"bottom":1.9,"right":2.35,"top":2.475,"active_frame":[11,12,13]}
 		],
-		"x_init_speed":1.0,
-		"y_init_speed":0.1,
-		"hit_state":"knock_back"
+		"interaction_properties":{
+			"hit_stop":1,
+			"x_init_speed":-1.0,
+			"y_init_speed":0.1,
+			"trigger_change":{
+				"hit_trigger":"knock_back",
+				"wall_trigger":"wall_bounce"
+			}
+		}
 	},
 	
 	"n_uswipe_action":{
@@ -157,8 +162,12 @@
 		"hit_box":[
 			{"left":2.35,"bottom":0.0,"right":2.9,"top":3.25,"active_frame":[6,7]}
 		],
-		"x_init_speed":0.7,
-		"y_init_speed":0.85,
-		"hit_state":"knock_up"
+		"interaction_properties":{
+			"x_init_speed":-0.7,
+			"y_init_speed":0.85,
+			"trigger_change":{
+				"hit_trigger":"knock_up"
+			}
+		}
 	}
 }

@@ -202,7 +202,7 @@ public class Enemy extends GameObject {
 			initSpeed = true;
 		}
 		
-		if(currentLogic.getTriggers().containsKey(ActionDataTool.WALL_TRIGGER)){
+		if(currentLogic.hasTrigger(ActionDataTool.WALL_TRIGGER)){
 			if(isAtWall()){
 				//String state = currentAction.getActionChangeState(ActionDataTool.WALL_TRIGGER); 
 				String state = currentLogic.getTrigger(ActionDataTool.WALL_TRIGGER);
@@ -212,9 +212,27 @@ public class Enemy extends GameObject {
 			}
 		}
 		
-		if(currentLogic.getTriggers().containsKey(ActionDataTool.GROUND_TRIGGER)){
+		if(currentLogic.hasTrigger(ActionDataTool.GROUND_TRIGGER)){
 			if(isOnGround()){
 				String state = currentLogic.getTrigger(ActionDataTool.GROUND_TRIGGER);
+				enemyState = EnemyState.getStateFromTotalName(EnemyState.OBJECT+"_"+state);
+				interProperties = null;
+				initSpeed = true;
+			}
+		}
+		
+		if(currentLogic.hasTrigger(ActionDataTool.PLAYED_TRIGGER)){
+			if(currentAction.getAnimation().isPlayed()){
+				String state = currentLogic.getTrigger(ActionDataTool.PLAYED_TRIGGER);
+				enemyState = EnemyState.getStateFromTotalName(EnemyState.OBJECT+"_"+state);
+				interProperties = null;
+				initSpeed = true;
+			}
+		}
+
+		if(currentLogic.hasTrigger(ActionDataTool.STOPPED_TRIGGER)){
+			if(isStopped()){
+				String state = currentLogic.getTrigger(ActionDataTool.STOPPED_TRIGGER);
 				enemyState = EnemyState.getStateFromTotalName(EnemyState.OBJECT+"_"+state);
 				interProperties = null;
 				initSpeed = true;
@@ -240,7 +258,9 @@ public class Enemy extends GameObject {
 			direction = Direction.RIGHT;
 		}
 		
-		if(enemyState == EnemyState.STRUCK1){
+		if(enemyState == EnemyState.STAND){
+
+		}else if(enemyState == EnemyState.STRUCK1){
 			if(currentAction.getAnimation().getFrame() < Player.CANCEL_STRIKE_FRAMES){
 				selected = false;
 			}
@@ -268,17 +288,7 @@ public class Enemy extends GameObject {
 				x -= CROSS_ROLL_SPEED;
 		}else if(enemyState == EnemyState.FREEZE){
 			unfreezeTimeCount--;
-		}else if(enemyState == EnemyState.KNOCK_BACK){
-			//executeKnockBack();
-			executeLogic();
-		}else if(enemyState == EnemyState.KNOCK_UP){
-			//executeKnockUp();
-			executeLogic();
-		} else if(enemyState == EnemyState.WALL_BOUNCE){
-			//executeWallBounce();
-			executeLogic();
-		} else if(enemyState == EnemyState.KNOCK_DOWN || enemyState == EnemyState.KNOCK_DOWN_FORWARD){
-			//xexecuteKnockDown();
+		}else {
 			executeLogic();
 		}
 	}
@@ -328,9 +338,9 @@ public class Enemy extends GameObject {
 			struck -= 1;
 			enemyState = EnemyState.STAND;
 		} else if(enemyState == EnemyState.KNOCK_DOWN || enemyState == EnemyState.KNOCK_DOWN_FORWARD){
-			display.resetAnimation();
-			struck -= 1;
-			enemyState = EnemyState.STAND;
+			//display.resetAnimation();
+			//struck -= 1;
+			//enemyState = EnemyState.STAND;
 		} else if(enemyState == EnemyState.FREEZE){
 			if(unfreezeTimeCount <= 0){
 				display.resetAnimation();
@@ -385,16 +395,32 @@ public class Enemy extends GameObject {
 		}
 		
 		if(initSpeed){
-			if(direction == Direction.LEFT){
-				initXPhys(-currentLogic.getxInitSpeed(), -currentLogic.getxAccel());
-			} else if(direction == Direction.RIGHT){
-				initXPhys(currentLogic.getxInitSpeed(), currentLogic.getxAccel());
+			float initxSpeed = currentLogic.getxInitSpeed();
+			float xAccel = currentLogic.getxAccel();
+			
+			if(currentAction.getActionProperties().hasModifier(ActionDataTool.REVERSE_X)){
+				initxSpeed = -1*initxSpeed;
 			}
+			
+			if(!currentLogic.isContinueSpeed()){
+				if(direction == Direction.RIGHT){
+					initxSpeed = initxSpeed;
+				} else if(direction == Direction.LEFT){
+					initxSpeed = -1*initxSpeed;
+				}
+			}
+			
+			xAccel = getAccelFromSpeed(initxSpeed, xAccel);
+
+			initXPhys(initxSpeed, xAccel);
 			initYPhys(currentLogic.getyInitSpeed(), currentLogic.getyAccel());
 			initSpeed = false;
+			
+			Log.d(enemyState.toString()+" init", xVelocity+" "+xAccel+" wall "+isAtWall());
 			return;
 		}
 
+		Log.d(enemyState.toString(), xVelocity+" "+xAccel+" wall "+isAtWall());
 		if(isStopped() || isAtWall()){
 			initXPhys(0, 0);
 		} else {

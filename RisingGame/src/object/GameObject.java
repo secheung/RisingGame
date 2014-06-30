@@ -178,28 +178,25 @@ public abstract class GameObject {
 		yVelocity += yAccel;
 		y += yVelocity;		
 	}
-	
-	/*
-	public void initXAccel(float speed){
-		xVelocity = speed;
-		//x += xVelocity;
-	}
 
-	public void executeXAccel(float accel){
-		xVelocity += accel;
-		x += xVelocity;
+	public float getAccelFromSpeed(float speed, float accel){
+		float setAccel = accel;
+		if(accel < 0){
+			if(speed < 0){
+				setAccel = Math.abs(accel);
+			} else if(speed > 0){
+				setAccel = -Math.abs(accel);
+			}
+		} else if(accel > 0){
+			if(speed > 0){
+				setAccel = Math.abs(accel);
+			} else if(speed < 0){
+				setAccel = -Math.abs(accel);
+			}
+		}
+		
+		return setAccel;
 	}
-
-	public void initYAccel(float speed){
-		yVelocity = speed;
-		//y += yVelocity;
-	}
-
-	public void executeYAccel(float accel){
-		yVelocity += accel;
-		y += yVelocity;
-	}
-	*/
 
 	public void addGesture(Gesture gesture){
 		if(inputList.size() <= INPUT_LIST_SIZE){
@@ -246,6 +243,8 @@ public abstract class GameObject {
 		if(xAccel > 0 && xVelocity > 0){
 			return true;
 		}else if(xAccel < 0 && xVelocity < 0){
+			return true;
+		} else if(xAccel == 0 && xVelocity == 0){
 			return true;
 		}
 		

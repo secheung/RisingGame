@@ -10,6 +10,7 @@ public class GameObjectLogic {
 	private LinkedHashMap<String, String> triggers;
 	private GameObject fromObject;
 
+	protected boolean continueSpeed;
 	protected int activeAfter;
 	
 	protected float xInitSpeed;
@@ -20,6 +21,7 @@ public class GameObjectLogic {
 	
 	public GameObjectLogic(){
 		triggers = new LinkedHashMap<String, String>();
+		continueSpeed = false;
 		xInitSpeed = 0;
 		yInitSpeed = 0;
 		xAccel = 0;
@@ -34,6 +36,7 @@ public class GameObjectLogic {
 		xAccel = 0;
 		yAccel = 0;
 		activeAfter = -1;
+		continueSpeed = false;
 	}
 	
 	public void buildInterInitSpeedLogic(InteractionProperties interProperties, ActionProperties actProperties){
@@ -41,18 +44,15 @@ public class GameObjectLogic {
 		yInitSpeed = interProperties.getyInitSpeed();
 		xAccel = actProperties.getxAccel();
 		yAccel = actProperties.getyAccel();
+		continueSpeed = false;
 	}
 
 	public void buildContSpeedLogic(GameObject gameObject, ActionProperties actProperties){
-		if(actProperties.getModifiers().containsKey(ActionDataTool.REVERSE_X)){
-			xInitSpeed = Math.abs(gameObject.getxVelocity());
-		} else {
-			xInitSpeed = -Math.abs(gameObject.getxVelocity());
-		}
-
+		xInitSpeed = gameObject.getxVelocity();
 		yInitSpeed = gameObject.getyVelocity();
 		xAccel = actProperties.getxAccel();
 		yAccel = actProperties.getyAccel();
+		continueSpeed = true;
 	}
 	
 	public void buildTriggers(ActionProperties actProperties){
@@ -66,11 +66,15 @@ public class GameObjectLogic {
 	public void setTriggers(LinkedHashMap<String, String> triggers) {
 		this.triggers = triggers;
 	}
-
+	
 	public void addTriggers(ActionProperties properties){
 		this.triggers.putAll(properties.getTriggerChange());
 	}
-	
+
+	public boolean hasTrigger(String trigger) {
+		return triggers.containsKey(trigger);
+	}
+
 	public void addTrigger(String trigger, String nextState){
 		triggers.put(trigger, nextState);
 	}
@@ -85,6 +89,14 @@ public class GameObjectLogic {
 
 	public void setFromObject(GameObject fromObject) {
 		this.fromObject = fromObject;
+	}
+
+	public boolean isContinueSpeed() {
+		return continueSpeed;
+	}
+
+	public void setContinueSpeed(boolean continueSpeed) {
+		this.continueSpeed = continueSpeed;
 	}
 
 	public int getActiveAfter() {

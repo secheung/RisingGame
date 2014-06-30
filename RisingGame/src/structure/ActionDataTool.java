@@ -57,6 +57,8 @@ public class ActionDataTool {
 	public static String HIT_TRIGGER = "hit_trigger";
 	public static String WALL_TRIGGER = "wall_trigger";
 	public static String GROUND_TRIGGER = "ground_trigger";
+	public static String PLAYED_TRIGGER = "played_trigger";
+	public static String STOPPED_TRIGGER = "stopped_trigger";
 	
 	Context context;
 	String currentFile;
@@ -274,6 +276,7 @@ public class ActionDataTool {
 			actionProperties.setyAccel((float)propertyData.getDouble(Y_ACCEL));
 		}
 		
+		//trigger parsing
 		if(propertyData.has(TRIGGER_CHANGE)){
 			JSONObject triggerJSON = propertyData.getJSONObject(TRIGGER_CHANGE);
 			if(triggerJSON.has(HIT_TRIGGER)){
@@ -289,6 +292,16 @@ public class ActionDataTool {
 			if(triggerJSON.has(WALL_TRIGGER)){
 				String value = triggerJSON.getString(WALL_TRIGGER);
 				actionProperties.addTrigger(WALL_TRIGGER, value);
+			}
+			
+			if(triggerJSON.has(PLAYED_TRIGGER)){
+				String value = triggerJSON.getString(PLAYED_TRIGGER);
+				actionProperties.addTrigger(PLAYED_TRIGGER, value);
+			}
+			
+			if(triggerJSON.has(STOPPED_TRIGGER)){
+				String value = triggerJSON.getString(STOPPED_TRIGGER);
+				actionProperties.addTrigger(STOPPED_TRIGGER, value);
 			}
 		}
 		

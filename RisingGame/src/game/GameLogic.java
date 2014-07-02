@@ -261,7 +261,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 				gameObject.addGesture(gesture);
 			}
 			
-			if(gesture == Gesture.UP){
+			if(gesture == Gesture.SWIPE_UP){
 				gameRun = true;
 			}
 			

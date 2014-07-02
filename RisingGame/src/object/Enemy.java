@@ -416,7 +416,7 @@ public class Enemy extends GameObject {
 			initYPhys(currentLogic.getyInitSpeed(), currentLogic.getyAccel());
 			initSpeed = false;
 			
-			Log.d(enemyState.toString()+" init", xVelocity+" "+xAccel+" wall "+isAtWall());
+			//Log.d(enemyState.toString()+" init", xVelocity+" "+xAccel+" wall "+isAtWall());
 			return;
 		}
 

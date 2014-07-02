@@ -7,17 +7,22 @@ import object.GameObject;
 public class GameTools {
 	public static enum Gesture {
 		NONE,
-		UP,
-		UP_RIGHT,
-		RIGHT,
-		DOWN_RIGHT,
-		DOWN,
-		DOWN_LEFT,
-		LEFT,
-		UP_LEFT;
+		SWIPE_UP,
+		SWIPE_UP_RIGHT,
+		SWIPE_RIGHT,
+		SWIPE_DOWN_RIGHT,
+		SWIPE_DOWN,
+		SWIPE_DOWN_LEFT,
+		SWIPE_LEFT,
+		SWIPE_UP_LEFT,
+		DTAP_UP,
+		DTAP_RIGHT,
+		DTAP_DOWN,
+		DTAP_LEFT;
 		
 		float xDiffSize = 0;
 		float yDiffSize = 0;
+		
 		public Gesture setXDiffSize(float diff){
 			xDiffSize = diff;
 			return this;
@@ -37,10 +42,10 @@ public class GameTools {
 		}
 	}
 	
-	public static final int SWIPE_LEFT = 30;
-	public static final int SWIPE_RIGHT = -30;
-	public static final int SWIPE_UP = 30;
-	public static final int SWIPE_DOWN = -30;
+	public static final int SWIPE_LEFT_DIFF = 30;
+	public static final int SWIPE_RIGHT_DIFF = -30;
+	public static final int SWIPE_UP_DIFF = 30;
+	public static final int SWIPE_DOWN_DIFF = -30;
 	
 	public static boolean boxColDetect(RectF box1, GameObject object1, RectF box2, GameObject object2){
 		float left1 = object1.getX() + box1.left;
@@ -130,14 +135,14 @@ public class GameTools {
 		Gesture horizontal = gestureDetectionHorizontal(prevX, curX);
 		Gesture vertical = gestureDetectionVertical(prevY,curY);
 		
-		if(horizontal == Gesture.RIGHT && vertical == Gesture.UP)
-			return Gesture.UP_RIGHT.setXDiffSize(horizontal.getXDiffSize()).setYDiffSize(vertical.getYDiffSize());
-		else if(horizontal == Gesture.RIGHT && vertical == Gesture.DOWN)
-			return Gesture.DOWN_RIGHT.setXDiffSize(horizontal.getXDiffSize()).setYDiffSize(vertical.getYDiffSize());
-		else if(horizontal == Gesture.LEFT&& vertical == Gesture.UP)
-			return Gesture.UP_LEFT.setXDiffSize(horizontal.getXDiffSize()).setYDiffSize(vertical.getYDiffSize());
-		else if(horizontal == Gesture.LEFT&& vertical == Gesture.DOWN)
-			return Gesture.DOWN_LEFT.setXDiffSize(horizontal.getXDiffSize()).setYDiffSize(vertical.getYDiffSize());
+		if(horizontal == Gesture.SWIPE_RIGHT && vertical == Gesture.SWIPE_UP)
+			return Gesture.SWIPE_UP_RIGHT.setXDiffSize(horizontal.getXDiffSize()).setYDiffSize(vertical.getYDiffSize());
+		else if(horizontal == Gesture.SWIPE_RIGHT && vertical == Gesture.SWIPE_DOWN)
+			return Gesture.SWIPE_DOWN_RIGHT.setXDiffSize(horizontal.getXDiffSize()).setYDiffSize(vertical.getYDiffSize());
+		else if(horizontal == Gesture.SWIPE_LEFT&& vertical == Gesture.SWIPE_UP)
+			return Gesture.SWIPE_UP_LEFT.setXDiffSize(horizontal.getXDiffSize()).setYDiffSize(vertical.getYDiffSize());
+		else if(horizontal == Gesture.SWIPE_LEFT&& vertical == Gesture.SWIPE_DOWN)
+			return Gesture.SWIPE_DOWN_LEFT.setXDiffSize(horizontal.getXDiffSize()).setYDiffSize(vertical.getYDiffSize());
 		
 		if(horizontal == Gesture.NONE)
 			return vertical;
@@ -149,10 +154,10 @@ public class GameTools {
 	
 	public static Gesture gestureDetectionHorizontal(float prevX, float curX){
 		float xDiff = prevX - curX;
-		if(xDiff > SWIPE_LEFT){
-			return Gesture.LEFT.setXDiffSize(xDiff);
-		} else if(xDiff < SWIPE_RIGHT){
-			return Gesture.RIGHT.setXDiffSize(xDiff);
+		if(xDiff > SWIPE_LEFT_DIFF){
+			return Gesture.SWIPE_LEFT.setXDiffSize(xDiff);
+		} else if(xDiff < SWIPE_RIGHT_DIFF){
+			return Gesture.SWIPE_RIGHT.setXDiffSize(xDiff);
 		}
 		
 		return Gesture.NONE;
@@ -160,29 +165,29 @@ public class GameTools {
 	
 	public static Gesture gestureDetectionVertical(float prevY, float curY){
 		float yDiff = prevY - curY;
-		if(yDiff > SWIPE_UP){
-			return Gesture.UP.setYDiffSize(yDiff);
-		} else if(yDiff < SWIPE_DOWN){
-			return Gesture.DOWN.setYDiffSize(yDiff);
+		if(yDiff > SWIPE_UP_DIFF){
+			return Gesture.SWIPE_UP.setYDiffSize(yDiff);
+		} else if(yDiff < SWIPE_DOWN_DIFF){
+			return Gesture.SWIPE_DOWN.setYDiffSize(yDiff);
 		}
 		
 		return Gesture.NONE;
 	}
 	
 	public static Gesture gestureBreakdownHorizontal(Gesture gesture){
-		if(gesture == Gesture.RIGHT || gesture == Gesture.UP_RIGHT || gesture == Gesture.DOWN_RIGHT)
-			return Gesture.RIGHT;
-		else if(gesture == Gesture.LEFT || gesture == Gesture.UP_LEFT || gesture == Gesture.DOWN_LEFT)
-			return Gesture.LEFT;
+		if(gesture == Gesture.SWIPE_RIGHT || gesture == Gesture.SWIPE_UP_RIGHT || gesture == Gesture.SWIPE_DOWN_RIGHT)
+			return Gesture.SWIPE_RIGHT;
+		else if(gesture == Gesture.SWIPE_LEFT || gesture == Gesture.SWIPE_UP_LEFT || gesture == Gesture.SWIPE_DOWN_LEFT)
+			return Gesture.SWIPE_LEFT;
 
 		return Gesture.NONE;
 	}
 	
 	public static Gesture gestureBreakdownVertical(Gesture gesture){
-		if(gesture == Gesture.UP || gesture == Gesture.UP_RIGHT || gesture == Gesture.UP_LEFT)
-			return Gesture.UP;
-		else if(gesture == Gesture.DOWN || gesture == Gesture.DOWN_LEFT || gesture == Gesture.DOWN_RIGHT)
-			return Gesture.DOWN;
+		if(gesture == Gesture.SWIPE_UP || gesture == Gesture.SWIPE_UP_RIGHT || gesture == Gesture.SWIPE_UP_LEFT)
+			return Gesture.SWIPE_UP;
+		else if(gesture == Gesture.SWIPE_DOWN || gesture == Gesture.SWIPE_DOWN_LEFT || gesture == Gesture.SWIPE_DOWN_RIGHT)
+			return Gesture.SWIPE_DOWN;
 
 		return Gesture.NONE;
 	}

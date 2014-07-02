@@ -9,6 +9,7 @@ public class ActionProperties {
 	protected float yAccel;
 	
 	LinkedHashMap<String,String> triggerChange;
+	LinkedHashMap<String,String> triggerCancel;
 	LinkedHashMap<String, Integer> modifiers;
 	
 	public ActionProperties(){
@@ -18,6 +19,7 @@ public class ActionProperties {
 		yAccel = 0;
 
 		triggerChange = new LinkedHashMap<String, String>();
+		triggerCancel = new LinkedHashMap<String, String>();
 		modifiers = new LinkedHashMap<String, Integer>();
 	}
 
@@ -63,6 +65,26 @@ public class ActionProperties {
 
 	public LinkedHashMap<String,String> getTriggerChange(){
 		return triggerChange;
+	}
+	
+	public void addCancel(String trigger, String nextState){
+		triggerCancel.put(trigger, nextState);
+	}
+	
+	public boolean hasCancel(String trigger){
+		return triggerCancel.containsKey(trigger);
+	}
+	
+	public String getCancel(String trigger){
+		return triggerCancel.get(trigger);
+	}
+	
+	public LinkedHashMap<String, String> getTriggerCancel() {
+		return triggerCancel;
+	}
+
+	public void setTriggerCancel(LinkedHashMap<String, String> triggerCancel) {
+		this.triggerCancel = triggerCancel;
 	}
 
 	public void addModifier(String modifier, Integer value){

@@ -9,6 +9,7 @@ import object.Enemy.EnemyState;
 import object.GameObject.Direction;
 import object.GameObject.GameObjectState;
 import structure.ActionData;
+import structure.ActionDataTool;
 import structure.HitBox;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -156,6 +157,15 @@ public class Player extends GameObject{
 		Plane display = currentAction.getAnimation();
 		float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(g.getDoubleTapX(), g.getDoubleTapY(), display);
 
+		if(unprojectedPoints[1] > (this.getY()+this.getHeight())){
+			inputList.add(Gesture.DTAP_UP);
+		} else if(unprojectedPoints[0] > this.getX()+this.getHeight()){
+			inputList.add(Gesture.DTAP_RIGHT);
+		} else if(unprojectedPoints[0] < this.getX()){
+			inputList.add(Gesture.DTAP_LEFT);
+		}
+		
+		/*
 		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
 			if(unprojectedPoints[1] > (this.getY()+this.getHeight())){
 				this.playerState = PlayerState.JUMP;
@@ -167,6 +177,7 @@ public class Player extends GameObject{
 				}
 			}
 		}
+		*/
 
 		display.unprojectDisable();
 	}
@@ -178,33 +189,13 @@ public class Player extends GameObject{
 		}
 		
 		Gesture gesture = Gesture.NONE;
+		PlayerState inputState = executeInput();
+		if(inputState != null){
+			playerState = inputState;
+		}
+		
 		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
 			executeMovement();
-			
-			if(!inputList.isEmpty()){
-				gesture = inputList.getFirst();
-				inputList.removeFirst();
-			}
-			
-			if(Math.abs(gesture.getXDiffSize()) > Math.abs(gesture.getYDiffSize())){
-				if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.LEFT){
-					playerState = PlayerState.NFSWIPE;
-					this.direction = Direction.LEFT;
-				} else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.RIGHT) {
-					playerState = PlayerState.NFSWIPE;
-					this.direction = Direction.RIGHT;
-				}
-			} else {
-				if(GameTools.gestureBreakdownVertical(gesture) == Gesture.UP) {
-					playerState = PlayerState.NUSWIPE;
-				}
-				
-				if(gesture.getXDiffSize() > 0){
-					this.direction = Direction.LEFT;
-				} else if(gesture.getXDiffSize() < 0) {
-					this.direction = Direction.RIGHT;
-				}
-			}
 		}
 		
 		if(playerState == PlayerState.JUMP){
@@ -213,6 +204,15 @@ public class Player extends GameObject{
 			}
 		}
 
+		if(currentLogic.hasTrigger(ActionDataTool.PLAYED_TRIGGER)){
+			if(currentAction.getAnimation().isPlayed()){
+				String state = currentLogic.getTrigger(ActionDataTool.PLAYED_TRIGGER);
+				playerState = PlayerState.getStateFromTotalName(PlayerState.OBJECT+"_"+state);
+				interProperties = null;
+				initSpeed = true;
+			}
+		}
+		
 		/*
 		for(GameObject gameObject : gameObjects.values()){
 			if(gameObject instanceof Enemy){
@@ -346,40 +346,6 @@ public class Player extends GameObject{
 		Plane display = currentAction.getAnimation();
 
 		if(display.isPlayed()){
-			/*
-			if(isStrikeState()){
-				display.resetAnimation();
-				playerState = PlayerState.STAND;
-				
-				updatePunchIndex();
-			}
-			
-			if(isFinishState()){
-				display.resetAnimation();
-				playerState = PlayerState.STAND;
-				
-				updateFinishIndex();
-			}
-
-			if(isCounterState()){
-				display.resetAnimation();
-				playerState = PlayerState.STAND;
-				
-				updateCounterIndex();
-			}
-			*/
-			if(	playerState==PlayerState.NFSWIPE){
-				//gesture = Gesture.NONE;
-				display.resetAnimation();
-				playerState = PlayerState.STAND;
-			}
-			
-			if(	playerState==PlayerState.NUSWIPE){
-				//gesture = Gesture.NONE;
-				display.resetAnimation();
-				playerState = PlayerState.STAND;
-			}
-			
 			if(playerState==PlayerState.LAND){
 				display.resetAnimation();
 				playerState = PlayerState.STAND;
@@ -396,6 +362,56 @@ public class Player extends GameObject{
 				playerState = PlayerState.STAND;
 			}
 		}
+	}
+	
+	private PlayerState executeInput(){
+		Gesture gesture = Gesture.NONE;
+		PlayerState state = null;
+		
+		if(!inputList.isEmpty()){
+			gesture = inputList.getFirst();
+			inputList.removeFirst();
+		}
+		
+		if(gesture == Gesture.DTAP_UP){
+			if(currentAction.getActionProperties().hasCancel(ActionDataTool.DTAP_U_TRIGGER)){
+				String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.DTAP_U_TRIGGER);
+				state = PlayerState.getStateFromTotalName(PlayerState.OBJECT+"_"+cancel);
+				initSpeed = true;
+			}
+		}
+		
+		if(Math.abs(gesture.getXDiffSize()) > Math.abs(gesture.getYDiffSize())){
+			
+			if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.SWIPE_LEFT){
+				if(currentAction.getActionProperties().hasCancel(ActionDataTool.SWIPE_F_TRIGGER)){
+					String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.SWIPE_F_TRIGGER);
+					state = PlayerState.getStateFromTotalName(PlayerState.OBJECT+"_"+cancel);
+					this.direction = Direction.LEFT;
+				}
+			} else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.SWIPE_RIGHT) {
+				if(currentAction.getActionProperties().hasCancel(ActionDataTool.SWIPE_F_TRIGGER)){
+					String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.SWIPE_F_TRIGGER);
+					state = PlayerState.getStateFromTotalName(PlayerState.OBJECT+"_"+cancel);
+					this.direction = Direction.RIGHT;
+				}
+			}
+		} else {
+			if(GameTools.gestureBreakdownVertical(gesture) == Gesture.SWIPE_UP) {
+				if(currentAction.getActionProperties().hasCancel(ActionDataTool.SWIPE_U_TRIGGER)){
+					String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.SWIPE_U_TRIGGER);
+					state = PlayerState.getStateFromTotalName(PlayerState.OBJECT+"_"+cancel);
+				}				
+			}
+			
+			if(gesture.getXDiffSize() > 0){
+				this.direction = Direction.LEFT;
+			} else if(gesture.getXDiffSize() < 0) {
+				this.direction = Direction.RIGHT;
+			}
+		}
+		
+		return state;
 	}
 
 	private void executeMovement(){

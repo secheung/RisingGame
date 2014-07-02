@@ -54,11 +54,22 @@ public class ActionDataTool {
 	public static String REVERSE_X = "reverse_x";
 	
 	public static String TRIGGER_CHANGE = "trigger_change";
+	public static String TRIGGER_CANCEL = "trigger_cancel";
 	public static String HIT_TRIGGER = "hit_trigger";
 	public static String WALL_TRIGGER = "wall_trigger";
 	public static String GROUND_TRIGGER = "ground_trigger";
 	public static String PLAYED_TRIGGER = "played_trigger";
 	public static String STOPPED_TRIGGER = "stopped_trigger";
+	
+	public static String SWIPE_F_TRIGGER = "swipe_f_trigger";
+	public static String SWIPE_U_TRIGGER = "swipe_u_trigger";
+	public static String SWIPE_B_TRIGGER = "swipe_b_trigger";
+	public static String SWIPE_D_TRIGGER = "swipe_d_trigger";
+	
+	public static String DTAP_F_TRIGGER = "dtap_f_trigger";
+	public static String DTAP_U_TRIGGER = "dtap_u_trigger";
+	public static String DTAP_B_TRIGGER = "dtap_b_trigger";
+	public static String DTAP_D_TRIGGER = "dtap_d_trigger";
 	
 	Context context;
 	String currentFile;
@@ -127,50 +138,6 @@ public class ActionDataTool {
 					interProperties.copyActionProperties(properties);
 					data.setInterProperties(interProperties);
 				}
-
-				/*
-				if(actionJSON.has(HITSTOP)){
-					int hitstop = actionJSON.getInt(HITSTOP);
-					data.setHitstop(hitstop);
-					
-				}
-				
-				if(actionJSON.has(HIT_ACTION)){
-					String value = actionJSON.getString(HIT_ACTION);
-					data.addActionChange(HIT_ACTION, value);
-				}
-				
-				if(actionJSON.has(GROUND_ACTION)){
-					String value = actionJSON.getString(GROUND_ACTION);
-					data.addActionChange(GROUND_ACTION, value);
-				}
-				
-				if(actionJSON.has(WALL_ACTION)){
-					String value = actionJSON.getString(WALL_ACTION);
-					data.addActionChange(WALL_ACTION, value);
-				}
-				
-				if(actionJSON.has(X_INIT_SPEED)){
-					float xInitSpeed = (float)actionJSON.getDouble(X_INIT_SPEED);
-					data.setxInitSpeed(xInitSpeed);
-				}
-				
-				if(actionJSON.has(Y_INIT_SPEED)){
-					float yInitSpeed = (float)actionJSON.getDouble(Y_INIT_SPEED);
-					data.setyInitSpeed(yInitSpeed);
-				}
-
-				if(actionJSON.has(X_ACCEL)){
-					float xAccel = (float)actionJSON.getDouble(X_ACCEL);
-					data.setxAccel(xAccel);
-				}
-				
-				if(actionJSON.has(Y_ACCEL)){
-					float yAccel = (float)actionJSON.getDouble(Y_ACCEL);
-					data.setyAccel(yAccel);
-				}
-				*/
-				
 				
 				PlaneData planeData = parsePlaneData(actionJSON.getJSONObject("plane_data"));
 				data.setPlaneData(planeData);
@@ -315,6 +282,49 @@ public class ActionDataTool {
 			if(modifiersJSON.has(REVERSE_X)){
 				int value = modifiersJSON.getInt(REVERSE_X);
 				actionProperties.addModifier(REVERSE_X, value);
+			}
+		}
+		
+		if(propertyData.has(TRIGGER_CANCEL)){
+			JSONObject cancelJSON = propertyData.getJSONObject(TRIGGER_CANCEL);
+			if(cancelJSON.has(SWIPE_F_TRIGGER)){
+				String value = cancelJSON.getString(SWIPE_F_TRIGGER);
+				actionProperties.addCancel(SWIPE_F_TRIGGER, value);
+			}
+			
+			if(cancelJSON.has(SWIPE_B_TRIGGER)){
+				String value = cancelJSON.getString(SWIPE_B_TRIGGER);
+				actionProperties.addCancel(SWIPE_B_TRIGGER, value);
+			}
+			
+			if(cancelJSON.has(SWIPE_U_TRIGGER)){
+				String value = cancelJSON.getString(SWIPE_U_TRIGGER);
+				actionProperties.addCancel(SWIPE_U_TRIGGER, value);
+			}
+			
+			if(cancelJSON.has(SWIPE_D_TRIGGER)){
+				String value = cancelJSON.getString(SWIPE_D_TRIGGER);
+				actionProperties.addCancel(SWIPE_D_TRIGGER, value);
+			}
+			
+			if(cancelJSON.has(DTAP_F_TRIGGER)){
+				String value = cancelJSON.getString(DTAP_F_TRIGGER);
+				actionProperties.addCancel(DTAP_F_TRIGGER, value);
+			}
+			
+			if(cancelJSON.has(DTAP_B_TRIGGER)){
+				String value = cancelJSON.getString(DTAP_B_TRIGGER);
+				actionProperties.addCancel(DTAP_B_TRIGGER, value);
+			}
+			
+			if(cancelJSON.has(DTAP_U_TRIGGER)){
+				String value = cancelJSON.getString(DTAP_U_TRIGGER);
+				actionProperties.addCancel(DTAP_U_TRIGGER, value);
+			}
+			
+			if(cancelJSON.has(DTAP_D_TRIGGER)){
+				String value = cancelJSON.getString(DTAP_D_TRIGGER);
+				actionProperties.addCancel(DTAP_D_TRIGGER, value);
 			}
 		}
 		

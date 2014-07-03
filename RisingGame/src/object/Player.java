@@ -213,6 +213,9 @@ public class Player extends GameObject{
 			}
 		}
 		
+		if(currentAction != actionData.get(playerState))
+			this.switchAction(playerState);
+
 		/*
 		for(GameObject gameObject : gameObjects.values()){
 			if(gameObject instanceof Enemy){
@@ -320,8 +323,6 @@ public class Player extends GameObject{
 			moveToY = getMidY();
 		}
 		
-		if(currentAction != actionData.get(playerState))
-			this.switchAction(playerState);
 	}
 	
 	@Override

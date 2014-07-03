@@ -133,8 +133,9 @@ public class ActionDataTool {
 				}
 
 				if(actionJSON.has(INTERACTION_PROPERTIES)){
+					
 					ActionProperties properties = parseActionProperties(actionJSON.getJSONObject(INTERACTION_PROPERTIES));
-					InteractionProperties interProperties = new InteractionProperties();
+					InteractionProperties interProperties = parseInteractionProperties(actionJSON.getJSONObject(INTERACTION_PROPERTIES));
 					interProperties.copyActionProperties(properties);
 					data.setInterProperties(interProperties);
 				}

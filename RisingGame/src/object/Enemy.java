@@ -188,7 +188,6 @@ public class Enemy extends GameObject {
 
 		if(isHit()){
 			interProperties = playerRef.getCurrentAction().getInterProperties();
-			
 			playerRef.setHitStopFrames(interProperties.getHitStop());
 			this.setHitStopFrames(interProperties.getHitStop());
 			
@@ -420,7 +419,7 @@ public class Enemy extends GameObject {
 			return;
 		}
 
-		Log.d(enemyState.toString(), xVelocity+" "+xAccel+" wall "+isAtWall());
+		//Log.d(enemyState.toString(), xVelocity+" "+xAccel);
 		if(isStopped() || isAtWall()){
 			initXPhys(0, 0);
 		} else {

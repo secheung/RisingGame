@@ -105,7 +105,18 @@
 			"play_back":"play_once"
 		},
 		"hurt_box":[
-		]
+		],
+		"action_properties":{
+			"x_init_speed":0.2,
+			"y_init_speed":0.75,
+			"x_accel":0,
+			"y_accel":-0.098,
+			"modifiers":{
+			},
+			"trigger_change":{
+				"ground_trigger":"jump_land"
+			}
+		}
 	},
 	"jump_land_action":{
 		"name":"jack_jump_land",
@@ -119,7 +130,14 @@
 			"play_back":"play_once"
 		},
 		"hurt_box":[
-		]
+		],
+		"action_properties":{
+			"modifiers":{
+			},
+			"trigger_change":{
+				"played_trigger":"stand"
+			}
+		}
 	},
 	"n_tap_action":{
 		"name":"jack_n_tap",

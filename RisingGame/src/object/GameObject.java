@@ -107,6 +107,8 @@ public abstract class GameObject {
 	public abstract void passTouchEvent(MotionEvent e, WorldRenderer worldRenderer);
 	public abstract void passDoubleTouchEvent(GestureListener g, WorldRenderer worldRenderer);
 	
+	public abstract void setStateUsingTotalName(String state);
+	
 	public void updateDrawData(WorldRenderer worldRenderer){
 		currentAction.updateDrawData(worldRenderer,this);
 	}
@@ -142,9 +144,12 @@ public abstract class GameObject {
 		if(interProperties != null){
 			currentLogic.addTriggers(interProperties);
 			currentLogic.buildInterInitSpeedLogic(interProperties, actProperties);
-		}else{
+		} else if(actProperties.hasModifier(ActionDataTool.CONT_SPEED)){
 			interProperties = null;
 			currentLogic.buildContSpeedLogic(this, actProperties);
+		}else{
+			interProperties = null;
+			currentLogic.buildActInitSpeedLogic(actProperties);
 		}
 		
 		if(actProperties.hasModifier(ActionDataTool.ACTIVE_AFTER)){
@@ -159,6 +164,90 @@ public abstract class GameObject {
 		updateAfterDisplay();
 	}
 
+	protected void executeTriggers(){
+		if(currentLogic.hasTrigger(ActionDataTool.WALL_TRIGGER)){
+			if(isAtWall()){ 
+				String state = currentLogic.getTrigger(ActionDataTool.WALL_TRIGGER);
+				setStateUsingTotalName(state);
+				interProperties = null;
+				initSpeed = true;
+			}
+		}
+		
+		if(currentLogic.hasTrigger(ActionDataTool.GROUND_TRIGGER)){
+			if(isOnGround()){
+				String state = currentLogic.getTrigger(ActionDataTool.GROUND_TRIGGER);
+				setStateUsingTotalName(state);
+				interProperties = null;
+				initSpeed = true;
+			}
+		}
+		
+		if(currentLogic.hasTrigger(ActionDataTool.PLAYED_TRIGGER)){
+			if(currentAction.getAnimation().isPlayed()){
+				String state = currentLogic.getTrigger(ActionDataTool.PLAYED_TRIGGER);
+				setStateUsingTotalName(state);
+				interProperties = null;
+				initSpeed = true;
+			}
+		}
+
+		if(currentLogic.hasTrigger(ActionDataTool.STOPPED_TRIGGER)){
+			if(isStopped()){
+				String state = currentLogic.getTrigger(ActionDataTool.STOPPED_TRIGGER);
+				setStateUsingTotalName(state);
+				interProperties = null;
+				initSpeed = true;
+			}
+		}
+	}
+	
+	public void executeLogic(){
+		if(currentAction.getAnimation().getFrame() < currentLogic.getActiveAfter()){
+			return;
+		}
+		
+		if(initSpeed){
+			float initxSpeed = currentLogic.getxInitSpeed();
+			float xAccel = currentLogic.getxAccel();
+			
+			if(currentAction.getActionProperties().hasModifier(ActionDataTool.REVERSE_X)){
+				initxSpeed = -1*initxSpeed;
+			}
+			
+			if(!currentAction.getActionProperties().hasModifier(ActionDataTool.CONT_SPEED)){
+				if(direction == Direction.RIGHT){
+					initxSpeed = initxSpeed;
+				} else if(direction == Direction.LEFT){
+					initxSpeed = -1*initxSpeed;
+				}
+			}
+			
+			xAccel = getAccelFromSpeed(initxSpeed, xAccel);
+
+			initXPhys(initxSpeed, xAccel);
+			initYPhys(currentLogic.getyInitSpeed(), currentLogic.getyAccel());
+			initSpeed = false;
+
+			executeXPhys();
+			executeYPhys();
+			return;
+		}
+
+		if(isStopped() || isAtWall()){
+			initXPhys(0, 0);
+		} else {
+			executeXPhys();
+		}
+		
+		if(isOnGround()){
+			y = GameLogic.FLOOR;
+			initYPhys(0, 0);
+		}else{
+			executeYPhys();
+		}
+	}
+	
 	public void initXPhys(float speed, float accel){
 		xVelocity = speed;
 		xAccel = accel;
@@ -216,6 +305,12 @@ public abstract class GameObject {
 			if(y+box.getBoxData().bottom <= GameLogic.FLOOR)
 				return true;
 		}
+
+		if(hurtBoxes.isEmpty()){
+			//hard code offset bad bad bad
+			if(y+0.01f <= GameLogic.FLOOR)
+				return true;
+		}
 		
 		return false;
 	}
@@ -230,9 +325,13 @@ public abstract class GameObject {
 			
 			if(xVelocity < 0 && x+box.getBoxData().left <= GameLogic.WALL_LEFT)
 				return true;
+		}
+		
+		if(hurtBoxes.isEmpty()){
+			if(xVelocity > 0 && x+width >= GameLogic.WALL_RIGHT)
+				return true;
 			
-			if	(xVelocity == 0 && 
-				(x+box.getBoxData().right >= GameLogic.WALL_RIGHT || x+box.getBoxData().left <= GameLogic.WALL_LEFT))
+			if(xVelocity < 0 && x <= GameLogic.WALL_LEFT)
 				return true;
 		}
 		

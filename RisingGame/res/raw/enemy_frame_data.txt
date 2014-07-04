@@ -75,11 +75,15 @@
 		"hit_box":[
 		],
 		"action_properties":{
+			"x_accel":-0.05,
+			"y_accel":0.0,
+			"modifiers":{
+				"cont_speed":1,
+				"snap_to_floor":1
+			},
 			"trigger_change":{
 				"played_trigger":"stand"
-			},
-			"x_accel":-0.05,
-			"y_accel":0.0
+			}
 		}
 	},
 	"knock_down_forward_action":{
@@ -98,6 +102,8 @@
 		],
 		"action_properties":{
 			"modifiers":{
+				"cont_speed":1,
+				"snap_to_floor":1
 			},
 			"trigger_change":{
 				"stopped_trigger":"stand"
@@ -165,6 +171,7 @@
 		],
 		"action_properties":{
 			"modifiers":{
+				"cont_speed":1,
 				"active_after":9,
 				"reverse_x":1
 			},

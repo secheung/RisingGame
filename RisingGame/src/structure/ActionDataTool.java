@@ -52,6 +52,8 @@ public class ActionDataTool {
 	private static String MODIFIERS = "modifiers";
 	public static String ACTIVE_AFTER = "active_after";
 	public static String REVERSE_X = "reverse_x";
+	public static String CONT_SPEED = "cont_speed";
+	public static String SNAP_TO_FLOOR = "snap_to_floor";
 	
 	public static String TRIGGER_CHANGE = "trigger_change";
 	public static String TRIGGER_CANCEL = "trigger_cancel";
@@ -283,6 +285,16 @@ public class ActionDataTool {
 			if(modifiersJSON.has(REVERSE_X)){
 				int value = modifiersJSON.getInt(REVERSE_X);
 				actionProperties.addModifier(REVERSE_X, value);
+			}
+			
+			if(modifiersJSON.has(CONT_SPEED)){
+				int value = modifiersJSON.getInt(CONT_SPEED);
+				actionProperties.addModifier(CONT_SPEED, value);
+			}
+			
+			if(modifiersJSON.has(SNAP_TO_FLOOR)){
+				int value = modifiersJSON.getInt(SNAP_TO_FLOOR);
+				actionProperties.addModifier(SNAP_TO_FLOOR, value);
 			}
 		}
 		

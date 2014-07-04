@@ -10,7 +10,6 @@ public class GameObjectLogic {
 	private LinkedHashMap<String, String> triggers;
 	private GameObject fromObject;
 
-	protected boolean continueSpeed;
 	protected int activeAfter;
 	
 	protected float xInitSpeed;
@@ -21,7 +20,6 @@ public class GameObjectLogic {
 	
 	public GameObjectLogic(){
 		triggers = new LinkedHashMap<String, String>();
-		continueSpeed = false;
 		xInitSpeed = 0;
 		yInitSpeed = 0;
 		xAccel = 0;
@@ -36,7 +34,13 @@ public class GameObjectLogic {
 		xAccel = 0;
 		yAccel = 0;
 		activeAfter = -1;
-		continueSpeed = false;
+	}
+	
+	public void buildActInitSpeedLogic(ActionProperties actProperties){
+		xInitSpeed = actProperties.getxInitSpeed();
+		yInitSpeed = actProperties.getyInitSpeed();
+		xAccel = actProperties.getxAccel();
+		yAccel = actProperties.getyAccel();
 	}
 	
 	public void buildInterInitSpeedLogic(InteractionProperties interProperties, ActionProperties actProperties){
@@ -44,7 +48,6 @@ public class GameObjectLogic {
 		yInitSpeed = interProperties.getyInitSpeed();
 		xAccel = actProperties.getxAccel();
 		yAccel = actProperties.getyAccel();
-		continueSpeed = false;
 	}
 
 	public void buildContSpeedLogic(GameObject gameObject, ActionProperties actProperties){
@@ -52,7 +55,6 @@ public class GameObjectLogic {
 		yInitSpeed = gameObject.getyVelocity();
 		xAccel = actProperties.getxAccel();
 		yAccel = actProperties.getyAccel();
-		continueSpeed = true;
 	}
 	
 	public void buildTriggers(ActionProperties actProperties){
@@ -89,14 +91,6 @@ public class GameObjectLogic {
 
 	public void setFromObject(GameObject fromObject) {
 		this.fromObject = fromObject;
-	}
-
-	public boolean isContinueSpeed() {
-		return continueSpeed;
-	}
-
-	public void setContinueSpeed(boolean continueSpeed) {
-		this.continueSpeed = continueSpeed;
 	}
 
 	public int getActiveAfter() {

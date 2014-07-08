@@ -205,8 +205,9 @@ public class Enemy extends GameObject {
 		
 		if(		enemyState != EnemyState.STAND && 
 				enemyState != EnemyState.RUN && 
-				enemyState != EnemyState.WALK)
-			Log.d(enemyState.toString(),"xVel"+xVelocity+" xAccel "+xAccel);
+				enemyState != EnemyState.WALK){
+			//Log.d(enemyState.toString(),"xVel"+xVelocity+" xAccel "+xAccel);
+		}
 	}
 
 	@Override

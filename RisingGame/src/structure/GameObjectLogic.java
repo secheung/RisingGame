@@ -8,10 +8,7 @@ import object.GameObject;
 
 public class GameObjectLogic {
 	private LinkedHashMap<String, String> triggers;
-	private GameObject fromObject;
 
-	protected int activeAfter;
-	
 	protected float xInitSpeed;
 	protected float yInitSpeed;
 	protected float xAccel;
@@ -24,7 +21,6 @@ public class GameObjectLogic {
 		yInitSpeed = 0;
 		xAccel = 0;
 		yAccel = 0;
-		activeAfter = -1;
 	}
 
 	public void reset(){
@@ -33,7 +29,6 @@ public class GameObjectLogic {
 		yInitSpeed = 0;
 		xAccel = 0;
 		yAccel = 0;
-		activeAfter = -1;
 	}
 	
 	public void buildActInitSpeedLogic(ActionProperties actProperties){
@@ -83,22 +78,6 @@ public class GameObjectLogic {
 
 	public String getTrigger(String trigger){
 		return triggers.get(trigger);
-	}
-	
-	public GameObject getFromObject() {
-		return fromObject;
-	}
-
-	public void setFromObject(GameObject fromObject) {
-		this.fromObject = fromObject;
-	}
-
-	public int getActiveAfter() {
-		return activeAfter;
-	}
-
-	public void setActiveAfter(int activeAfter) {
-		this.activeAfter = activeAfter;
 	}
 
 	public float getxInitSpeed() {

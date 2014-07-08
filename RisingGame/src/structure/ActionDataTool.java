@@ -51,6 +51,7 @@ public class ActionDataTool {
 	
 	private static String MODIFIERS = "modifiers";
 	public static String ACTIVE_AFTER = "active_after";
+	public static String ACTIVE_BEFORE = "active_before";
 	public static String REVERSE_X = "reverse_x";
 	public static String CONT_SPEED = "cont_speed";
 	public static String SNAP_TO_FLOOR = "snap_to_floor";
@@ -61,7 +62,8 @@ public class ActionDataTool {
 	public static String WALL_TRIGGER = "wall_trigger";
 	public static String GROUND_TRIGGER = "ground_trigger";
 	public static String PLAYED_TRIGGER = "played_trigger";
-	public static String STOPPED_TRIGGER = "stopped_trigger";
+	public static String STOPPED_X_TRIGGER = "stopped_x_trigger";
+	public static String STOPPED_Y_TRIGGER = "stopped_y_trigger";
 	
 	public static String SWIPE_F_TRIGGER = "swipe_f_trigger";
 	public static String SWIPE_U_TRIGGER = "swipe_u_trigger";
@@ -269,9 +271,14 @@ public class ActionDataTool {
 				actionProperties.addTrigger(PLAYED_TRIGGER, value);
 			}
 			
-			if(triggerJSON.has(STOPPED_TRIGGER)){
-				String value = triggerJSON.getString(STOPPED_TRIGGER);
-				actionProperties.addTrigger(STOPPED_TRIGGER, value);
+			if(triggerJSON.has(STOPPED_X_TRIGGER)){
+				String value = triggerJSON.getString(STOPPED_X_TRIGGER);
+				actionProperties.addTrigger(STOPPED_X_TRIGGER, value);
+			}
+			
+			if(triggerJSON.has(STOPPED_Y_TRIGGER)){
+				String value = triggerJSON.getString(STOPPED_Y_TRIGGER);
+				actionProperties.addTrigger(STOPPED_Y_TRIGGER, value);
 			}
 		}
 		
@@ -281,7 +288,12 @@ public class ActionDataTool {
 				int value = modifiersJSON.getInt(ACTIVE_AFTER);
 				actionProperties.addModifier(ACTIVE_AFTER, value);
 			}
-			
+
+			if(modifiersJSON.has(ACTIVE_BEFORE)){
+				int value = modifiersJSON.getInt(ACTIVE_BEFORE);
+				actionProperties.addModifier(ACTIVE_BEFORE, value);
+			}
+
 			if(modifiersJSON.has(REVERSE_X)){
 				int value = modifiersJSON.getInt(REVERSE_X);
 				actionProperties.addModifier(REVERSE_X, value);

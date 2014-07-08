@@ -151,10 +151,6 @@ public abstract class GameObject {
 			interProperties = null;
 			currentLogic.buildActInitSpeedLogic(actProperties);
 		}
-		
-		if(actProperties.hasModifier(ActionDataTool.ACTIVE_AFTER)){
-			currentLogic.setActiveAfter(actProperties.getModifier(ActionDataTool.ACTIVE_AFTER));
-		}
 	}
 	
 	public void update() {
@@ -192,9 +188,18 @@ public abstract class GameObject {
 			}
 		}
 
-		if(currentLogic.hasTrigger(ActionDataTool.STOPPED_TRIGGER)){
-			if(isStopped()){
-				String state = currentLogic.getTrigger(ActionDataTool.STOPPED_TRIGGER);
+		if(currentLogic.hasTrigger(ActionDataTool.STOPPED_X_TRIGGER)){
+			if(isXStopped()){
+				String state = currentLogic.getTrigger(ActionDataTool.STOPPED_X_TRIGGER);
+				setStateUsingTotalName(state);
+				interProperties = null;
+				initSpeed = true;
+			}
+		}
+		
+		if(currentLogic.hasTrigger(ActionDataTool.STOPPED_Y_TRIGGER)){
+			if(isYStopped()){
+				String state = currentLogic.getTrigger(ActionDataTool.STOPPED_Y_TRIGGER);
 				setStateUsingTotalName(state);
 				interProperties = null;
 				initSpeed = true;
@@ -203,8 +208,16 @@ public abstract class GameObject {
 	}
 	
 	public void executeLogic(){
-		if(currentAction.getAnimation().getFrame() < currentLogic.getActiveAfter()){
-			return;
+		if(currentAction.getActionProperties().hasModifier(ActionDataTool.ACTIVE_AFTER)){
+			if(currentAction.getAnimation().getFrame() < currentAction.getActionProperties().getModifier(ActionDataTool.ACTIVE_AFTER)){
+				return;
+			}
+		}
+
+		if(currentAction.getActionProperties().hasModifier(ActionDataTool.ACTIVE_BEFORE)){
+			if(currentAction.getAnimation().getFrame() > currentAction.getActionProperties().getModifier(ActionDataTool.ACTIVE_BEFORE)){
+				return;
+			}
 		}
 		
 		if(initSpeed){
@@ -229,12 +242,21 @@ public abstract class GameObject {
 			initYPhys(currentLogic.getyInitSpeed(), currentLogic.getyAccel());
 			initSpeed = false;
 
-			executeXPhys();
-			executeYPhys();
-			return;
+			//executeXPhys();
+			//executeYPhys();
+			//return;
 		}
 
-		if(isStopped() || isAtWall()){
+		/*
+		if(isXStopped() || isAtWall()){
+			initXPhys(0, 0);
+		} else {
+			executeXPhys();
+		}
+		*/
+		if(!currentLogic.hasTrigger(ActionDataTool.STOPPED_X_TRIGGER) && isXStopped()){
+			initXPhys(0, 0);
+		} else if(!currentLogic.hasTrigger(ActionDataTool.WALL_TRIGGER) && isAtWall()){
 			initXPhys(0, 0);
 		} else {
 			executeXPhys();
@@ -338,12 +360,24 @@ public abstract class GameObject {
 		return false;
 	}
 	
-	public boolean isStopped(){
+	public boolean isXStopped(){
 		if(xAccel > 0 && xVelocity > 0){
 			return true;
 		}else if(xAccel < 0 && xVelocity < 0){
 			return true;
 		} else if(xAccel == 0 && xVelocity == 0){
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean isYStopped(){
+		if(yAccel > 0 && yVelocity > 0){
+			return true;
+		}else if(yAccel < 0 && yVelocity < 0){
+			return true;
+		} else if(yAccel == 0 && yVelocity == 0){
 			return true;
 		}
 		

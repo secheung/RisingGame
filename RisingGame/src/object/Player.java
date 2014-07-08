@@ -112,7 +112,7 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.DEAD, R.drawable.rising_stance);
 		animationRef.put(PlayerState.RUN, R.drawable.jack_run);
 		animationRef.put(PlayerState.JUMP, R.drawable.jack_jump_startup);
-		animationRef.put(PlayerState.ARC, R.drawable.jack_jump_startup);
+		animationRef.put(PlayerState.ARC, R.drawable.jack_jump_arc);
 		animationRef.put(PlayerState.LAND, R.drawable.jack_jump_land);
 		animationRef.put(PlayerState.DODGE, R.drawable.rising_dodge);
 		animationRef.put(PlayerState.NTAP, R.drawable.jack_n_tap);
@@ -251,23 +251,18 @@ public class Player extends GameObject{
 			moveToX = getMidX();
 			moveToY = getMidY();
 		} else if(playerState == PlayerState.NFSWIPE){
+			executeLogic();
 			moveToX = getMidX();
-			if(currentAction.getAnimation().getFrame() <= 7 && currentAction.getAnimation().getFrame() >= 5){
-				if(direction == Direction.RIGHT)
-					x += NFSWIPE_SPEED;
-				else if(direction == Direction.LEFT)
-					x -= NFSWIPE_SPEED;
-			}
 		} else if(playerState == PlayerState.NUSWIPE){
 			moveToX = getMidX();
 		} else {
 			executeLogic();
 		}
 
-		/*
-		if(playerState != PlayerState.STAND && playerState != PlayerState.RUN)
-			Log.d(playerState.toString(), "yvelocity "+yVelocity+" yaccel "+yAccel);
-		*/
+
+		if(playerState != PlayerState.STAND && playerState != PlayerState.RUN){
+			//Log.d(playerState.toString(), "xvelocity "+xVelocity+" xaccel "+xAccel);
+		}
 	}
 	
 	@Override
@@ -304,7 +299,7 @@ public class Player extends GameObject{
 			}
 		}
 	}
-	
+
 	private PlayerState executeInput(){
 		Gesture gesture = Gesture.NONE;
 		PlayerState state = null;
@@ -328,12 +323,14 @@ public class Player extends GameObject{
 				if(currentAction.getActionProperties().hasCancel(ActionDataTool.SWIPE_F_TRIGGER)){
 					String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.SWIPE_F_TRIGGER);
 					setStateUsingTotalName(cancel);
+					initSpeed = true;
 					this.direction = Direction.LEFT;
 				}
 			} else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.SWIPE_RIGHT) {
 				if(currentAction.getActionProperties().hasCancel(ActionDataTool.SWIPE_F_TRIGGER)){
 					String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.SWIPE_F_TRIGGER);
 					setStateUsingTotalName(cancel);
+					initSpeed = true;
 					this.direction = Direction.RIGHT;
 				}
 			}

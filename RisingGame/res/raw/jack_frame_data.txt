@@ -95,8 +95,6 @@
 	},
 	"jump_startup_action":{
 		"name":"jack_jump_startup",
-		"xChange":0,
-		"yChange":1.5,
 		"plane_data":{
 			"width":3.5,
 			"height":3.5,
@@ -112,6 +110,28 @@
 			"x_accel":0,
 			"y_accel":-0.098,
 			"modifiers":{
+			},
+			"trigger_change":{
+				"stopped_y_trigger":"jump_arc"
+			}
+		}
+	},
+	"jump_arc_action":{
+		"name":"jack_jump_arc",
+		"plane_data":{
+			"width":3.5,
+			"height":3.5,
+			"rows":1,
+			"columns":5,
+			"play_back":"play_once"
+		},
+		"hurt_box":[
+		],
+		"action_properties":{
+			"x_accel":0,
+			"y_accel":-0.098,
+			"modifiers":{
+				"cont_speed":1
 			},
 			"trigger_change":{
 				"ground_trigger":"jump_land"
@@ -175,7 +195,13 @@
 			{"left":1.6,"bottom":1.9,"right":2.35,"top":2.475,"active_frame":[11,12,13]}
 		],
 		"action_properties":{
+			"x_init_speed":0.2,
+			"y_init_speed":0.0,
+			"x_accel":0.0,
+			"y_accel":0.0,
 			"modifiers":{
+				"active_after":3,
+				"active_before":7
 			},
 			"trigger_change":{
 				"played_trigger":"stand"
@@ -202,14 +228,14 @@
 		"plane_data":{
 			"width":3.5,
 			"height":3.5,
-			"rows":4,
-			"columns":5,
+			"rows":2,
+			"columns":11,
 			"play_back":"play_once"
 		},
 		"hurt_box":[
 		],
 		"hit_box":[
-			{"left":2.35,"bottom":0.0,"right":2.9,"top":3.25,"active_frame":[6,7]}
+			{"left":2.35,"bottom":0.0,"right":2.9,"top":3.25,"active_frame":[9,10]}
 		],
 		"action_properties":{
 			"modifiers":{

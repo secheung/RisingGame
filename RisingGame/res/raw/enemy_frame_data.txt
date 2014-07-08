@@ -106,7 +106,7 @@
 				"snap_to_floor":1
 			},
 			"trigger_change":{
-				"stopped_trigger":"stand"
+				"stopped_x_trigger":"stand"
 			},
 			"x_accel":-0.05,
 			"y_accel":0.0

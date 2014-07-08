@@ -55,7 +55,9 @@ public class ActionDataTool {
 	public static String REVERSE_X = "reverse_x";
 	public static String CONT_SPEED = "cont_speed";
 	public static String SNAP_TO_FLOOR = "snap_to_floor";
-	
+
+	public static String CANCEL_FRAME = "cancel_frame";
+
 	public static String TRIGGER_CHANGE = "trigger_change";
 	public static String TRIGGER_CANCEL = "trigger_cancel";
 	public static String HIT_TRIGGER = "hit_trigger";
@@ -312,6 +314,14 @@ public class ActionDataTool {
 		
 		if(propertyData.has(TRIGGER_CANCEL)){
 			JSONObject cancelJSON = propertyData.getJSONObject(TRIGGER_CANCEL);
+
+			if(cancelJSON.has(CANCEL_FRAME)){
+				JSONArray value = cancelJSON.getJSONArray(CANCEL_FRAME);
+				for(int index = 0; index < value.length(); index++){
+					actionProperties.addCancelFrame(value.getInt(index));
+				}
+			}
+
 			if(cancelJSON.has(SWIPE_F_TRIGGER)){
 				String value = cancelJSON.getString(SWIPE_F_TRIGGER);
 				actionProperties.addCancel(SWIPE_F_TRIGGER, value);

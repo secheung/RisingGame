@@ -1,6 +1,7 @@
 package object;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -304,6 +305,13 @@ public class Player extends GameObject{
 		Gesture gesture = Gesture.NONE;
 		PlayerState state = null;
 		
+		HashSet<Integer> cancelFrames = currentAction.getActionProperties().getCancelFrame();
+		if(!cancelFrames.isEmpty()){
+			if(!cancelFrames.contains(currentAction.getAnimation().getFrame())){
+				return state;
+			}
+		}
+
 		if(!inputList.isEmpty()){
 			gesture = inputList.getFirst();
 			inputList.removeFirst();

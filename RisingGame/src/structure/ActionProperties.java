@@ -1,5 +1,6 @@
 package structure;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 
 public class ActionProperties {
@@ -10,6 +11,8 @@ public class ActionProperties {
 	
 	LinkedHashMap<String,String> triggerChange;
 	LinkedHashMap<String,String> triggerCancel;
+	HashSet<Integer> cancelFrame;
+
 	LinkedHashMap<String, Integer> modifiers;
 	
 	public ActionProperties(){
@@ -20,6 +23,7 @@ public class ActionProperties {
 
 		triggerChange = new LinkedHashMap<String, String>();
 		triggerCancel = new LinkedHashMap<String, String>();
+		cancelFrame = new HashSet<Integer>();
 		modifiers = new LinkedHashMap<String, Integer>();
 	}
 
@@ -78,13 +82,25 @@ public class ActionProperties {
 	public String getCancel(String trigger){
 		return triggerCancel.get(trigger);
 	}
-	
+
 	public LinkedHashMap<String, String> getTriggerCancel() {
 		return triggerCancel;
 	}
 
 	public void setTriggerCancel(LinkedHashMap<String, String> triggerCancel) {
 		this.triggerCancel = triggerCancel;
+	}
+
+	public void addCancelFrame(int frame){
+		cancelFrame.add(frame);
+	}
+
+	public boolean hasCancelFrame(int frame){
+		return cancelFrame.contains(frame);
+	}
+
+	public HashSet<Integer> getCancelFrame(){
+		return cancelFrame;
 	}
 
 	public void addModifier(String modifier, Integer value){

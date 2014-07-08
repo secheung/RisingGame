@@ -24,7 +24,6 @@ public class ActionData {
 	
 	boolean flipped = false;
 	//GameObject pairedObj;
-	
 
 	//public ActionData(String name,Plane animation,GameObject pairedObj){
 	//public ActionData(String name,GameObject pairedObj){

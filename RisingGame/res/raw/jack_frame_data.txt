@@ -277,15 +277,15 @@
 		"hurt_box":[
 		],
 		"hit_box":[
-			{"left":1.8,"bottom":1.83,"right":3.15,"top":2.275,"active_frame":[8,9,10,11,12]}
+			{"left":1.8,"bottom":1.83,"right":3.15,"top":2.275,"active_frame":[3,4,5,6,7,8,9,10,11,12]}
 		],
 		"action_properties":{
-			"x_init_speed":1.35,
-			"y_init_speed":0.2,
+			"x_init_speed":1.5,
+			"y_init_speed":0.5,
 			"x_accel":-0.2,
 			"y_accel":-0.098,
 			"modifiers":{
-				"active_after":5
+				"active_after":2
 			},
 			"trigger_change":{
 				"ground_trigger":"stand"

@@ -74,7 +74,7 @@ public class Enemy extends GameObject {
 	
 	private static EnemyState INIT_STATE = EnemyState.STAND;
 	
-	private static final int TEMP_FRAME = 0;
+	private static final int TEMP_FRAME = 14;
 	
 	private static float RUN_SPEED = 0.16f;
 	private static float WALK_SPEED = 0.08f;
@@ -116,7 +116,7 @@ public class Enemy extends GameObject {
 	@Override
 	public void setupAnimRef() {
 		animationRef = new HashMap<GameObjectState, Integer>();
-		animationRef.put(EnemyState.TEMP, R.drawable.enemy_knock_back);
+		animationRef.put(EnemyState.TEMP, R.drawable.enemy_knock_up);
 		animationRef.put(EnemyState.STAND, R.drawable.enemy_stance);
 		animationRef.put(EnemyState.FREEZE, R.drawable.enemy_stance);
 		animationRef.put(EnemyState.RUN, R.drawable.enemy_run);

@@ -262,12 +262,15 @@ public abstract class GameObject {
 			executeXPhys();
 		}
 		
-		if(isOnGround()){
-			y = GameLogic.FLOOR;
-			initYPhys(0, 0);
-		}else{
-			executeYPhys();
+		
+		if(currentAction.getActionProperties().hasModifier(ActionDataTool.SNAP_TO_FLOOR)){
+			if(!currentLogic.hasTrigger(ActionDataTool.GROUND_TRIGGER) && isOnGround()){
+				y = GameLogic.FLOOR;
+				initYPhys(0, 0);
+			}
 		}
+
+		executeYPhys();
 	}
 	
 	public void initXPhys(float speed, float accel){
@@ -330,10 +333,12 @@ public abstract class GameObject {
 
 		if(hurtBoxes.isEmpty()){
 			//hard code offset bad bad bad
-			if(y+0.01f <= GameLogic.FLOOR)
+			if(y+0.01f <= GameLogic.FLOOR){
+			//if(y <= GameLogic.FLOOR){
 				return true;
+			}
 		}
-		
+
 		return false;
 	}
 	

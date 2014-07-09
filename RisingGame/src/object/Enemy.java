@@ -35,6 +35,7 @@ public class Enemy extends GameObject {
 		KNOCK_DOWN("knock_down"),
 		KNOCK_DOWN_FORWARD("knock_down_forward"),
 		KNOCK_UP("knock_up"),
+		HOVER("hover"),
 		WALL_BOUNCE("wall_bounce"),
 		RUN("run"),
 		WALK("walk"),
@@ -130,6 +131,7 @@ public class Enemy extends GameObject {
 		animationRef.put(EnemyState.KNOCK_DOWN, R.drawable.enemy_knock_down);
 		animationRef.put(EnemyState.KNOCK_DOWN_FORWARD, R.drawable.enemy_knock_down_forward);
 		animationRef.put(EnemyState.KNOCK_UP, R.drawable.enemy_knock_up);
+		animationRef.put(EnemyState.HOVER, R.drawable.enemy_knock_back);
 		animationRef.put(EnemyState.WALL_BOUNCE, R.drawable.enemy_wall_bounce);
 		
 	}

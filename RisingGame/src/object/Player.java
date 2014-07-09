@@ -35,7 +35,8 @@ public class Player extends GameObject{
 		DEAD("dead"),
 		NTAP("n_tap"),
 		NFSWIPE("n_fswipe"),
-		NUSWIPE("n_uswipe");
+		NUSWIPE("n_uswipe"),
+		AFSWIPE("a_fswipe");
 		
 		static String OBJECT = "jack";
 		String name;
@@ -65,7 +66,7 @@ public class Player extends GameObject{
 	public static String OBJNAME = "player";
 	private static PlayerState INIT_STATE = PlayerState.STAND;
 	
-	private static final int TEMP_FRAME = 10;
+	private static final int TEMP_FRAME = 8;
 
 	private static float WALK_SPEED = 0.2f;
 	private static float STRIKE_SPEED = 0.1f;
@@ -108,7 +109,7 @@ public class Player extends GameObject{
 	public void setupAnimRef() {
 		animationRef = new HashMap<GameObjectState, Integer>();
 		//animationRef.put(PlayerState.STAND, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.STAND.getName(), width, height, 4, 7));
-		animationRef.put(PlayerState.TEMP, R.drawable.jack_n_uswipe);
+		animationRef.put(PlayerState.TEMP, R.drawable.jack_a_fswipe);
 		animationRef.put(PlayerState.STAND, R.drawable.jack_stand);
 		animationRef.put(PlayerState.DEAD, R.drawable.rising_stance);
 		animationRef.put(PlayerState.RUN, R.drawable.jack_run);
@@ -119,7 +120,7 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.NTAP, R.drawable.jack_n_tap);
 		animationRef.put(PlayerState.NFSWIPE, R.drawable.jack_n_fswipe);
 		animationRef.put(PlayerState.NUSWIPE, R.drawable.jack_n_uswipe);
-		
+		animationRef.put(PlayerState.AFSWIPE, R.drawable.jack_a_fswipe);
 	}
 	
 	@Override
@@ -154,7 +155,7 @@ public class Player extends GameObject{
 	public void passTouchEvent(MotionEvent e, WorldRenderer worldRenderer){
 		Plane display = currentAction.getAnimation();
 		float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), display);
-		
+
 		//if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
 		if(inputList.isEmpty()){
 			moveToX = unprojectedPoints[0];
@@ -168,9 +169,10 @@ public class Player extends GameObject{
 		Plane display = currentAction.getAnimation();
 		float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(g.getDoubleTapX(), g.getDoubleTapY(), display);
 
-		if(unprojectedPoints[1] > (this.getY()+this.getHeight())){
+		//if(unprojectedPoints[1] > (this.getY()+this.getHeight())){
+		if(unprojectedPoints[1] > this.getMidY()){
 			inputList.add(Gesture.DTAP_UP);
-		} else if(unprojectedPoints[0] > this.getX()+this.getHeight()){
+		} else if(unprojectedPoints[0] > this.getX()+this.getWidth()){
 			inputList.add(Gesture.DTAP_RIGHT);
 		} else if(unprojectedPoints[0] < this.getX()){
 			inputList.add(Gesture.DTAP_LEFT);
@@ -251,21 +253,21 @@ public class Player extends GameObject{
 			executeLogic();
 			moveToX = getMidX();
 			moveToY = getMidY();
-		} else if(playerState == PlayerState.NFSWIPE){
+		} else if(	playerState == PlayerState.NFSWIPE||
+					playerState == PlayerState.NUSWIPE||
+					playerState == PlayerState.AFSWIPE){
 			executeLogic();
-			moveToX = getMidX();
-		} else if(playerState == PlayerState.NUSWIPE){
 			moveToX = getMidX();
 		} else {
 			executeLogic();
 		}
 
-
 		if(playerState != PlayerState.STAND && playerState != PlayerState.RUN){
-			//Log.d(playerState.toString(), "xvelocity "+xVelocity+" xaccel "+xAccel);
+			//Log.d(playerState.toString(), "xpos "+x+" xvelocity "+xVelocity+" xaccel "+xAccel);
+			//Log.d(playerState.toString(), "ypos "+y+" yvelocity "+yVelocity+" yaccel "+yAccel);
 		}
 	}
-	
+
 	@Override
 	public void updateDisplay() {
 		if(hitStopFrames > 0){
@@ -347,6 +349,7 @@ public class Player extends GameObject{
 				if(currentAction.getActionProperties().hasCancel(ActionDataTool.SWIPE_U_TRIGGER)){
 					String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.SWIPE_U_TRIGGER);
 					setStateUsingTotalName(cancel);
+					initSpeed = true;
 				}				
 			}
 			

@@ -28,7 +28,7 @@ import game.open2d.R;
 public class GameLogic extends AsyncTask<Void, Void, Void>{
 	private static final int DOUBLE_TAP_INTERVAL_MIN_CHECK = 3;
 	private static final int DOUBLE_TAP_INTERVAL_MAX_CHECK = 5;
-	private static final int GESTURE_INTERVAL_MIN_CHECK = 2;
+	private static final int GESTURE_INTERVAL_MIN_CHECK = 1;
 	private static final int GESTURE_INTERVAL_MAX_CHECK = 11;
 	
 	public static float CAM_X_CHANGE = 0.65f;
@@ -82,7 +82,6 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		player.loadAnimIntoRenderer(worldRenderer);
 		gameObjects.put(player.getName(), player);
 		
-		
 		enemyIndex = 1;
 		parser.readFile(R.raw.enemy_frame_data);
 		List<ActionData> enemyData = parser.parseFrameData();
@@ -91,6 +90,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		//enemy.getDisplay().drawDisable();
 		enemy.loadAnimIntoRenderer(worldRenderer);
 		gameObjects.put(enemy.getName(), enemy);
+		
 	}
 	
 	public void update(){

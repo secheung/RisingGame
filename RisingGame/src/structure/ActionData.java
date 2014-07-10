@@ -10,6 +10,7 @@ import engine.open2d.renderer.WorldRenderer;
 
 public class ActionData {
 	private final static String LOG_PREFIX = "ACTION_DATA";
+	private final static boolean HITBOX_DEBUG = true;
 	
 	private List<HitBox> hitBoxes;
 	private List<HurtBox> hurtBoxes;
@@ -48,68 +49,72 @@ public class ActionData {
 		//Log.d("debug",animation.name+" "+(animation.isDrawEnabled()));
 		worldRenderer.updateDrawObject(animation, pairedObj.getX(), pairedObj.getY(), pairedObj.getZ());
 		
-		float boxOffsetX = 0;
-		float boxOffsetY = 0;
-		
-		for(HitBox box : hitBoxes){
-			if(box.getActiveFrame().contains(animation.getFrame()) || box.getActiveFrame().isEmpty()){
-				/*
-				if(pairedObj.getDirection() == Direction.LEFT){
+		if(HITBOX_DEBUG){
+			float boxOffsetX = 0;
+			float boxOffsetY = 0;
+			
+			for(HitBox box : hitBoxes){
+				if(box.getActiveFrame().contains(animation.getFrame()) || box.getActiveFrame().isEmpty()){
+					/*
+					if(pairedObj.getDirection() == Direction.LEFT){
+						boxOffsetX = pairedObj.getX() + box.getBoxData().left;
+					} else {
+						boxOffsetX = pairedObj.getX() + flipBoxCoordX(box.getBoxData());
+					}
+					*/
 					boxOffsetX = pairedObj.getX() + box.getBoxData().left;
+					boxOffsetY = pairedObj.getY() + box.getBoxData().bottom;
+					worldRenderer.updateDrawObject(box.getDrawBox(), boxOffsetX, boxOffsetY,pairedObj.getZ()+0.01f);
+					box.getDrawBox().drawEnable();
 				} else {
-					boxOffsetX = pairedObj.getX() + flipBoxCoordX(box.getBoxData());
+					box.getDrawBox().drawDisable();
 				}
-				*/
-				boxOffsetX = pairedObj.getX() + box.getBoxData().left;
-				boxOffsetY = pairedObj.getY() + box.getBoxData().bottom;
-				worldRenderer.updateDrawObject(box.getDrawBox(), boxOffsetX, boxOffsetY,pairedObj.getZ()+0.01f);
-				box.getDrawBox().drawEnable();
-			} else {
-				box.getDrawBox().drawDisable();
 			}
-		}
-		
-		for(HurtBox box : hurtBoxes){
-			//if(box.getActiveFrame() == animation.getFrame() || box.getActiveFrame() == -1){
-			if(box.getActiveFrame().contains(animation.getFrame()) || box.getActiveFrame().isEmpty()){
-				/*
-				if(pairedObj.getDirection() == Direction.LEFT){
+			
+			for(HurtBox box : hurtBoxes){
+				//if(box.getActiveFrame() == animation.getFrame() || box.getActiveFrame() == -1){
+				if(box.getActiveFrame().contains(animation.getFrame()) || box.getActiveFrame().isEmpty()){
+					/*
+					if(pairedObj.getDirection() == Direction.LEFT){
+						boxOffsetX = pairedObj.getX() + box.getBoxData().left;
+					} else {
+						boxOffsetX = pairedObj.getX() + flipBoxCoordX(box.getBoxData());
+					}
+					*/
 					boxOffsetX = pairedObj.getX() + box.getBoxData().left;
+					boxOffsetY = pairedObj.getY() + box.getBoxData().bottom;
+					worldRenderer.updateDrawObject(box.getDrawBox(), boxOffsetX, boxOffsetY,pairedObj.getZ()+0.01f);
+					box.getDrawBox().drawEnable();
 				} else {
-					boxOffsetX = pairedObj.getX() + flipBoxCoordX(box.getBoxData());
+					box.getDrawBox().drawDisable();
 				}
-				*/
-				boxOffsetX = pairedObj.getX() + box.getBoxData().left;
-				boxOffsetY = pairedObj.getY() + box.getBoxData().bottom;
-				worldRenderer.updateDrawObject(box.getDrawBox(), boxOffsetX, boxOffsetY,pairedObj.getZ()+0.01f);
-				box.getDrawBox().drawEnable();
-			} else {
-				box.getDrawBox().drawDisable();
 			}
 		}
 	}
 	
 	public void loadAnimIntoRenderer(WorldRenderer worldRenderer){
 		worldRenderer.addDrawShape(animation);
-		
-		for(HitBox box : hitBoxes){
-			worldRenderer.addDrawShape(box.getDrawBox());
-		}
-		
-		for(HurtBox box : hurtBoxes){
-			worldRenderer.addDrawShape(box.getDrawBox());
+		if(HITBOX_DEBUG){
+			for(HitBox box : hitBoxes){
+				worldRenderer.addDrawShape(box.getDrawBox());
+			}
+			
+			for(HurtBox box : hurtBoxes){
+				worldRenderer.addDrawShape(box.getDrawBox());
+			}
 		}
 	}
 	
 	public void unloadAnimFromRenderer(WorldRenderer worldRenderer){
 		worldRenderer.removeDrawShape(animation);
-		
-		for(HitBox box : hitBoxes){
-			worldRenderer.removeDrawShape(box.getDrawBox());
-		}
-		
-		for(HurtBox box : hurtBoxes){
-			worldRenderer.removeDrawShape(box.getDrawBox());
+		if(HITBOX_DEBUG){
+			for(HitBox box : hitBoxes){
+				worldRenderer.removeDrawShape(box.getDrawBox());
+			}
+			
+			for(HurtBox box : hurtBoxes){
+				worldRenderer.removeDrawShape(box.getDrawBox());
+			}
 		}
 	}
 	

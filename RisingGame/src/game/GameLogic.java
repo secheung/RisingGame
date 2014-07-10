@@ -81,7 +81,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		Player player = new Player(gameObjects, playerData, 1.0f, FLOOR);
 		player.loadAnimIntoRenderer(worldRenderer);
 		gameObjects.put(player.getName(), player);
-		
+
 		enemyIndex = 1;
 		parser.readFile(R.raw.enemy_frame_data);
 		List<ActionData> enemyData = parser.parseFrameData();
@@ -90,7 +90,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		//enemy.getDisplay().drawDisable();
 		enemy.loadAnimIntoRenderer(worldRenderer);
 		gameObjects.put(enemy.getName(), enemy);
-		
+
 	}
 	
 	public void update(){
@@ -236,10 +236,11 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		} else if(e.getAction() == MotionEvent.ACTION_UP){
 			if(gestureCheck > GESTURE_INTERVAL_MIN_CHECK && gestureCheck < GESTURE_INTERVAL_MAX_CHECK){
 				gestureCheck = 0;
-//				Log.d("Gesture",GameTools.gestureDetection(gestureX, e.getX(), gestureY, e.getY())+"");
-				return GameTools.gestureDetection(gestureX, e.getX(), gestureY, e.getY());
+				return GameTools.gestureDetection(gestureX, e.getX(), gestureY, e.getY()).setxTap(e.getX()).setyTap(e.getY());
+			} else {
+				gestureCheck = 0;
+				return Gesture.TAP.setxTap(e.getX()).setyTap(e.getY());
 			}
-			gestureCheck = 0;
 		} else if(e.getAction() == MotionEvent.ACTION_MOVE){
 			gestureCheck++;
 		}
@@ -257,7 +258,6 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 			}
 		} else if(e.getAction() == MotionEvent.ACTION_UP){
 			for(GameObject gameObject : gameObjects.values()){
-				//gameObject.setGesture(gesture);
 				gameObject.addGesture(gesture);
 			}
 			

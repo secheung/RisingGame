@@ -3,6 +3,7 @@ package game;
 import android.graphics.RectF;
 import android.util.Log;
 import object.GameObject;
+import structure.DataBox;
 
 public class GameTools {
 	public static enum Gesture {
@@ -15,14 +16,39 @@ public class GameTools {
 		SWIPE_DOWN_LEFT,
 		SWIPE_LEFT,
 		SWIPE_UP_LEFT,
+		TAP,
+		TAP_UP,
+		TAP_RIGHT,
+		TAP_DOWN,
+		TAP_LEFT,
 		DTAP_UP,
 		DTAP_RIGHT,
 		DTAP_DOWN,
 		DTAP_LEFT;
 		
+		float xTap = 0;
+		float yTap = 0;
 		float xDiffSize = 0;
 		float yDiffSize = 0;
 		
+		public float getxTap() {
+			return xTap;
+		}
+
+		public Gesture setxTap(float xTap) {
+			this.xTap = xTap;
+			return this;
+		}
+
+		public float getyTap() {
+			return yTap;
+		}
+
+		public Gesture setyTap(float yTap) {
+			this.yTap = yTap;
+			return this;
+		}
+
 		public Gesture setXDiffSize(float diff){
 			xDiffSize = diff;
 			return this;
@@ -46,6 +72,17 @@ public class GameTools {
 	public static final int SWIPE_RIGHT_DIFF = -30;
 	public static final int SWIPE_UP_DIFF = 30;
 	public static final int SWIPE_DOWN_DIFF = -30;
+	
+	public static boolean boxContains(RectF box, float x, float y){
+		if(	x >= box.left && 
+			x < box.right &&
+			y >= box.bottom &&
+			y < box.top){
+			return true;
+		}
+		
+		return false;
+	}
 	
 	public static boolean boxColDetect(RectF box1, GameObject object1, RectF box2, GameObject object2){
 		float left1 = object1.getX() + box1.left;

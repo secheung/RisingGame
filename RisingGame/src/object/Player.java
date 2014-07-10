@@ -66,7 +66,7 @@ public class Player extends GameObject{
 	public static String OBJNAME = "player";
 	private static PlayerState INIT_STATE = PlayerState.STAND;
 	
-	private static final int TEMP_FRAME = 8;
+	private static final int TEMP_FRAME = 2;
 
 	private static float WALK_SPEED = 0.2f;
 	private static float STRIKE_SPEED = 0.1f;
@@ -81,6 +81,9 @@ public class Player extends GameObject{
 	private PlayerState playerState;
 	private float moveToX;
 	private float moveToY;
+	
+	private float unprojectedX;
+	private float unprojectedY;
 	
 	private int punchIndex;
 	private int finishIndex;
@@ -109,7 +112,7 @@ public class Player extends GameObject{
 	public void setupAnimRef() {
 		animationRef = new HashMap<GameObjectState, Integer>();
 		//animationRef.put(PlayerState.STAND, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.STAND.getName(), width, height, 4, 7));
-		animationRef.put(PlayerState.TEMP, R.drawable.jack_a_fswipe);
+		animationRef.put(PlayerState.TEMP, R.drawable.jack_n_tap);
 		animationRef.put(PlayerState.STAND, R.drawable.jack_stand);
 		animationRef.put(PlayerState.DEAD, R.drawable.rising_stance);
 		animationRef.put(PlayerState.RUN, R.drawable.jack_run);
@@ -155,12 +158,16 @@ public class Player extends GameObject{
 	public void passTouchEvent(MotionEvent e, WorldRenderer worldRenderer){
 		Plane display = currentAction.getAnimation();
 		float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), display);
-
+		/*
 		//if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
 		if(inputList.isEmpty()){
 			moveToX = unprojectedPoints[0];
 			moveToY = unprojectedPoints[1];
 		}
+		*/
+		
+		unprojectedX = unprojectedPoints[0];
+		unprojectedY = unprojectedPoints[1];
 		
 		display.unprojectDisable();
 	}
@@ -169,8 +176,8 @@ public class Player extends GameObject{
 		Plane display = currentAction.getAnimation();
 		float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(g.getDoubleTapX(), g.getDoubleTapY(), display);
 
-		//if(unprojectedPoints[1] > (this.getY()+this.getHeight())){
-		if(unprojectedPoints[1] > this.getMidY()){
+		if(unprojectedPoints[1] > (this.getY()+this.getHeight())){
+		//if(unprojectedPoints[1] > this.getMidY()){
 			inputList.add(Gesture.DTAP_UP);
 		} else if(unprojectedPoints[0] > this.getX()+this.getWidth()){
 			inputList.add(Gesture.DTAP_RIGHT);
@@ -202,10 +209,7 @@ public class Player extends GameObject{
 		}
 		
 		Gesture gesture = Gesture.NONE;
-		PlayerState inputState = executeInput();
-		if(inputState != null){
-			playerState = inputState;
-		}
+		executeInput();
 		
 		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
 			executeMovement();
@@ -239,7 +243,7 @@ public class Player extends GameObject{
 		}
 		
 		if(playerState == PlayerState.TEMP){
-			currentAction.getAnimation().setFrame(TEMP_FRAME);
+			currentAction.getAnimation().setFrame(TEMP_FRAME-1);
 			direction = Direction.RIGHT;
 			//currentAction.getAnimation().setPlayback(Playback.PAUSE);
 		}
@@ -255,7 +259,8 @@ public class Player extends GameObject{
 			moveToY = getMidY();
 		} else if(	playerState == PlayerState.NFSWIPE||
 					playerState == PlayerState.NUSWIPE||
-					playerState == PlayerState.AFSWIPE){
+					playerState == PlayerState.AFSWIPE||
+					playerState == PlayerState.NTAP){
 			executeLogic();
 			moveToX = getMidX();
 		} else {
@@ -303,14 +308,14 @@ public class Player extends GameObject{
 		}
 	}
 
-	private PlayerState executeInput(){
+	private void executeInput(){
 		Gesture gesture = Gesture.NONE;
 		PlayerState state = null;
 		
 		HashSet<Integer> cancelFrames = currentAction.getActionProperties().getCancelFrame();
 		if(!cancelFrames.isEmpty()){
 			if(!cancelFrames.contains(currentAction.getAnimation().getFrame())){
-				return state;
+				return;
 			}
 		}
 
@@ -319,7 +324,41 @@ public class Player extends GameObject{
 			inputList.removeFirst();
 		}
 		
-		if(gesture == Gesture.DTAP_UP){
+
+		if(gesture == Gesture.TAP){
+			float xTapDiff = 0.0f;
+			if(currentAction.getActionProperties().hasCancel(ActionDataTool.TAP_TRIGGER)){
+				for(GameObject gameObject : gameObjects.values()){
+					if(gameObject instanceof Enemy){
+						Enemy enemy = (Enemy) gameObject;
+						if(enemy.isSelected()){
+							String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.TAP_TRIGGER);
+							setStateUsingTotalName(cancel);
+							initSpeed = true;
+							enemy.selected = false;
+							xTapDiff = getMidX() - enemy.getMidX();
+						}
+					}
+				}
+			}
+			if(!initSpeed){
+				moveToX = unprojectedX;
+				moveToY = unprojectedY;
+				if(unprojectedX > getMidX()){
+					this.direction = Direction.RIGHT;
+				}else if(unprojectedX < getMidX()){
+					this.direction = Direction.LEFT;
+				}
+			}else {
+				if(xTapDiff > 0){
+					this.direction = Direction.LEFT;
+				}else if(xTapDiff < 0){
+					this.direction = Direction.RIGHT;
+				}
+			}
+			
+			
+		} else if(gesture == Gesture.DTAP_UP){
 			if(currentAction.getActionProperties().hasCancel(ActionDataTool.DTAP_U_TRIGGER)){
 				String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.DTAP_U_TRIGGER);
 				setStateUsingTotalName(cancel);
@@ -328,7 +367,6 @@ public class Player extends GameObject{
 		}
 		
 		if(Math.abs(gesture.getXDiffSize()) > Math.abs(gesture.getYDiffSize())){
-			
 			if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.SWIPE_LEFT){
 				if(currentAction.getActionProperties().hasCancel(ActionDataTool.SWIPE_F_TRIGGER)){
 					String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.SWIPE_F_TRIGGER);
@@ -350,17 +388,27 @@ public class Player extends GameObject{
 					String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.SWIPE_U_TRIGGER);
 					setStateUsingTotalName(cancel);
 					initSpeed = true;
-				}				
+				}
+				
+				/*
+				if(unprojectedX > getMidX()){
+					this.direction = Direction.RIGHT;
+				}else if(unprojectedX < getMidX()){
+					this.direction = Direction.LEFT;
+				}
+				*/
 			}
-			
+
+			/*
 			if(gesture.getXDiffSize() > 0){
 				this.direction = Direction.LEFT;
 			} else if(gesture.getXDiffSize() < 0) {
 				this.direction = Direction.RIGHT;
 			}
+			*/
 		}
 		
-		return state;
+		return;
 	}
 
 	private void executeMovement(){

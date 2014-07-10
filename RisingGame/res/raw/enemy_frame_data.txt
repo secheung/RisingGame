@@ -23,7 +23,7 @@
 			"columns":7
 		},
 		"hurt_box":[
-					{"left":0.0,"bottom":1.5,"right":3.5,"top":3.5}
+			{"left":1.1,"bottom":1.5,"right":2.9,"top":3.5}
 		],
 		"hit_box":[
 		],
@@ -43,8 +43,7 @@
 			"columns":3
 		},
 		"hurt_box":[
-					{"left":0.0,"bottom":0.0,"right":1.7,"top":1.5},
-					{"left":0.0,"bottom":1.0,"right":3.5,"top":2.5,"active_frame":[2]}
+			{"left":1.1,"bottom":1.5,"right":2.9,"top":3.5}
 		],
 		"hit_box":[
 		]
@@ -59,8 +58,7 @@
 			"columns":3
 		},
 		"hurt_box":[
-					{"left":0.0,"bottom":0.0,"right":1.7,"top":1.5},
-					{"left":0.0,"bottom":1.0,"right":3.5,"top":2.5,"active_frame":[2]}
+			{"left":1.1,"bottom":1.5,"right":2.9,"top":3.5}
 		],
 		"hit_box":[
 		]
@@ -165,7 +163,7 @@
 		"plane_data":{
 			"width":3.5,
 			"height":3.5,
-			"rows":2,
+			"rows":4,
 			"columns":5
 		},
 		"hurt_box":[

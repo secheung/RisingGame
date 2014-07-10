@@ -72,6 +72,8 @@ public class ActionDataTool {
 	public static String SWIPE_B_TRIGGER = "swipe_b_trigger";
 	public static String SWIPE_D_TRIGGER = "swipe_d_trigger";
 	
+	public static String TAP_TRIGGER = "tap_trigger";
+	
 	public static String DTAP_F_TRIGGER = "dtap_f_trigger";
 	public static String DTAP_U_TRIGGER = "dtap_u_trigger";
 	public static String DTAP_B_TRIGGER = "dtap_b_trigger";
@@ -322,6 +324,11 @@ public class ActionDataTool {
 				}
 			}
 
+			if(cancelJSON.has(TAP_TRIGGER)){
+				String value = cancelJSON.getString(TAP_TRIGGER);
+				actionProperties.addCancel(TAP_TRIGGER, value);
+			}
+			
 			if(cancelJSON.has(SWIPE_F_TRIGGER)){
 				String value = cancelJSON.getString(SWIPE_F_TRIGGER);
 				actionProperties.addCancel(SWIPE_F_TRIGGER, value);

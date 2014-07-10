@@ -99,7 +99,7 @@ public class Enemy extends GameObject {
 		
 		enemyState = INIT_STATE;
 		this.name = OBJNAME+index;
-		this.z = -0.9f+index*0.01f;
+		this.z = -1.0f+index*0.01f;
 		this.playerRef = player;
 		
 		struck = 3;
@@ -131,7 +131,7 @@ public class Enemy extends GameObject {
 		animationRef.put(EnemyState.KNOCK_DOWN, R.drawable.enemy_knock_down);
 		animationRef.put(EnemyState.KNOCK_DOWN_FORWARD, R.drawable.enemy_knock_down_forward);
 		animationRef.put(EnemyState.KNOCK_UP, R.drawable.enemy_knock_up);
-		animationRef.put(EnemyState.HOVER, R.drawable.enemy_knock_back);
+		animationRef.put(EnemyState.HOVER, R.drawable.enemy_hover);
 		animationRef.put(EnemyState.WALL_BOUNCE, R.drawable.enemy_wall_bounce);
 		
 	}
@@ -161,7 +161,8 @@ public class Enemy extends GameObject {
 				enemyState != EnemyState.KNOCK_DOWN &&
 				enemyState != EnemyState.KNOCK_DOWN_FORWARD &&
 				enemyState != EnemyState.WALL_BOUNCE &&
-				enemyState != EnemyState.KNOCK_UP){
+				enemyState != EnemyState.KNOCK_UP &&
+				enemyState != EnemyState.HOVER){
 			if(playerRef.getMidX() > checkX){
 				direction = Direction.RIGHT;
 			} else if(playerRef.getMidX() < checkX){
@@ -324,6 +325,21 @@ public class Enemy extends GameObject {
 		Plane selectedPlane = worldRenderer.getSelectedPlane(e.getX(), e.getY());
 
 		float[] points = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), display);
+		if(currentAction.getAnimation().equals(selectedPlane)){
+			//Log.d("enemy", "selected");
+			for(HurtBox playerHurtBox : playerRef.getCurrentAction().getHurtBoxes()){
+				for(HurtBox ownHurtBox : currentAction.getHurtBoxes()){
+					if(	GameTools.boxColDetect(ownHurtBox.getBoxData(), this, playerHurtBox.getBoxData(), playerRef)
+						//&& GameTools.boxContains(ownHurtBox.getBoxData(), points[0] - this.getX(), points[1] - this.getY())
+					){
+						selected = true;
+					}
+				}
+			}
+		} else {
+			selected = false;
+		}
+		
 //		if(enemyState != EnemyState.FREEZE)
 //			selected = checkEnemySelection(points[0],points[1]);
 		
@@ -355,54 +371,7 @@ public class Enemy extends GameObject {
 			enemyState = EnemyState.STAND;
 		}
 	}
-	
-	/*
-	public void executeLogic(){
-		if(currentAction.getAnimation().getFrame() < currentLogic.getActiveAfter()){
-			return;
-		}
-		
-		if(initSpeed){
-			float initxSpeed = currentLogic.getxInitSpeed();
-			float xAccel = currentLogic.getxAccel();
-			
-			if(currentAction.getActionProperties().hasModifier(ActionDataTool.REVERSE_X)){
-				initxSpeed = -1*initxSpeed;
-			}
-			
-			if(!currentLogic.isContinueSpeed()){
-				if(direction == Direction.RIGHT){
-					initxSpeed = initxSpeed;
-				} else if(direction == Direction.LEFT){
-					initxSpeed = -1*initxSpeed;
-				}
-			}
-			
-			xAccel = getAccelFromSpeed(initxSpeed, xAccel);
 
-			initXPhys(initxSpeed, xAccel);
-			initYPhys(currentLogic.getyInitSpeed(), currentLogic.getyAccel());
-			initSpeed = false;
-			
-			//Log.d(enemyState.toString()+" init", xVelocity+" "+xAccel+" wall "+isAtWall());
-			return;
-		}
-
-		//Log.d(enemyState.toString(), xVelocity+" "+xAccel);
-		if(isStopped() || isAtWall()){
-			initXPhys(0, 0);
-		} else {
-			executeXPhys();
-		}
-		
-		if(isOnGround()){
-			y = GameLogic.FLOOR;
-			initYPhys(0, 0);
-		}else{
-			executeYPhys();
-		}
-	}
-	*/
 	public boolean isHit(){
 		if(playerRef.getHitActive() && playerRef.getHitStopFrames() == 0){
 			ActionData playerAction = playerRef.getCurrentAction();
@@ -493,7 +462,11 @@ public class Enemy extends GameObject {
 		StringBuffer buffer = new StringBuffer(EnemyState.OBJECT);
 		buffer.append("_");
 		buffer.append(state);
-		this.enemyState = EnemyState.getStateFromTotalName(buffer.toString());
+		EnemyState changeState = EnemyState.getStateFromTotalName(buffer.toString()); 
+		if(enemyState == null){
+			Log.w(EnemyState.OBJECT, "can't find state "+buffer.toString());
+		}
+		this.enemyState = changeState;
 	}
 	
 	public int getStruck(){

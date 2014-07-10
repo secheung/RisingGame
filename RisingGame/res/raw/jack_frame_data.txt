@@ -5,13 +5,14 @@
 			"width":3.5,
 			"height":3.5,
 			"rows":3,
-			"columns":6,
-			"play_back":"pause"
+			"columns":4
 		},
 		"hurt_box":[
 		],
 		"hit_box":[
-			{"left":1.8,"bottom":1.83,"right":3.15,"top":2.275,"active_frame":[8,9,10,11,12]}
+			{"left":1.95,"top":2.55,"right":3.15,"bottom":2.25,"active_frame":[2]},
+			{"left":1.95,"top":2.85,"right":2.7,"bottom":2.25,"active_frame":[3],"select":1},
+			{"left":2.25,"top":2.35,"right":3.5,"bottom":2.0,"active_frame":[9,10,11]}
 		]
 	},
 
@@ -36,6 +37,7 @@
 			"trigger_change":{
 			},
 			"trigger_cancel":{
+				"tap_trigger":"n_tap",
 				"dtap_u_trigger":"jump_startup",
 				"swipe_u_trigger":"n_uswipe",
 				"swipe_f_trigger":"n_fswipe"
@@ -89,6 +91,7 @@
 			"trigger_change":{
 			},
 			"trigger_cancel":{
+				"tap_trigger":"n_tap",
 				"dtap_u_trigger":"jump_startup",
 				"swipe_u_trigger":"n_uswipe",
 				"swipe_f_trigger":"n_fswipe"
@@ -173,17 +176,41 @@
 		"plane_data":{
 			"width":3.5,
 			"height":3.5,
-			"rows":2,
-			"columns":6
+			"rows":3,
+			"columns":4
 		},
 		"hurt_box":[
-					{"left":0.0,"bottom":0.0,"right":1.7,"top":1.5},
-					{"left":0.0,"bottom":1.0,"right":3.5,"top":2.5,"active_frame":[2]}
 		],
 		"hit_box":[
-					{"left":0.0,"top":1.5,"right":3.5,"bottom":0.0,"active_frame":[2,4,5,6,7,8,9,10,11,15,16,17,18,19,20]},
-					{"left":0.0,"top":3.5,"right":3.5,"bottom":2.0,"select":1}
-		]
+			{"left":1.95,"top":2.55,"right":3.15,"bottom":2.25,"active_frame":[2]},
+			{"left":1.95,"top":2.85,"right":2.7,"bottom":2.25,"active_frame":[3]},
+			{"left":2.25,"top":2.35,"right":3.5,"bottom":2.0,"active_frame":[9,10,11]}
+		],
+		"action_properties":{
+			"x_init_speed":0.0,
+			"y_init_speed":0.0,
+			"x_accel":0.0,
+			"y_accel":0.0,
+			"modifiers":{
+			},
+			"trigger_change":{
+				"played_trigger":"stand"
+			},
+			"trigger_cancel":{
+				"cancel_frame":[2,3,9,10,11,12],
+				"dtap_u_trigger":"jump_startup",
+				"swipe_u_trigger":"n_uswipe",
+				"swipe_f_trigger":"n_fswipe"
+			}
+		},
+		"interaction_properties":{
+			"hit_stop":1,
+			"x_init_speed":-0.3,
+			"y_init_speed":0.0,
+			"trigger_change":{
+				"hit_trigger":"knock_back"
+			}
+		}
 	},
 	
 	"n_fswipe_action":{

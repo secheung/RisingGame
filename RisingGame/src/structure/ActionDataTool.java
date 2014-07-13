@@ -60,7 +60,8 @@ public class ActionDataTool {
 
 	public static String TRIGGER_CHANGE = "trigger_change";
 	public static String TRIGGER_CANCEL = "trigger_cancel";
-	public static String HIT_TRIGGER = "hit_trigger";
+	public static String GROUND_HIT_TRIGGER = "ground_hit_trigger";
+	public static String AIR_HIT_TRIGGER = "air_hit_trigger";
 	public static String WALL_TRIGGER = "wall_trigger";
 	public static String GROUND_TRIGGER = "ground_trigger";
 	public static String PLAYED_TRIGGER = "played_trigger";
@@ -255,34 +256,39 @@ public class ActionDataTool {
 		//trigger parsing
 		if(propertyData.has(TRIGGER_CHANGE)){
 			JSONObject triggerJSON = propertyData.getJSONObject(TRIGGER_CHANGE);
-			if(triggerJSON.has(HIT_TRIGGER)){
-				String value = triggerJSON.getString(HIT_TRIGGER);
-				actionProperties.addTrigger(HIT_TRIGGER, value);
+			if(triggerJSON.has(GROUND_HIT_TRIGGER)){
+				String value = triggerJSON.getString(GROUND_HIT_TRIGGER);
+				actionProperties.addTriggerChange(GROUND_HIT_TRIGGER, value);
 			}
-
+			
+			if(triggerJSON.has(AIR_HIT_TRIGGER)){
+				String value = triggerJSON.getString(AIR_HIT_TRIGGER);
+				actionProperties.addTriggerChange(AIR_HIT_TRIGGER, value);
+			}
+			
 			if(triggerJSON.has(GROUND_TRIGGER)){
 				String value = triggerJSON.getString(GROUND_TRIGGER);
-				actionProperties.addTrigger(GROUND_TRIGGER, value);
+				actionProperties.addTriggerChange(GROUND_TRIGGER, value);
 			}
 			
 			if(triggerJSON.has(WALL_TRIGGER)){
 				String value = triggerJSON.getString(WALL_TRIGGER);
-				actionProperties.addTrigger(WALL_TRIGGER, value);
+				actionProperties.addTriggerChange(WALL_TRIGGER, value);
 			}
 			
 			if(triggerJSON.has(PLAYED_TRIGGER)){
 				String value = triggerJSON.getString(PLAYED_TRIGGER);
-				actionProperties.addTrigger(PLAYED_TRIGGER, value);
+				actionProperties.addTriggerChange(PLAYED_TRIGGER, value);
 			}
 			
 			if(triggerJSON.has(STOPPED_X_TRIGGER)){
 				String value = triggerJSON.getString(STOPPED_X_TRIGGER);
-				actionProperties.addTrigger(STOPPED_X_TRIGGER, value);
+				actionProperties.addTriggerChange(STOPPED_X_TRIGGER, value);
 			}
 			
 			if(triggerJSON.has(STOPPED_Y_TRIGGER)){
 				String value = triggerJSON.getString(STOPPED_Y_TRIGGER);
-				actionProperties.addTrigger(STOPPED_Y_TRIGGER, value);
+				actionProperties.addTriggerChange(STOPPED_Y_TRIGGER, value);
 			}
 		}
 		

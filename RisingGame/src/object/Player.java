@@ -225,8 +225,11 @@ public class Player extends GameObject{
 		
 		executeTriggers();
 		
-		if(currentAction != actionData.get(playerState))
+		if(	currentAction != actionData.get(playerState) ||
+			resetAnim){
 			this.switchAction(playerState);
+			resetAnim = false;
+		}
 	}
 	
 	@Override
@@ -268,6 +271,7 @@ public class Player extends GameObject{
 		}
 
 		if(playerState != PlayerState.STAND && playerState != PlayerState.RUN){
+			//Log.d(playerState.toString(), "playerpos "+getMidX()+" tap "+unprojectedX);
 			//Log.d(playerState.toString(), "xpos "+x+" xvelocity "+xVelocity+" xaccel "+xAccel);
 			//Log.d(playerState.toString(), "ypos "+y+" yvelocity "+yVelocity+" yaccel "+yAccel);
 		}
@@ -310,7 +314,10 @@ public class Player extends GameObject{
 
 	private void executeInput(){
 		Gesture gesture = Gesture.NONE;
-		PlayerState state = null;
+		
+		if(hitStopFrames > 0){
+			return;
+		}
 		
 		HashSet<Integer> cancelFrames = currentAction.getActionProperties().getCancelFrame();
 		if(!cancelFrames.isEmpty()){
@@ -326,7 +333,6 @@ public class Player extends GameObject{
 		
 
 		if(gesture == Gesture.TAP){
-			float xTapDiff = 0.0f;
 			if(currentAction.getActionProperties().hasCancel(ActionDataTool.TAP_TRIGGER)){
 				for(GameObject gameObject : gameObjects.values()){
 					if(gameObject instanceof Enemy){
@@ -336,7 +342,6 @@ public class Player extends GameObject{
 							setStateUsingTotalName(cancel);
 							initSpeed = true;
 							enemy.selected = false;
-							xTapDiff = getMidX() - enemy.getMidX();
 						}
 					}
 				}
@@ -344,19 +349,13 @@ public class Player extends GameObject{
 			if(!initSpeed){
 				moveToX = unprojectedX;
 				moveToY = unprojectedY;
-				if(unprojectedX > getMidX()){
-					this.direction = Direction.RIGHT;
-				}else if(unprojectedX < getMidX()){
-					this.direction = Direction.LEFT;
-				}
-			}else {
-				if(xTapDiff > 0){
-					this.direction = Direction.LEFT;
-				}else if(xTapDiff < 0){
-					this.direction = Direction.RIGHT;
-				}
 			}
 			
+			if(unprojectedX > getMidX()){
+				this.direction = Direction.RIGHT;
+			}else if(unprojectedX < getMidX()){
+				this.direction = Direction.LEFT;
+			}
 			
 		} else if(gesture == Gesture.DTAP_UP){
 			if(currentAction.getActionProperties().hasCancel(ActionDataTool.DTAP_U_TRIGGER)){
@@ -389,14 +388,12 @@ public class Player extends GameObject{
 					setStateUsingTotalName(cancel);
 					initSpeed = true;
 				}
-				
-				/*
+
 				if(unprojectedX > getMidX()){
 					this.direction = Direction.RIGHT;
 				}else if(unprojectedX < getMidX()){
 					this.direction = Direction.LEFT;
 				}
-				*/
 			}
 
 			/*

@@ -30,7 +30,7 @@ public class Enemy extends GameObject {
 		TEMP("temp"),
 		STAND("stand"),
 		STRIKE1("strike"),
-		STRUCK1("struck1"),
+		STRUCK("struck"),
 		KNOCK_BACK("knock_back"),
 		KNOCK_DOWN("knock_down"),
 		KNOCK_DOWN_FORWARD("knock_down_forward"),
@@ -90,8 +90,6 @@ public class Enemy extends GameObject {
 	
 	Player playerRef;
 	EnemyState enemyState;
-	public int struck;
-	public int unfreezeTimeCount;
 	
 	//public Enemy(LinkedHashMap<String,GameObject> gameObjects, Player player, int index, float x, float y, float width, float height){
 	public Enemy(LinkedHashMap<String,GameObject> gameObjects, List<ActionData> actionData, Player player, int index, float x, float y){
@@ -101,9 +99,6 @@ public class Enemy extends GameObject {
 		this.name = OBJNAME+index;
 		this.z = -1.0f+index*0.01f;
 		this.playerRef = player;
-		
-		struck = 3;
-		unfreezeTimeCount = 0;
 		
 		//display = animations.get(EnemyState.STAND);
 		//this.currentAction = this.actionData.get(INIT_STATE);
@@ -125,7 +120,7 @@ public class Enemy extends GameObject {
 		animationRef.put(EnemyState.CROSS_ROLL, R.drawable.enemy_cross_roll);
 		animationRef.put(EnemyState.DEAD, R.drawable.enemy_stance);
 		animationRef.put(EnemyState.STRIKE1, R.drawable.enemy_strike1);
-		animationRef.put(EnemyState.STRUCK1, R.drawable.enemy_struck1);
+		animationRef.put(EnemyState.STRUCK, R.drawable.enemy_struck);
 		
 		animationRef.put(EnemyState.KNOCK_BACK, R.drawable.enemy_knock_back);
 		animationRef.put(EnemyState.KNOCK_DOWN, R.drawable.enemy_knock_down);
@@ -194,22 +189,30 @@ public class Enemy extends GameObject {
 				direction = Direction.RIGHT;
 			}
 
-			//enemyState = EnemyState.getStateFromTotalName(EnemyState.OBJECT+"_"+interProperties.getTriggerState(ActionDataTool.HIT_TRIGGER));
-			setStateUsingTotalName(interProperties.getTriggerState(ActionDataTool.HIT_TRIGGER));
+			if(interProperties.hasTriggerChange(ActionDataTool.GROUND_HIT_TRIGGER) && isOnGround()){
+				Log.d(enemyState.toString(),"groundHit");
+				setStateUsingTotalName(interProperties.getTriggerChange(ActionDataTool.GROUND_HIT_TRIGGER));
+			}else if(interProperties.hasTriggerChange(ActionDataTool.AIR_HIT_TRIGGER) && isInAir()){
+				Log.d(enemyState.toString(),"airHit");
+				setStateUsingTotalName(interProperties.getTriggerChange(ActionDataTool.AIR_HIT_TRIGGER));
+			}
 			initSpeed = true;
+			resetAnim = true;
 		}
 
 		executeTriggers();
 
-		if(currentAction != actionData.get(enemyState)){
+		if(	currentAction != actionData.get(enemyState) || resetAnim){
 			switchAction(enemyState);
+			resetAnim = false;
 		}
 		
 		
 		if(		enemyState != EnemyState.STAND && 
 				enemyState != EnemyState.RUN && 
 				enemyState != EnemyState.WALK){
-			//Log.d(enemyState.toString(),"xVel"+xVelocity+" xAccel "+xAccel);
+			//Log.d(enemyState.toString(),"xVel "+xVelocity+" xAccel "+xAccel);
+			//Log.d(enemyState.toString(),"yVel "+yVelocity+" yAccel "+yAccel);
 		}
 	}
 
@@ -227,10 +230,6 @@ public class Enemy extends GameObject {
 		
 		if(enemyState == EnemyState.STAND){
 
-		}else if(enemyState == EnemyState.STRUCK1){
-			if(currentAction.getAnimation().getFrame() < Player.CANCEL_STRIKE_FRAMES){
-				selected = false;
-			}
 		}else if(isStrikeState()){
 			
 		}else if(enemyState == EnemyState.RUN){
@@ -253,8 +252,6 @@ public class Enemy extends GameObject {
 				x += CROSS_ROLL_SPEED;
 			else if(direction == Direction.LEFT)
 				x -= CROSS_ROLL_SPEED;
-		}else if(enemyState == EnemyState.FREEZE){
-			unfreezeTimeCount--;
 		}else {
 			executeLogic();
 			//Log.d(enemyState.toString(),"xVel"+xVelocity+" xAccel "+xAccel);
@@ -301,21 +298,10 @@ public class Enemy extends GameObject {
 		} else if(enemyState == EnemyState.CROSS_ROLL){
 			display.resetAnimation();
 			enemyState = EnemyState.STAND;
-		} else if(enemyState == EnemyState.STRUCK1){
-			display.resetAnimation();
-			struck -= 1;
-			enemyState = EnemyState.STAND;
 		} else if(enemyState == EnemyState.KNOCK_DOWN || enemyState == EnemyState.KNOCK_DOWN_FORWARD){
 			//display.resetAnimation();
 			//struck -= 1;
 			//enemyState = EnemyState.STAND;
-		} else if(enemyState == EnemyState.FREEZE){
-			if(unfreezeTimeCount <= 0){
-				display.resetAnimation();
-				enemyState = EnemyState.STAND;
-				unfreezeTimeCount = 0;
-			}
-			
 		}
 	}
 	
@@ -399,9 +385,7 @@ public class Enemy extends GameObject {
 				if(enemy != this && GameTools.boxColDetect(this, enemy, COLLISION_BUFFER)){
 					if(	enemy.getEnemyState() != EnemyState.WALK &&
 						enemy.getEnemyState() != EnemyState.RUN &&
-						enemy.getEnemyState() != EnemyState.STRUCK1 &&
-						!enemy.isDodging() &&
-						this.getEnemyState() != EnemyState.STRUCK1){
+						!enemy.isDodging()){
 						if(counter % 2 == 1){
 							enemyState = EnemyState.JUMP_BACK;
 						} else {
@@ -467,10 +451,6 @@ public class Enemy extends GameObject {
 			Log.w(EnemyState.OBJECT, "can't find state "+buffer.toString());
 		}
 		this.enemyState = changeState;
-	}
-	
-	public int getStruck(){
-		return struck;
 	}
 
 	public boolean isSelected() {

@@ -205,10 +205,11 @@
 		},
 		"interaction_properties":{
 			"hit_stop":1,
-			"x_init_speed":-0.3,
+			"x_init_speed":-0.05,
 			"y_init_speed":0.0,
 			"trigger_change":{
-				"hit_trigger":"knock_back"
+				"ground_hit_trigger":"struck",
+				"air_hit_trigger":"knock_back"
 			}
 		}
 	},
@@ -252,7 +253,8 @@
 			"x_init_speed":-1.0,
 			"y_init_speed":0.2,
 			"trigger_change":{
-				"hit_trigger":"knock_back",
+				"ground_hit_trigger":"knock_back",
+				"air_hit_trigger":"knock_back",
 				"wall_trigger":"wall_bounce"
 			}
 		}
@@ -288,7 +290,8 @@
 			"x_init_speed":-0.7,
 			"y_init_speed":0.85,
 			"trigger_change":{
-				"hit_trigger":"knock_up"
+				"ground_hit_trigger":"knock_up",
+				"air_hit_trigger":"knock_up"
 			}
 		}
 	},
@@ -325,7 +328,7 @@
 			"x_init_speed":0.0,
 			"y_init_speed":0.0,
 			"trigger_change":{
-				"hit_trigger":"hover"
+				"air_hit_trigger":"hover"
 			}
 		}
 	}

@@ -58,6 +58,7 @@ public abstract class GameObject {
 	protected HashMap<GameObjectState, Integer> animationRef;
 	protected String name;
 	protected boolean initSpeed;
+	protected boolean resetAnim;
 	public boolean selected;
 	protected boolean hitActive;
 	protected LinkedList<Gesture> inputList;
@@ -93,6 +94,7 @@ public abstract class GameObject {
 		this.height = currentAction.getPlaneData().getHeight();
 		this.hitActive = false;
 		this.initSpeed = false;
+		this.resetAnim = false;
 		this.hitStopFrames = 0;
 	}
 	
@@ -171,7 +173,7 @@ public abstract class GameObject {
 		}
 		
 		if(currentLogic.hasTrigger(ActionDataTool.GROUND_TRIGGER)){
-			if(isOnGround()){
+			if(isOnGround() && !initSpeed){
 				String state = currentLogic.getTrigger(ActionDataTool.GROUND_TRIGGER);
 				setStateUsingTotalName(state);
 				interProperties = null;
@@ -324,12 +326,16 @@ public abstract class GameObject {
 	}
 	*/
 	
-	public boolean isOnGround(){
+	public boolean isInAir(){
 		List<HurtBox> hurtBoxes = currentAction.getHurtBoxes();
+		float lowest = y + height;
 		for(HurtBox box : hurtBoxes){
-			if(y+box.getBoxData().bottom <= GameLogic.FLOOR)
-				return true;
+			if(y+box.getBoxData().bottom <= lowest)
+				lowest = y+box.getBoxData().bottom;
 		}
+		
+		if(lowest > GameLogic.FLOOR)
+			return true;
 
 		if(hurtBoxes.isEmpty()){
 			//hard code offset bad bad bad
@@ -338,6 +344,24 @@ public abstract class GameObject {
 				return true;
 			}
 		}
+
+		return false;
+	}
+	
+	public boolean isOnGround(){
+		List<HurtBox> hurtBoxes = currentAction.getHurtBoxes();
+		for(HurtBox box : hurtBoxes){
+			if(y+box.getBoxData().bottom <= GameLogic.FLOOR)
+				return true;
+		}
+
+		//if(hurtBoxes.isEmpty()){
+		//hard code offset bad bad bad
+		//if(y+0.01f <= GameLogic.FLOOR){
+		if(y <= GameLogic.FLOOR){
+			return true;
+		}
+		//}
 
 		return false;
 	}

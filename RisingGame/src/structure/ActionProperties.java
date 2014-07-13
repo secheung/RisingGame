@@ -59,14 +59,18 @@ public class ActionProperties {
 		this.yAccel = yAccel;
 	}
 
-	public void addTrigger(String trigger, String nextState){
+	public void addTriggerChange(String trigger, String nextState){
 		triggerChange.put(trigger, nextState);
 	}
 	
-	public String getTriggerState(String trigger){
+	public String getTriggerChange(String trigger){
 		return triggerChange.get(trigger);
 	}
 
+	public boolean hasTriggerChange(String trigger){
+		return triggerChange.containsKey(trigger);
+	}
+	
 	public LinkedHashMap<String,String> getTriggerChange(){
 		return triggerChange;
 	}

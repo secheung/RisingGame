@@ -31,12 +31,14 @@ public class Player extends GameObject{
 		JUMP("jump_startup"),
 		ARC("jump_arc"),
 		LAND("jump_land"),
+		DASH("dash"),
 		DODGE("dodge"),
 		DEAD("dead"),
 		NTAP("n_tap"),
 		NFSWIPE("n_fswipe"),
 		NUSWIPE("n_uswipe"),
-		AFSWIPE("a_fswipe");
+		AFSWIPE("a_fswipe"),
+		DFSWIPE("d_fswipe");
 		
 		static String OBJECT = "jack";
 		String name;
@@ -119,11 +121,13 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.JUMP, R.drawable.jack_jump_startup);
 		animationRef.put(PlayerState.ARC, R.drawable.jack_jump_arc);
 		animationRef.put(PlayerState.LAND, R.drawable.jack_jump_land);
+		animationRef.put(PlayerState.DASH, R.drawable.jack_dash);
 		animationRef.put(PlayerState.DODGE, R.drawable.rising_dodge);
 		animationRef.put(PlayerState.NTAP, R.drawable.jack_n_tap);
 		animationRef.put(PlayerState.NFSWIPE, R.drawable.jack_n_fswipe);
 		animationRef.put(PlayerState.NUSWIPE, R.drawable.jack_n_uswipe);
 		animationRef.put(PlayerState.AFSWIPE, R.drawable.jack_a_fswipe);
+		animationRef.put(PlayerState.DFSWIPE, R.drawable.jack_d_fswipe);
 	}
 	
 	@Override
@@ -263,7 +267,9 @@ public class Player extends GameObject{
 		} else if(	playerState == PlayerState.NFSWIPE||
 					playerState == PlayerState.NUSWIPE||
 					playerState == PlayerState.AFSWIPE||
-					playerState == PlayerState.NTAP){
+					playerState == PlayerState.NTAP||
+					playerState == PlayerState.DFSWIPE||
+					playerState == PlayerState.DASH){
 			executeLogic();
 			moveToX = getMidX();
 		} else {
@@ -350,7 +356,7 @@ public class Player extends GameObject{
 				moveToX = unprojectedX;
 				moveToY = unprojectedY;
 			}
-			
+
 			if(unprojectedX > getMidX()){
 				this.direction = Direction.RIGHT;
 			}else if(unprojectedX < getMidX()){
@@ -360,6 +366,12 @@ public class Player extends GameObject{
 		} else if(gesture == Gesture.DTAP_UP){
 			if(currentAction.getActionProperties().hasCancel(ActionDataTool.DTAP_U_TRIGGER)){
 				String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.DTAP_U_TRIGGER);
+				setStateUsingTotalName(cancel);
+				initSpeed = true;
+			}
+		} else if(gesture == Gesture.DTAP_LEFT || gesture == Gesture.DTAP_RIGHT){
+			if(currentAction.getActionProperties().hasCancel(ActionDataTool.DTAP_F_TRIGGER)){
+				String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.DTAP_F_TRIGGER);
 				setStateUsingTotalName(cancel);
 				initSpeed = true;
 			}

@@ -91,6 +91,14 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		enemy.loadAnimIntoRenderer(worldRenderer);
 		gameObjects.put(enemy.getName(), enemy);
 
+		/*
+		enemyIndex = 2;
+		parser.readFile(R.raw.enemy_frame_data);
+		List<ActionData> enemyData2 = parser.parseFrameData();
+		Enemy enemy2 = new Enemy(gameObjects, enemyData2, (Player)gameObjects.get("player"), enemyIndex, -1.0f, -1.0f);
+		enemy2.loadAnimIntoRenderer(worldRenderer);
+		gameObjects.put(enemy2.getName(), enemy2);
+		*/
 	}
 	
 	public void update(){

@@ -190,10 +190,10 @@ public class Enemy extends GameObject {
 			}
 
 			if(interProperties.hasTriggerChange(ActionDataTool.GROUND_HIT_TRIGGER) && isOnGround()){
-				Log.d(enemyState.toString(),"groundHit");
+				//Log.d(enemyState.toString(),"groundHit");
 				setStateUsingTotalName(interProperties.getTriggerChange(ActionDataTool.GROUND_HIT_TRIGGER));
 			}else if(interProperties.hasTriggerChange(ActionDataTool.AIR_HIT_TRIGGER) && isInAir()){
-				Log.d(enemyState.toString(),"airHit");
+				//Log.d(enemyState.toString(),"airHit");
 				setStateUsingTotalName(interProperties.getTriggerChange(ActionDataTool.AIR_HIT_TRIGGER));
 			}
 			initSpeed = true;
@@ -359,7 +359,7 @@ public class Enemy extends GameObject {
 	}
 
 	public boolean isHit(){
-		if(playerRef.getHitActive() && playerRef.getHitStopFrames() == 0){
+		if(playerRef.getHitActive() && this.getHitStopFrames() == 0){
 			ActionData playerAction = playerRef.getCurrentAction();
 			for(HitBox hitBox : playerAction.getHitBoxes()){
 				for(HurtBox hurtBox : currentAction.getHurtBoxes()){

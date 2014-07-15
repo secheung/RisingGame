@@ -37,8 +37,10 @@ public class Player extends GameObject{
 		NTAP("n_tap"),
 		NFSWIPE("n_fswipe"),
 		NUSWIPE("n_uswipe"),
+		NDSWIPE("n_dswipe"),
 		AFSWIPE("a_fswipe"),
-		DFSWIPE("d_fswipe");
+		DFSWIPE("d_fswipe"),
+		DUSWIPE("d_uswipe"),;
 		
 		static String OBJECT = "jack";
 		String name;
@@ -68,7 +70,7 @@ public class Player extends GameObject{
 	public static String OBJNAME = "player";
 	private static PlayerState INIT_STATE = PlayerState.STAND;
 	
-	private static final int TEMP_FRAME = 2;
+	private static final int TEMP_FRAME = 6;
 
 	private static float WALK_SPEED = 0.2f;
 	private static float STRIKE_SPEED = 0.1f;
@@ -114,7 +116,7 @@ public class Player extends GameObject{
 	public void setupAnimRef() {
 		animationRef = new HashMap<GameObjectState, Integer>();
 		//animationRef.put(PlayerState.STAND, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.STAND.getName(), width, height, 4, 7));
-		animationRef.put(PlayerState.TEMP, R.drawable.jack_n_tap);
+		animationRef.put(PlayerState.TEMP, R.drawable.jack_d_uswipe);
 		animationRef.put(PlayerState.STAND, R.drawable.jack_stand);
 		animationRef.put(PlayerState.DEAD, R.drawable.rising_stance);
 		animationRef.put(PlayerState.RUN, R.drawable.jack_run);
@@ -126,8 +128,10 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.NTAP, R.drawable.jack_n_tap);
 		animationRef.put(PlayerState.NFSWIPE, R.drawable.jack_n_fswipe);
 		animationRef.put(PlayerState.NUSWIPE, R.drawable.jack_n_uswipe);
+		animationRef.put(PlayerState.NDSWIPE, R.drawable.jack_n_dswipe);
 		animationRef.put(PlayerState.AFSWIPE, R.drawable.jack_a_fswipe);
 		animationRef.put(PlayerState.DFSWIPE, R.drawable.jack_d_fswipe);
+		animationRef.put(PlayerState.DUSWIPE, R.drawable.jack_d_uswipe);
 	}
 	
 	@Override
@@ -397,6 +401,18 @@ public class Player extends GameObject{
 			if(GameTools.gestureBreakdownVertical(gesture) == Gesture.SWIPE_UP) {
 				if(currentAction.getActionProperties().hasCancel(ActionDataTool.SWIPE_U_TRIGGER)){
 					String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.SWIPE_U_TRIGGER);
+					setStateUsingTotalName(cancel);
+					initSpeed = true;
+				}
+
+				if(unprojectedX > getMidX()){
+					this.direction = Direction.RIGHT;
+				}else if(unprojectedX < getMidX()){
+					this.direction = Direction.LEFT;
+				}
+			} else if(GameTools.gestureBreakdownVertical(gesture) == Gesture.SWIPE_DOWN){
+				if(currentAction.getActionProperties().hasCancel(ActionDataTool.SWIPE_D_TRIGGER)){
+					String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.SWIPE_D_TRIGGER);
 					setStateUsingTotalName(cancel);
 					initSpeed = true;
 				}

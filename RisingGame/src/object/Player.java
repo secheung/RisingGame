@@ -40,7 +40,9 @@ public class Player extends GameObject{
 		NDSWIPE("n_dswipe"),
 		AFSWIPE("a_fswipe"),
 		DFSWIPE("d_fswipe"),
-		DUSWIPE("d_uswipe"),;
+		DUSWIPE("d_uswipe"),
+		DDSWIPE("d_dswipe"),
+		DDSWIPEFOLLWUP("d_dswipe_followup");
 		
 		static String OBJECT = "jack";
 		String name;
@@ -70,7 +72,7 @@ public class Player extends GameObject{
 	public static String OBJNAME = "player";
 	private static PlayerState INIT_STATE = PlayerState.STAND;
 	
-	private static final int TEMP_FRAME = 6;
+	private static final int TEMP_FRAME = 7;
 
 	private static float WALK_SPEED = 0.2f;
 	private static float STRIKE_SPEED = 0.1f;
@@ -116,7 +118,7 @@ public class Player extends GameObject{
 	public void setupAnimRef() {
 		animationRef = new HashMap<GameObjectState, Integer>();
 		//animationRef.put(PlayerState.STAND, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.STAND.getName(), width, height, 4, 7));
-		animationRef.put(PlayerState.TEMP, R.drawable.jack_d_uswipe);
+		animationRef.put(PlayerState.TEMP, R.drawable.jack_d_dswipe);
 		animationRef.put(PlayerState.STAND, R.drawable.jack_stand);
 		animationRef.put(PlayerState.DEAD, R.drawable.rising_stance);
 		animationRef.put(PlayerState.RUN, R.drawable.jack_run);
@@ -132,6 +134,8 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.AFSWIPE, R.drawable.jack_a_fswipe);
 		animationRef.put(PlayerState.DFSWIPE, R.drawable.jack_d_fswipe);
 		animationRef.put(PlayerState.DUSWIPE, R.drawable.jack_d_uswipe);
+		animationRef.put(PlayerState.DDSWIPE, R.drawable.jack_d_dswipe);
+		animationRef.put(PlayerState.DDSWIPEFOLLWUP, R.drawable.jack_d_dswipe_followup);
 	}
 	
 	@Override
@@ -178,6 +182,11 @@ public class Player extends GameObject{
 		unprojectedY = unprojectedPoints[1];
 		
 		display.unprojectDisable();
+		
+		if(playerState == PlayerState.TEMP){
+			float[] coord = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), this.getDisplay());
+			Log.d("debug",coord[0] + " " + coord[1] + " " + coord[2]);
+		}
 	}
 
 	public void passDoubleTouchEvent(GestureListener g,  WorldRenderer worldRenderer){

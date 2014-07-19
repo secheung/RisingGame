@@ -5,13 +5,13 @@
 			"width":3.5,
 			"height":3.5,
 			"rows":4,
-			"columns":6
+			"columns":5
 		},
 		"hurt_box":[
 		],
 		"hit_box":[
 			{"left":1.85,"bottom":1.6,"right":2.9,"top":2.55,"active_frame":[4,5],"select":1},
-			{"left":1.85,"bottom":1.9,"right":2.9,"top":3.55,"active_frame":[6,7]}
+			{"left":1.85,"bottom":0.5,"right":3.45,"top":1.1,"active_frame":[7]}
 		]
 	},
 
@@ -171,7 +171,12 @@
 				"played_trigger":"stand"
 			},
 			"trigger_cancel":{
-				"dtap_f_trigger":"dash"
+				"tap_trigger":"n_tap",
+				"dtap_u_trigger":"jump_startup",
+				"dtap_f_trigger":"dash",
+				"swipe_u_trigger":"n_uswipe",
+				"swipe_f_trigger":"n_fswipe",
+				"swipe_d_trigger":"n_dswipe"
 			}
 		}
 	},
@@ -197,7 +202,8 @@
 			},
 			"trigger_cancel":{
 				"swipe_f_trigger":"d_fswipe",
-				"swipe_u_trigger":"d_uswipe"
+				"swipe_u_trigger":"d_uswipe",
+				"swipe_d_trigger":"d_dswipe"
 			}
 		}
 	},
@@ -273,7 +279,7 @@
 				"played_trigger":"stand"
 			},
 			"trigger_cancel":{
-				"cancel_frame":[14,15,16,17,18,19,20,21,22],
+				"cancel_frame":[11,12,13,14,15,16,17,18,19,20,21,22],
 				"dtap_f_trigger":"dash"
 			}
 		},
@@ -467,6 +473,81 @@
 			},
 			"trigger_cancel":{
 				"swipe_f_trigger":"a_fswipe"
+			}
+		},
+		"interaction_properties":{
+			"hit_stop":1,
+			"x_init_speed":-0.7,
+			"y_init_speed":0.85,
+			"trigger_change":{
+				"ground_hit_trigger":"knock_up",
+				"air_hit_trigger":"knock_up"
+			}
+		}
+	},
+	"d_dswipe_action":{
+		"name":"jack_d_dswipe",
+		"plane_data":{
+			"width":3.5,
+			"height":3.5,
+			"rows":4,
+			"columns":5,
+			"play_back":"play_once"
+		},
+		"hurt_box":[
+		],
+		"hit_box":[
+			{"left":1.85,"bottom":0.5,"right":3.45,"top":1.1,"active_frame":[5,6,7,8,9,10,11,12]}
+		],
+		"action_properties":{
+			"x_init_speed":0.6,
+			"x_accel":-0.06,
+			"modifiers":{
+				"snap_to_floor":1
+			},
+			"trigger_change":{
+				"played_trigger":"stand"
+			},
+			"trigger_cancel":{
+				"swipe_u_trigger":"d_dswipe_followup"
+			}
+		},
+		"interaction_properties":{
+			"hit_stop":1,
+			"x_init_speed":0.5,
+			"y_init_speed":0.7,
+			"trigger_change":{
+				"ground_hit_trigger":"trip_forward",
+				"air_hit_trigger":"trip_forward"
+			}
+		}
+	},
+	"d_dswipe_followup_action":{
+		"name":"jack_d_dswipe_followup",
+		"plane_data":{
+			"width":3.5,
+			"height":3.5,
+			"rows":4,
+			"columns":6,
+			"play_back":"play_once"
+		},
+		"hurt_box":[
+		],
+		"hit_box":[
+			{"left":1.85,"bottom":0.5,"right":2.9,"top":2.55,"active_frame":[9,10,11,12,13,14]}
+		],
+		"action_properties":{
+			"x_accel":-0.06,
+			"modifiers":{
+				"cont_speed":1,
+				"snap_to_floor":1
+			},
+			"trigger_change":{
+				"played_trigger":"stand"
+			},
+			"trigger_cancel":{
+				"cancel_frame":[9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24],
+				"dtap_u_trigger":"jump_startup"
 			}
 		},
 		"interaction_properties":{

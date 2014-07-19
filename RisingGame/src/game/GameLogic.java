@@ -78,9 +78,10 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		parser.readFile(R.raw.jack_frame_data);
 		List<ActionData> playerData = parser.parseFrameData();
 		
-		Player player = new Player(gameObjects, playerData, 1.0f, FLOOR);
+		Player player = new Player(gameObjects, playerData, -3.0f, FLOOR);
 		player.loadAnimIntoRenderer(worldRenderer);
 		gameObjects.put(player.getName(), player);
+
 
 		enemyIndex = 1;
 		parser.readFile(R.raw.enemy_frame_data);
@@ -278,11 +279,6 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		
 		Player player = (Player) gameObjects.get(Player.OBJNAME);
 		player.passTouchEvent(e, worldRenderer);
-
-		if(player.getPlayerState() == PlayerState.TEMP){
-			float[] coord = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), player.getDisplay());
-			Log.d("debug",coord[0] + " " + coord[1] + " " + coord[2]);
-		}
 	}
 	
 	public void passDoubleTouchEvents(GestureListener gesture){

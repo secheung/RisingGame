@@ -4,11 +4,11 @@
 		"plane_data":{
 			"width":3.5,
 			"height":3.5,
-			"rows":2,
-			"columns":7
+			"rows":3,
+			"columns":4
 		},
 		"hurt_box":[
-			{"left":1.1,"bottom":1.25,"right":2.9,"top":2.5}
+			{"left":0.4,"bottom":0.65,"right":2.9,"top":1.2}
 		],
 		"hit_box":[
 		]
@@ -23,7 +23,7 @@
 			"columns":7
 		},
 		"hurt_box":[
-			{"left":1.1,"bottom":1.5,"right":2.9,"top":3.5}
+			{"left":1.1,"bottom":0.5,"right":2.9,"top":3.5}
 		],
 		"hit_box":[
 		],
@@ -43,7 +43,7 @@
 			"columns":3
 		},
 		"hurt_box":[
-			{"left":1.1,"bottom":1.5,"right":2.9,"top":3.5}
+			{"left":1.1,"bottom":0.5,"right":2.9,"top":3.5}
 		],
 		"hit_box":[
 		]
@@ -58,7 +58,7 @@
 			"columns":3
 		},
 		"hurt_box":[
-			{"left":1.1,"bottom":1.5,"right":2.9,"top":3.5}
+			{"left":1.1,"bottom":0.5,"right":2.9,"top":3.5}
 		],
 		"hit_box":[
 		]
@@ -100,7 +100,8 @@
 			"play_back":"play_once"
 		},
 		"hurt_box":[
-			{"left":1.1,"bottom":1.25,"right":2.9,"top":2.5}
+			{"left":0.4,"bottom":0.65,"right":2.9,"top":1.2},
+			{"left":1.1,"bottom":1.25,"right":2.9,"top":2.5,"active_frame":[4,5,6,7,8,9,10,11,12,13]}
 		],
 		"hit_box":[
 		],
@@ -126,7 +127,7 @@
 			"play_back":"play_once"
 		},
 		"hurt_box":[
-			{"left":1.1,"bottom":1.25,"right":2.9,"top":2.5}
+			{"left":0.4,"bottom":0.65,"right":2.9,"top":1.2}
 		],
 		"hit_box":[
 		],
@@ -136,10 +137,32 @@
 				"snap_to_floor":1
 			},
 			"trigger_change":{
-				"stopped_x_trigger":"stand"
+				"played_trigger":"stand"
 			},
 			"x_accel":-0.05,
 			"y_accel":0.0
+		}
+	},
+	"trip_forward_action":{
+		"name":"enemy_trip_forward",
+		"plane_data":{
+			"width":3.5,
+			"height":3.5,
+			"rows":3,
+			"columns":4,
+			"play_back":"play_once"
+		},
+		"hurt_box":[
+			{"left":0.4,"bottom":0.65,"right":2.9,"top":1.2}
+		],
+		"hit_box":[
+		],
+		"action_properties":{
+			"x_accel":-0.1,
+			"y_accel":-0.098,
+			"trigger_change":{
+				"ground_trigger":"knock_down"
+			}
 		}
 	},
 	"knock_up_action":{

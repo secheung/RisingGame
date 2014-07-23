@@ -75,7 +75,7 @@ public class Enemy extends GameObject {
 	
 	private static EnemyState INIT_STATE = EnemyState.STAND;
 	
-	private static final int TEMP_FRAME = 3;
+	private static final int TEMP_FRAME = 5;
 	
 	private static float RUN_SPEED = 0.16f;
 	private static float WALK_SPEED = 0.08f;
@@ -112,7 +112,7 @@ public class Enemy extends GameObject {
 	@Override
 	public void setupAnimRef() {
 		animationRef = new HashMap<GameObjectState, Integer>();
-		animationRef.put(EnemyState.TEMP, R.drawable.enemy_knock_down_forward);
+		animationRef.put(EnemyState.TEMP, R.drawable.enemy_trip_forward);
 		animationRef.put(EnemyState.STAND, R.drawable.enemy_stance);
 		animationRef.put(EnemyState.FREEZE, R.drawable.enemy_stance);
 		animationRef.put(EnemyState.RUN, R.drawable.enemy_run);
@@ -125,7 +125,7 @@ public class Enemy extends GameObject {
 		
 		animationRef.put(EnemyState.KNOCK_BACK, R.drawable.enemy_knock_back);
 		animationRef.put(EnemyState.KNOCK_DOWN, R.drawable.enemy_knock_down);
-		animationRef.put(EnemyState.TRIP_FORWARD, R.drawable.enemy_knock_down_forward);
+		animationRef.put(EnemyState.TRIP_FORWARD, R.drawable.enemy_trip_forward);
 		animationRef.put(EnemyState.KNOCK_DOWN_FORWARD, R.drawable.enemy_knock_down_forward);
 		animationRef.put(EnemyState.KNOCK_UP, R.drawable.enemy_knock_up);
 		animationRef.put(EnemyState.HOVER, R.drawable.enemy_hover);
@@ -159,7 +159,8 @@ public class Enemy extends GameObject {
 				enemyState != EnemyState.KNOCK_DOWN_FORWARD &&
 				enemyState != EnemyState.WALL_BOUNCE &&
 				enemyState != EnemyState.KNOCK_UP &&
-				enemyState != EnemyState.HOVER){
+				enemyState != EnemyState.HOVER&&
+				enemyState != EnemyState.TRIP_FORWARD){
 			if(playerRef.getMidX() > checkX){
 				direction = Direction.RIGHT;
 			} else if(playerRef.getMidX() < checkX){
@@ -226,7 +227,7 @@ public class Enemy extends GameObject {
 		}
 
 		if(enemyState== EnemyState.TEMP){
-			currentAction.getAnimation().setFrame(TEMP_FRAME);
+			currentAction.getAnimation().setFrame(TEMP_FRAME - 1);
 			direction = Direction.RIGHT;
 		}
 		

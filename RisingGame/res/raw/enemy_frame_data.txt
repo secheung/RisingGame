@@ -8,7 +8,7 @@
 			"columns":4
 		},
 		"hurt_box":[
-			{"left":0.4,"bottom":0.65,"right":2.9,"top":1.2}
+
 		],
 		"hit_box":[
 		]
@@ -23,7 +23,7 @@
 			"columns":7
 		},
 		"hurt_box":[
-			{"left":1.1,"bottom":0.5,"right":2.9,"top":3.5}
+			{"left":1.0,"bottom":0.5,"right":2.5,"top":2.8}
 		],
 		"hit_box":[
 		],
@@ -43,7 +43,8 @@
 			"columns":3
 		},
 		"hurt_box":[
-			{"left":1.1,"bottom":0.5,"right":2.9,"top":3.5}
+			{"left":0.9,"bottom":0.5,"right":2.8,"top":2.25,"active_frame":[0,1,2,3,4,5,16,17,18,19,20,21,32]},
+			{"left":0.5,"bottom":0.5,"right":3.4,"top":2.35,"active_frame":[6,7,8,9,10,11,13,14,15,16,17,18,19]}
 		],
 		"hit_box":[
 		]
@@ -58,7 +59,8 @@
 			"columns":3
 		},
 		"hurt_box":[
-			{"left":1.1,"bottom":0.5,"right":2.9,"top":3.5}
+			{"left":0.9,"bottom":0.5,"right":2.8,"top":2.25,"active_frame":[0,1,2,3,4,5,16,17,18,19,20,21,32]},
+			{"left":0.5,"bottom":0.5,"right":3.4,"top":2.35,"active_frame":[6,7,8,9,10,11,13,14,15,16,17,18,19]}
 		],
 		"hit_box":[
 		]
@@ -74,7 +76,7 @@
 			"play_back":"play_once"
 		},
 		"hurt_box":[
-			{"left":1.1,"bottom":1.25,"right":2.9,"top":2.5}
+			{"left":1.0,"bottom":0.5,"right":2.5,"top":2.8}
 		],
 		"hit_box":[
 		],
@@ -127,7 +129,7 @@
 			"play_back":"play_once"
 		},
 		"hurt_box":[
-			{"left":0.4,"bottom":0.65,"right":2.9,"top":1.2}
+			{"left":0.4,"bottom":0.65,"right":2.9,"top":2.0}
 		],
 		"hit_box":[
 		],
@@ -139,7 +141,7 @@
 			"trigger_change":{
 				"played_trigger":"stand"
 			},
-			"x_accel":-0.05,
+			"x_accel":-0.03,
 			"y_accel":0.0
 		}
 	},
@@ -153,7 +155,9 @@
 			"play_back":"play_once"
 		},
 		"hurt_box":[
-			{"left":0.4,"bottom":0.65,"right":2.9,"top":1.2}
+			{"left":1.0,"bottom":0.5,"right":2.5,"top":2.8,"active_frame":[0,1]},
+			{"left":0.4,"bottom":1.0,"right":2.5,"top":2.8,"active_frame":[2,3]},
+			{"left":0.4,"bottom":1.0,"right":2.7,"top":2.3,"active_frame":[5,6,7,8,9,10,11]}
 		],
 		"hit_box":[
 		],
@@ -161,7 +165,7 @@
 			"x_accel":-0.1,
 			"y_accel":-0.098,
 			"trigger_change":{
-				"ground_trigger":"knock_down"
+				"ground_trigger":"knock_down_forward"
 			}
 		}
 	},

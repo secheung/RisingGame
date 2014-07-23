@@ -39,6 +39,7 @@ public class Player extends GameObject{
 		NUSWIPE("n_uswipe"),
 		NDSWIPE("n_dswipe"),
 		AFSWIPE("a_fswipe"),
+		ADSWIPE("a_dswipe"),
 		DFSWIPE("d_fswipe"),
 		DUSWIPE("d_uswipe"),
 		DDSWIPE("d_dswipe"),
@@ -71,8 +72,8 @@ public class Player extends GameObject{
 
 	public static String OBJNAME = "player";
 	private static PlayerState INIT_STATE = PlayerState.STAND;
-	
-	private static final int TEMP_FRAME = 7;
+
+	private static final int TEMP_FRAME = 5;
 
 	private static float WALK_SPEED = 0.2f;
 	private static float STRIKE_SPEED = 0.1f;
@@ -118,7 +119,7 @@ public class Player extends GameObject{
 	public void setupAnimRef() {
 		animationRef = new HashMap<GameObjectState, Integer>();
 		//animationRef.put(PlayerState.STAND, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.STAND.getName(), width, height, 4, 7));
-		animationRef.put(PlayerState.TEMP, R.drawable.jack_d_dswipe);
+		animationRef.put(PlayerState.TEMP, R.drawable.jack_a_dswipe);
 		animationRef.put(PlayerState.STAND, R.drawable.jack_stand);
 		animationRef.put(PlayerState.DEAD, R.drawable.rising_stance);
 		animationRef.put(PlayerState.RUN, R.drawable.jack_run);
@@ -132,6 +133,7 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.NUSWIPE, R.drawable.jack_n_uswipe);
 		animationRef.put(PlayerState.NDSWIPE, R.drawable.jack_n_dswipe);
 		animationRef.put(PlayerState.AFSWIPE, R.drawable.jack_a_fswipe);
+		animationRef.put(PlayerState.ADSWIPE, R.drawable.jack_a_dswipe);
 		animationRef.put(PlayerState.DFSWIPE, R.drawable.jack_d_fswipe);
 		animationRef.put(PlayerState.DUSWIPE, R.drawable.jack_d_uswipe);
 		animationRef.put(PlayerState.DDSWIPE, R.drawable.jack_d_dswipe);
@@ -282,6 +284,8 @@ public class Player extends GameObject{
 					playerState == PlayerState.AFSWIPE||
 					playerState == PlayerState.NTAP||
 					playerState == PlayerState.DFSWIPE||
+					playerState == PlayerState.DDSWIPE||
+					playerState == PlayerState.DDSWIPEFOLLWUP||
 					playerState == PlayerState.DASH){
 			executeLogic();
 			moveToX = getMidX();

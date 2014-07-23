@@ -4,14 +4,14 @@
 		"plane_data":{
 			"width":3.5,
 			"height":3.5,
-			"rows":4,
-			"columns":5
+			"rows":2,
+			"columns":3
 		},
 		"hurt_box":[
 		],
 		"hit_box":[
-			{"left":1.85,"bottom":1.6,"right":2.9,"top":2.55,"active_frame":[4,5],"select":1},
-			{"left":1.85,"bottom":0.5,"right":3.45,"top":1.1,"active_frame":[7]}
+			{"left":1.5,"bottom":1.225,"right":2.25,"top":1.85,"active_frame":[5,6]},
+			{"left":1.95,"bottom":0.6,"right":2.7,"top":1.225,"active_frame":[5,6],"select":1}
 		]
 	},
 
@@ -123,7 +123,8 @@
 				"stopped_y_trigger":"jump_arc"
 			},
 			"trigger_cancel":{
-				"swipe_f_trigger":"a_fswipe"
+				"swipe_f_trigger":"a_fswipe",
+				"swipe_d_trigger":"a_dswipe"
 			}
 		}
 	},
@@ -148,7 +149,8 @@
 				"ground_trigger":"jump_land"
 			},
 			"trigger_cancel":{
-				"swipe_f_trigger":"a_fswipe"
+				"swipe_f_trigger":"a_fswipe",
+				"swipe_d_trigger":"a_dswipe"
 			}
 		}
 	},
@@ -286,7 +288,7 @@
 		"interaction_properties":{
 			"hit_stop":1,
 			"x_init_speed":-1.0,
-			"y_init_speed":0.2,
+			"y_init_speed":0.3,
 			"trigger_change":{
 				"ground_hit_trigger":"knock_back",
 				"air_hit_trigger":"knock_back",
@@ -343,7 +345,7 @@
 		"hurt_box":[
 		],
 		"hit_box":[
-			{"left":2.35,"bottom":0.0,"right":2.9,"top":3.25,"active_frame":[8,9]}
+			{"left":2.0,"bottom":1.35,"right":3.1,"top":1.75,"active_frame":[8,9]}
 		],
 		"action_properties":{
 			"cancel_frame":[8,9,10,11,12,13,14,15,16,17,18],
@@ -405,19 +407,57 @@
 			}
 		}
 	},
+	"a_dswipe_action":{
+		"name":"jack_a_dswipe",
+		"plane_data":{
+			"width":3.5,
+			"height":3.5,
+			"rows":2,
+			"columns":3,
+			"play_back":"play_once"
+		},
+		"hurt_box":[
+		],
+		"hit_box":[
+			{"left":1.5,"bottom":1.225,"right":2.25,"top":1.85,"active_frame":[5,6]},
+			{"left":1.95,"bottom":0.6,"right":2.7,"top":1.225,"active_frame":[5,6]}
+		],
+		"action_properties":{
+			"x_init_speed":0.5,
+			"y_init_speed":-0.3,
+			"x_accel":0.0,
+			"y_accel":-0.098,
+			"modifiers":{
+				"active_after":5
+			},
+			"trigger_change":{
+				"ground_trigger":"jump_land"
+			},
+			"trigger_cancel":{
+			}
+		},
+		"interaction_properties":{
+			"hit_stop":0,
+			"x_init_speed":0.0,
+			"y_init_speed":0.0,
+			"trigger_change":{
+				"air_hit_trigger":"trip_forward"
+			}
+		}
+	},
 	"d_fswipe_action":{
 		"name":"jack_d_fswipe",
 		"plane_data":{
 			"width":3.5,
 			"height":3.5,
-			"rows":5,
+			"rows":4,
 			"columns":5,
 			"play_back":"play_once"
 		},
 		"hurt_box":[
 		],
 		"hit_box":[
-			{"left":1.8,"bottom":1.83,"right":3.15,"top":2.275,"active_frame":[14,15,16]}
+			{"left":1.8,"bottom":1.83,"right":3.15,"top":2.275,"active_frame":[9,10,11]}
 		],
 		"action_properties":{
 			"x_init_speed":0.6,
@@ -472,7 +512,8 @@
 				"ground_trigger":"jump_land"
 			},
 			"trigger_cancel":{
-				"swipe_f_trigger":"a_fswipe"
+				"swipe_f_trigger":"a_fswipe",
+				"swipe_d_trigger":"a_dswipe"
 			}
 		},
 		"interaction_properties":{
@@ -515,7 +556,7 @@
 		"interaction_properties":{
 			"hit_stop":1,
 			"x_init_speed":0.5,
-			"y_init_speed":0.7,
+			"y_init_speed":0.6,
 			"trigger_change":{
 				"ground_hit_trigger":"trip_forward",
 				"air_hit_trigger":"trip_forward"
@@ -552,8 +593,8 @@
 		},
 		"interaction_properties":{
 			"hit_stop":1,
-			"x_init_speed":-0.7,
-			"y_init_speed":0.85,
+			"x_init_speed":-0.85,
+			"y_init_speed":0.7,
 			"trigger_change":{
 				"ground_hit_trigger":"knock_up",
 				"air_hit_trigger":"knock_up"

@@ -282,7 +282,8 @@
 			},
 			"trigger_cancel":{
 				"cancel_frame":[11,12,13,14,15,16,17,18,19,20,21,22],
-				"dtap_f_trigger":"dash"
+				"dtap_f_trigger":"dash",
+				"dtap_u_trigger":"jump_startup"
 			}
 		},
 		"interaction_properties":{
@@ -439,9 +440,9 @@
 		"interaction_properties":{
 			"hit_stop":0,
 			"x_init_speed":0.0,
-			"y_init_speed":0.0,
+			"y_init_speed":0.3,
 			"trigger_change":{
-				"air_hit_trigger":"trip_forward"
+				"air_hit_trigger":"knock_back"
 			}
 		}
 	},

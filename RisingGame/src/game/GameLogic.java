@@ -90,7 +90,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		//enemy.getDisplay().drawDisable();
 		enemy.loadAnimIntoRenderer(worldRenderer);
 		gameObjects.put(enemy.getName(), enemy);
-		
+
 		/*
 		enemyIndex = 2;
 		parser.readFile(R.raw.enemy_frame_data);

@@ -10,7 +10,7 @@ import engine.open2d.renderer.WorldRenderer;
 
 public class ActionData {
 	private final static String LOG_PREFIX = "ACTION_DATA";
-	private final static boolean HITBOX_DEBUG = true;
+	private final static boolean HITBOX_DEBUG = false;
 	
 	private List<HitBox> hitBoxes;
 	private List<HurtBox> hurtBoxes;

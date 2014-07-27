@@ -168,6 +168,7 @@ public class Enemy extends GameObject {
 			}
 		}
 
+		/*
 		if(enemyState == EnemyState.STAND){
 			
 			if(Math.abs(checkX - playerRef.getMidX()) > CLOSE_DIST_TO_PLAYER){
@@ -180,6 +181,7 @@ public class Enemy extends GameObject {
 		} else if(enemyState == EnemyState.RUN || enemyState == EnemyState.WALK){
 			executeMovement();
 		}
+		*/
 
 		if(isHit()){
 			interProperties = playerRef.getCurrentAction().getInterProperties();

@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
+import engine.open2d.texture.AnimatedTexture.Playback;
 import game.GameTools.Gesture;
 import game.GameLogic;
 import game.GestureListener;
@@ -48,6 +49,8 @@ public abstract class GameObject {
 	
 	protected float width;
 	protected float height;
+	
+	protected int gameFrame;
 	
 	protected ActionData currentAction;
 	protected GameObjectLogic currentLogic;
@@ -127,8 +130,24 @@ public abstract class GameObject {
 		}
 	}
 	
+	//Currently not used
+	public void incrementGameFrame(){
+		int totalFrames = currentAction.getAnimation().getTotalFrame();
+		
+		gameFrame++;
+		if(gameFrame >= totalFrames){
+			gameFrame = 0;
+			currentAction.getAnimation().setPlayed(true);
+		} else if(gameFrame < 0) {
+			gameFrame = totalFrames - 1;
+			currentAction.getAnimation().setPlayed(true);
+		}
+	}
+	
 	public void switchAction(GameObjectState actionToSwitch){
 		//Log.d(this.name, actionToSwitch.toString());
+		gameFrame = 0;
+		
 		currentAction.drawDisable();
 		currentAction.getAnimation().resetAnimation();
 		currentAction = actionData.get(actionToSwitch);
@@ -315,9 +334,9 @@ public abstract class GameObject {
 	}
 
 	public void addGesture(Gesture gesture){
-		if(inputList.size() <= INPUT_LIST_SIZE){
-			inputList.add(gesture);
-		}
+		//if(inputList.size() <= INPUT_LIST_SIZE){
+			inputList.push(gesture);
+		//}
 	}
 	
 	/*
@@ -507,10 +526,17 @@ public abstract class GameObject {
 	}
 
 
-	public void setHitStopFrames(int hitStopFrames) {
+	public void activateHitStop(int hitStopFrames) {
 		this.hitStopFrames = hitStopFrames;
+		if(hitStopFrames > 0)
+			currentAction.getAnimation().setPlayback(Playback.PAUSE);
 	}
 
+	public void deactivateHitStop() {
+		this.hitStopFrames = 0;
+		Playback defaultPlayback = currentAction.getPlaneData().getPlayback();
+		currentAction.getAnimation().setPlayback(defaultPlayback);
+	}
 
 	public float getxVelocity() {
 		return xVelocity;

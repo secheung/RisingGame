@@ -35,6 +35,8 @@ public class Player extends GameObject{
 		DODGE("dodge"),
 		DEAD("dead"),
 		NTAP("n_tap"),
+		NFSWIPECOMBO1("n_fswipe_combo1"),
+		NFSWIPECOMBO2("n_fswipe_combo2"),
 		NFSWIPE("n_fswipe"),
 		NUSWIPE("n_uswipe"),
 		NDSWIPE("n_dswipe"),
@@ -73,7 +75,7 @@ public class Player extends GameObject{
 	public static String OBJNAME = "player";
 	private static PlayerState INIT_STATE = PlayerState.STAND;
 
-	private static final int TEMP_FRAME = 8;
+	private static final int TEMP_FRAME = 5;
 
 	private static float WALK_SPEED = 0.2f;
 	private static float STRIKE_SPEED = 0.1f;
@@ -119,7 +121,7 @@ public class Player extends GameObject{
 	public void setupAnimRef() {
 		animationRef = new HashMap<GameObjectState, Integer>();
 		//animationRef.put(PlayerState.STAND, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.STAND.getName(), width, height, 4, 7));
-		animationRef.put(PlayerState.TEMP, R.drawable.jack_n_dswipe);
+		animationRef.put(PlayerState.TEMP, R.drawable.jack_n_combo2);
 		animationRef.put(PlayerState.STAND, R.drawable.jack_stand);
 		animationRef.put(PlayerState.DEAD, R.drawable.rising_stance);
 		animationRef.put(PlayerState.RUN, R.drawable.jack_run);
@@ -130,6 +132,8 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.DODGE, R.drawable.rising_dodge);
 		animationRef.put(PlayerState.NTAP, R.drawable.jack_n_tap);
 		animationRef.put(PlayerState.NFSWIPE, R.drawable.jack_n_fswipe);
+		animationRef.put(PlayerState.NFSWIPECOMBO1, R.drawable.jack_n_combo1);
+		animationRef.put(PlayerState.NFSWIPECOMBO2, R.drawable.jack_n_combo2);
 		animationRef.put(PlayerState.NUSWIPE, R.drawable.jack_n_uswipe);
 		animationRef.put(PlayerState.NDSWIPE, R.drawable.jack_n_dswipe);
 		animationRef.put(PlayerState.AFSWIPE, R.drawable.jack_a_fswipe);
@@ -187,14 +191,14 @@ public class Player extends GameObject{
 		
 		if(playerState == PlayerState.TEMP){
 			float[] coord = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), this.getDisplay());
-			Log.d("debug",coord[0] + " " + coord[1] + " " + coord[2]);
+			Log.i("rising_debug",coord[0] + " " + coord[1] + " " + coord[2] +" "+getMidX());
 		}
 	}
 
 	public void passDoubleTouchEvent(GestureListener g,  WorldRenderer worldRenderer){
 		Plane display = currentAction.getAnimation();
 		float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(g.getDoubleTapX(), g.getDoubleTapY(), display);
-
+		
 		if(unprojectedPoints[1] > (this.getY()+this.getHeight())){
 		//if(unprojectedPoints[1] > this.getMidY()){
 			inputList.add(Gesture.DTAP_UP);
@@ -227,9 +231,6 @@ public class Player extends GameObject{
 			return;
 		}
 		
-		Gesture gesture = Gesture.NONE;
-		executeInput();
-		
 		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
 			executeMovement();
 		}
@@ -241,14 +242,23 @@ public class Player extends GameObject{
 			}
 		}
 		*/
-		
+
+		//String state1 = playerState.toString();
 		executeTriggers();
-		
-		if(	currentAction != actionData.get(playerState) ||
-			resetAnim){
+		executeInput();
+		/*
+		String state2 = playerState.toString();
+		if(!state1.equals(state2)){
+			Log.d("rising_debug_update_state", currentAction.getName()+" "+currentAction.getAnimation().isPlayed()+"");
+			Log.d("rising_debug_update_state",state1 +" to "+state2);
+		}
+		*/
+
+		if(	currentAction != actionData.get(playerState) || resetAnim){
 			this.switchAction(playerState);
 			resetAnim = false;
 		}
+		
 	}
 	
 	@Override
@@ -261,6 +271,7 @@ public class Player extends GameObject{
 		//should hitstop return from function?
 		if(hitStopFrames > 0){
 			hitStopFrames--;
+			this.setHitActive(false);//disable hit box for attack won't come back till next attack
 			return;
 		}
 		
@@ -280,6 +291,8 @@ public class Player extends GameObject{
 			moveToX = getMidX();
 			moveToY = getMidY();
 		} else if(	playerState == PlayerState.NFSWIPE||
+					playerState == PlayerState.NFSWIPECOMBO1||
+					playerState == PlayerState.NFSWIPECOMBO2||
 					playerState == PlayerState.NUSWIPE||
 					playerState == PlayerState.AFSWIPE||
 					playerState == PlayerState.NTAP||
@@ -303,24 +316,33 @@ public class Player extends GameObject{
 	@Override
 	public void updateDisplay() {
 		if(hitStopFrames > 0){
-			currentAction.getAnimation().setPlayback(Playback.PAUSE);
+			//Log.d("rising_debug updateDisplay",currentAction.getAnimation().getFrame()+"");
+			//currentAction.getAnimation().setPlayback(Playback.PAUSE);
 			return;
 		} else {
-			Playback defaultPlayback = currentAction.getPlaneData().getPlayback();
-			currentAction.getAnimation().setPlayback(defaultPlayback);
+			//Playback defaultPlayback = currentAction.getPlaneData().getPlayback();
+			//currentAction.getAnimation().setPlayback(defaultPlayback);
+			deactivateHitStop();
 		}
-		
+
 		if(direction==Direction.RIGHT){
 			currentAction.flipHorizontal(false);
 		} else if(direction==Direction.LEFT){
 			currentAction.flipHorizontal(true);
 		}
+		
+		//incrementGameFrame();
+		//currentAction.getAnimation().setFrame(gameFrame);
 	}
 	
 	@Override
 	public void updateAfterDisplay() {
 		Plane display = currentAction.getAnimation();
-
+		
+		if(hitStopFrames > 0){
+			return;
+		}
+		
 		if(display.isPlayed()){
 			if(	playerState==PlayerState.DODGE){
 				//gesture = Gesture.NONE;
@@ -337,10 +359,15 @@ public class Player extends GameObject{
 
 	private void executeInput(){
 		Gesture gesture = Gesture.NONE;
+		//if(!inputList.isEmpty())
+		//	Log.d("rising_debug_execute_input", inputList.toString()+" "+ playerState + " "+currentAction.getAnimation().getFrame());
 		
+		/*
 		if(hitStopFrames > 0){
+			//Log.d("rising_debug", inputList.toString()+" "+currentAction.getAnimation().getFrame());
 			return;
 		}
+		*/
 		
 		HashSet<Integer> cancelFrames = currentAction.getActionProperties().getCancelFrame();
 		if(!cancelFrames.isEmpty()){
@@ -391,6 +418,12 @@ public class Player extends GameObject{
 				String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.DTAP_F_TRIGGER);
 				setStateUsingTotalName(cancel);
 				initSpeed = true;
+			}
+			
+			if(gesture == Gesture.DTAP_LEFT){
+				this.direction = Direction.LEFT;
+			} else if(gesture == Gesture.DTAP_RIGHT){
+				this.direction = Direction.RIGHT;
 			}
 		}
 		

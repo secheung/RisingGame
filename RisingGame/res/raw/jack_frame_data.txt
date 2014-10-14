@@ -4,13 +4,14 @@
 		"plane_data":{
 			"width":3.5,
 			"height":3.5,
-			"rows":3,
-			"columns":6
+			"rows":2,
+			"columns":5
 		},
 		"hurt_box":[
 		],
 		"hit_box":[
-			{"left":2.0,"bottom":1.35,"right":3.1,"top":1.75,"active_frame":[8,9]}
+			{"left":2.35,"bottom":0.75,"right":3.1,"top":1.39,"active_frame":[5,6,7],select:1},
+			{"left":2.1,"bottom":1.39,"right":2.7,"top":1.7,"active_frame":[5,6,7]}
 		]
 	},
 
@@ -35,11 +36,10 @@
 			"trigger_change":{
 			},
 			"trigger_cancel":{
-				"tap_trigger":"n_tap",
 				"dtap_u_trigger":"jump_startup",
 				"dtap_f_trigger":"dash",
 				"swipe_u_trigger":"n_uswipe",
-				"swipe_f_trigger":"n_fswipe",
+				"swipe_f_trigger":"n_fswipe_combo1",
 				"swipe_d_trigger":"n_dswipe"
 			}
 		}
@@ -91,11 +91,10 @@
 			"trigger_change":{
 			},
 			"trigger_cancel":{
-				"tap_trigger":"n_tap",
 				"dtap_u_trigger":"jump_startup",
 				"dtap_f_trigger":"dash",
 				"swipe_u_trigger":"n_uswipe",
-				"swipe_f_trigger":"n_fswipe",
+				"swipe_f_trigger":"n_fswipe_combo1",
 				"swipe_d_trigger":"n_dswipe"
 			}
 		}
@@ -172,11 +171,10 @@
 				"played_trigger":"stand"
 			},
 			"trigger_cancel":{
-				"tap_trigger":"n_tap",
 				"dtap_u_trigger":"jump_startup",
 				"dtap_f_trigger":"dash",
 				"swipe_u_trigger":"n_uswipe",
-				"swipe_f_trigger":"n_fswipe",
+				"swipe_f_trigger":"n_fswipe_combo1",
 				"swipe_d_trigger":"n_dswipe"
 			}
 		}
@@ -208,20 +206,20 @@
 			}
 		}
 	},
-	"n_tap_action":{
-		"name":"jack_n_tap",
+	"n_fswipe_combo1_action":{
+		"name":"jack_n_fswipe_combo1",
 		"plane_data":{
 			"width":3.5,
 			"height":3.5,
-			"rows":3,
-			"columns":4
+			"rows":1,
+			"columns":7,
+			"play_back":"play_once"
 		},
 		"hurt_box":[
 		],
 		"hit_box":[
-			{"left":1.95,"top":2.55,"right":3.15,"bottom":2.25,"active_frame":[2]},
-			{"left":1.95,"top":2.85,"right":2.7,"bottom":2.25,"active_frame":[3]},
-			{"left":2.25,"top":2.35,"right":3.5,"bottom":2.0,"active_frame":[9,10,11]}
+			{"left":2.35,"bottom":2.175,"right":3.1,"top":2.75,"active_frame":[4,5]},
+			{"left":1.6,"bottom":1.9,"right":2.35,"top":2.475,"active_frame":[4,5]}
 		],
 		"action_properties":{
 			"x_init_speed":0.0,
@@ -234,25 +232,62 @@
 				"played_trigger":"stand"
 			},
 			"trigger_cancel":{
-				"cancel_frame":[2,3,4,5,9,10,11,12],
-				"dtap_u_trigger":"jump_startup",
+				"cancel_frame":[5,6,7],
 				"dtap_f_trigger":"dash",
-				"swipe_u_trigger":"n_uswipe",
-				"swipe_d_trigger":"n_dswipe",
+				"dtap_u_trigger":"jump_startup",
+				"swipe_f_trigger":"n_fswipe_combo2"
+			}
+		},
+		"interaction_properties":{
+			"hit_stop":3,
+			"x_init_speed":0.0,
+			"y_init_speed":0.0,
+			"trigger_change":{
+				"ground_hit_trigger":"struck"
+			}
+		}
+	},
+	"n_fswipe_combo2_action":{
+		"name":"jack_n_fswipe_combo2",
+		"plane_data":{
+			"width":3.5,
+			"height":3.5,
+			"rows":2,
+			"columns":5,
+			"play_back":"play_once"
+		},
+		"hurt_box":[
+		],
+		"hit_box":[
+			{"left":2.35,"bottom":0.75,"right":3.1,"top":1.39,"active_frame":[5,6,7]},
+			{"left":2.1,"bottom":1.39,"right":2.7,"top":1.7,"active_frame":[5,6,7]}
+		],
+		"action_properties":{
+			"x_init_speed":0.0,
+			"y_init_speed":0.0,
+			"x_accel":0.0,
+			"y_accel":0.0,
+			"modifiers":{
+			},
+			"trigger_change":{
+				"played_trigger":"stand"
+			},
+			"trigger_cancel":{
+				"cancel_frame":[6,7],
+				"dtap_f_trigger":"dash",
+				"dtap_u_trigger":"jump_startup",
 				"swipe_f_trigger":"n_fswipe"
 			}
 		},
 		"interaction_properties":{
-			"hit_stop":1,
-			"x_init_speed":-0.01,
+			"hit_stop":3,
+			"x_init_speed":0.0,
 			"y_init_speed":0.0,
 			"trigger_change":{
-				"ground_hit_trigger":"struck",
-				"air_hit_trigger":"knock_back"
+				"ground_hit_trigger":"struck"
 			}
 		}
 	},
-	
 	"n_fswipe_action":{
 		"name":"jack_n_fswipe",
 		"plane_data":{
@@ -309,7 +344,7 @@
 		"hurt_box":[
 		],
 		"hit_box":[
-			{"left":2.35,"bottom":1.25,"right":2.9,"top":3.25,"active_frame":[9,10]}
+			{"left":2.35,"bottom":0.0,"right":2.9,"top":3.25,"active_frame":[9,10]}
 		],
 		"action_properties":{
 			"cancel_frame":[2,3,4,5,9,10,11,12],
@@ -358,7 +393,7 @@
 			"trigger_cancel":{
 				"dtap_u_trigger":"jump_startup",
 				"dtap_f_trigger":"dash",
-				"swipe_f_trigger":"n_fswipe",
+				"swipe_f_trigger":"n_fswipe_combo1",
 				"swipe_u_trigger":"n_uswipe"
 			}
 		},
@@ -477,7 +512,7 @@
 			}
 		},
 		"interaction_properties":{
-			"hit_stop":1,
+			"hit_stop":5,
 			"x_init_speed":-1.0,
 			"y_init_speed":0.0,
 			"trigger_change":{
@@ -556,7 +591,7 @@
 			}
 		},
 		"interaction_properties":{
-			"hit_stop":1,
+			"hit_stop":10,
 			"x_init_speed":0.5,
 			"y_init_speed":0.6,
 			"trigger_change":{

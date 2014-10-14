@@ -28,7 +28,7 @@ import game.open2d.R;
 public class GameLogic extends AsyncTask<Void, Void, Void>{
 	private static final int DOUBLE_TAP_INTERVAL_MIN_CHECK = 3;
 	private static final int DOUBLE_TAP_INTERVAL_MAX_CHECK = 5;
-	private static final int GESTURE_INTERVAL_MIN_CHECK = 1;
+	private static final int GESTURE_INTERVAL_MIN_CHECK = 2;
 	private static final int GESTURE_INTERVAL_MAX_CHECK = 11;
 	
 	public static float CAM_X_CHANGE = 0.65f;
@@ -236,7 +236,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	}
 	
 	//USE THIS FOR SWIPES
-	public Gesture gestureProcessing(MotionEvent e){
+	public Gesture gestureProcessing(MotionEvent e, GestureListener listner){
 		if(e.getAction() == MotionEvent.ACTION_DOWN){
 			gestureX = e.getX();
 			gestureY = e.getY();
@@ -256,8 +256,9 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		return Gesture.NONE;
 	}
 	
-	public void passTouchEvents(MotionEvent e){
-		Gesture gesture = gestureProcessing(e);
+	public void passTouchEvents(MotionEvent e, GestureListener dTapListner){
+		Player player = (Player) gameObjects.get(Player.OBJNAME);
+		Gesture gesture = gestureProcessing(e, dTapListner);
 		
 		if(e.getAction() == MotionEvent.ACTION_DOWN){
 			for(GameObject gameObject : gameObjects.values()){
@@ -265,8 +266,14 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 					gameObject.passTouchEvent(e, worldRenderer);
 			}
 		} else if(e.getAction() == MotionEvent.ACTION_UP){
-			for(GameObject gameObject : gameObjects.values()){
-				gameObject.addGesture(gesture);
+			if(gesture != Gesture.NONE && gesture != Gesture.TAP){
+				//Log.d("rising_debug_gameLogic_passtouch",gesture.toString());
+				player.addGesture(gesture);
+			}else if(dTapListner.isdTapped()){//for if want swipe as precedence dtap 
+				player.passDoubleTouchEvent(dTapListner, worldRenderer);
+				dTapListner.setdTapped(false);
+			} else if(gesture == Gesture.TAP){
+				player.addGesture(gesture);
 			}
 			
 			if(gesture == Gesture.SWIPE_UP){
@@ -276,14 +283,13 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		} else if(e.getAction() == MotionEvent.ACTION_MOVE){
 		}
 		
-		Player player = (Player) gameObjects.get(Player.OBJNAME);
 		player.passTouchEvent(e, worldRenderer);
 	}
 	
 	public void passDoubleTouchEvents(GestureListener gesture){
-		//Log.d("doubletap", gesture.getDoubleTapX()+" "+gesture.getDoubleTapY());
 		Player player = (Player) gameObjects.get(Player.OBJNAME);
 		player.passDoubleTouchEvent(gesture, worldRenderer);
+		
 	}
 
 	@Override

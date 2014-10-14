@@ -3,6 +3,7 @@ package game;
 import engine.open2d.renderer.WorldRenderer;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
@@ -42,7 +43,7 @@ public class GameSurfaceView extends GLSurfaceView{
 	public boolean onTouchEvent(MotionEvent e) {
 		//requestRender();
 		worldRenderer.passTouchEvents(e);
-		gameLogic.passTouchEvents(e);
+		gameLogic.passTouchEvents(e,gestureListener);
 
 		if(gestureDetector.onTouchEvent(e)){
 			gameLogic.passDoubleTouchEvents(gestureListener);

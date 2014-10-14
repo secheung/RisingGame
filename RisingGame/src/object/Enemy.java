@@ -185,8 +185,9 @@ public class Enemy extends GameObject {
 
 		if(isHit()){
 			interProperties = playerRef.getCurrentAction().getInterProperties();
-			playerRef.setHitStopFrames(interProperties.getHitStop());
-			this.setHitStopFrames(interProperties.getHitStop());
+			playerRef.activateHitStop(interProperties.getHitStop());
+			this.activateHitStop(interProperties.getHitStop());
+			//playerRef.setHitActive(false);
 			
 			if(playerRef.getDirection() == Direction.RIGHT){
 				direction = Direction.LEFT;
@@ -223,6 +224,10 @@ public class Enemy extends GameObject {
 
 	@Override
 	public void updateLogic() {
+		if(!inputList.isEmpty()){
+			this.inputList.removeFirst();
+		}
+		
 		if(hitStopFrames > 0){
 			hitStopFrames--;
 			return;
@@ -266,7 +271,6 @@ public class Enemy extends GameObject {
 	@Override
 	public void updateDisplay() {
 		if(hitStopFrames > 0){
-			currentAction.getAnimation().setPlayback(Playback.PAUSE);
 			return;
 		} else {
 			Playback defaultPlayback = currentAction.getPlaneData().getPlayback();
@@ -286,6 +290,9 @@ public class Enemy extends GameObject {
 		if(enemyState == EnemyState.FREEZE){
 			currentAction.drawDisable();
 		}
+		
+		//incrementGameFrame();
+		//currentAction.getAnimation().setFrame(gameFrame);
 	}
 
 	@Override

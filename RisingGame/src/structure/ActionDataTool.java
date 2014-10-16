@@ -33,6 +33,10 @@ public class ActionDataTool {
 	private static String ACTIVE_FRAME = "active_frame";
 	private static String SELECT_BOX = "select";
 	
+	private static String HIT_TYPE = "hit_type";
+	public static String SINGLE_HIT = "single_hit";
+	public static String MULTI_HIT = "multi_hit";
+	
 	private static String X_INIT_SPEED = "x_init_speed";
 	private static String Y_INIT_SPEED = "y_init_speed";
 	private static String X_ACCEL = "x_accel";
@@ -236,6 +240,10 @@ public class ActionDataTool {
 	
 	public ActionProperties parseActionProperties(JSONObject propertyData) throws JSONException{
 		ActionProperties actionProperties = new ActionProperties();
+		
+		if(propertyData.has(HIT_TYPE)){
+			actionProperties.setHitType(propertyData.getString(HIT_TYPE));
+		}
 		
 		if(propertyData.has(X_INIT_SPEED)){
 			actionProperties.setxInitSpeed((float)propertyData.getDouble(X_INIT_SPEED));

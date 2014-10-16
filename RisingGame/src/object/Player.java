@@ -263,11 +263,17 @@ public class Player extends GameObject{
 	
 	@Override
 	public void updateLogic() {
-		if(currentAction.isHitBoxActive()){
+		if(currentAction.isHitBoxActive() && isHitAvailable()){
 			this.setHitActive(true);
 		} else {
 			this.setHitActive(false);
 		}
+		
+		String hitType = currentAction.getActionProperties().getHitType(); 
+		if(hitType.equals(ActionDataTool.SINGLE_HIT)){
+			
+		}
+		
 		//should hitstop return from function?
 		if(hitStopFrames > 0){
 			hitStopFrames--;

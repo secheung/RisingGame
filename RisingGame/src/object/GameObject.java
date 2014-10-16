@@ -64,6 +64,7 @@ public abstract class GameObject {
 	protected boolean resetAnim;
 	public boolean selected;
 	protected boolean hitActive;
+	protected boolean hitAvailable;
 	protected LinkedList<Gesture> inputList;
 	//protected Gesture gesture;
 	
@@ -147,6 +148,7 @@ public abstract class GameObject {
 	public void switchAction(GameObjectState actionToSwitch){
 		//Log.d(this.name, actionToSwitch.toString());
 		gameFrame = 0;
+		hitAvailable = true;
 		
 		currentAction.drawDisable();
 		currentAction.getAnimation().resetAnimation();
@@ -518,6 +520,16 @@ public abstract class GameObject {
 
 	public void setHitActive(boolean hitActive) {
 		this.hitActive = hitActive;
+	}
+
+
+	public boolean isHitAvailable() {
+		return hitAvailable;
+	}
+
+
+	public void setHitAvailable(boolean hitAvailable) {
+		this.hitAvailable = hitAvailable;
 	}
 
 

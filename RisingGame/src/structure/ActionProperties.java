@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 
 public class ActionProperties {
+	protected String hitType;
 	protected float xInitSpeed;
 	protected float yInitSpeed;
 	protected float xAccel;
@@ -16,6 +17,7 @@ public class ActionProperties {
 	LinkedHashMap<String, Integer> modifiers;
 	
 	public ActionProperties(){
+		hitType = ActionDataTool.SINGLE_HIT;
 		xInitSpeed = 0;
 		yInitSpeed = 0;
 		xAccel = 0;
@@ -25,6 +27,14 @@ public class ActionProperties {
 		triggerCancel = new LinkedHashMap<String, String>();
 		cancelFrame = new HashSet<Integer>();
 		modifiers = new LinkedHashMap<String, Integer>();
+	}
+
+	public String getHitType() {
+		return hitType;
+	}
+
+	public void setHitType(String hitType) {
+		this.hitType = hitType;
 	}
 
 	public float getxInitSpeed() {

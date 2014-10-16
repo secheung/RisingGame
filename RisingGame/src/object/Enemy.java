@@ -187,6 +187,10 @@ public class Enemy extends GameObject {
 			interProperties = playerRef.getCurrentAction().getInterProperties();
 			playerRef.activateHitStop(interProperties.getHitStop());
 			this.activateHitStop(interProperties.getHitStop());
+			if(playerRef.getCurrentAction().getActionProperties().getHitType().equals(ActionDataTool.SINGLE_HIT)){
+				playerRef.setHitAvailable(false);
+			}
+			
 			//playerRef.setHitActive(false);
 			
 			if(playerRef.getDirection() == Direction.RIGHT){

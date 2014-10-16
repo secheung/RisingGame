@@ -222,6 +222,7 @@
 			{"left":1.6,"bottom":1.9,"right":2.35,"top":2.475,"active_frame":[4,5]}
 		],
 		"action_properties":{
+			"hit_type":"single_hit",
 			"x_init_speed":0.0,
 			"y_init_speed":0.0,
 			"x_accel":0.0,
@@ -537,6 +538,7 @@
 			{"left":1.85,"bottom":1.9,"right":2.9,"top":3.55,"active_frame":[6,7]}
 		],
 		"action_properties":{
+			"hit_type":"multi_hit",
 			"x_init_speed":0.7,
 			"y_init_speed":0.7,
 			"x_accel":-0.1,

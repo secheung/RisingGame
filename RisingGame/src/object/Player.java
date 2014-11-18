@@ -13,6 +13,7 @@ import structure.ActionData;
 import structure.ActionDataTool;
 import structure.HitBox;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
@@ -196,14 +197,19 @@ public class Player extends GameObject{
 	}
 
 	public void passDoubleTouchEvent(GestureListener g,  WorldRenderer worldRenderer){
+		int width = worldRenderer.getScreenWidth();
+		int height = worldRenderer.getScreenHeight();
 		Plane display = currentAction.getAnimation();
 		float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(g.getDoubleTapX(), g.getDoubleTapY(), display);
 		
+		//if(g.getDoubleTapY() < height/2){
 		if(unprojectedPoints[1] > (this.getY()+this.getHeight())){
 		//if(unprojectedPoints[1] > this.getMidY()){
 			inputList.add(Gesture.DTAP_UP);
+		//} else if(g.getDoubleTapX() > width/2){
 		} else if(unprojectedPoints[0] > this.getX()+this.getWidth()){
 			inputList.add(Gesture.DTAP_RIGHT);
+		//} else if(g.getDoubleTapX() < width/2){
 		} else if(unprojectedPoints[0] < this.getX()){
 			inputList.add(Gesture.DTAP_LEFT);
 		}
@@ -383,6 +389,8 @@ public class Player extends GameObject{
 		}
 
 		if(!inputList.isEmpty()){
+			//Log.d("rising_debug", inputList.toString()+" "+currentAction.getAnimation().getFrame());
+			//Log.d(playerState.toString(), gesture.toString()+" "+direction.toString());
 			gesture = inputList.getFirst();
 			inputList.removeFirst();
 		}

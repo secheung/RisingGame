@@ -269,6 +269,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 			if(gesture != Gesture.NONE && gesture != Gesture.TAP){
 				//Log.d("rising_debug_gameLogic_passtouch",gesture.toString());
 				player.addGesture(gesture);
+				dTapListner.setdTapped(false);
 			}else if(dTapListner.isdTapped()){//for if want swipe as precedence dtap 
 				player.passDoubleTouchEvent(dTapListner, worldRenderer);
 				dTapListner.setdTapped(false);

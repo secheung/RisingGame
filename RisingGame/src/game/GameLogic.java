@@ -35,6 +35,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	private static final int DOUBLE_TAP_INTERVAL_MAX_CHECK = 5;
 	private static final int GESTURE_INTERVAL_MIN_CHECK = 2;
 	private static final int GESTURE_INTERVAL_MAX_CHECK = 11;
+	private static final int HOLD_INTERVAL_CHECK = 13;
 	
 	public enum CONTROL_TYPE{
 		FIXED,
@@ -307,7 +308,9 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 			}
 			
 		} else if(e.getAction() == MotionEvent.ACTION_MOVE){
-			player.updateHoldTouchEvent(true,Gesture.HOLD.setxTap(e.getX()).setyTap(e.getY()), worldRenderer);
+			if(gestureCheck > HOLD_INTERVAL_CHECK){
+				player.updateHoldTouchEvent(true,Gesture.HOLD.setxTap(e.getX()).setyTap(e.getY()), worldRenderer);
+			}
 		}
 		
 		player.passTouchEvent(e, worldRenderer);

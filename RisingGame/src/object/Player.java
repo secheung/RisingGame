@@ -19,6 +19,7 @@ import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
 import engine.open2d.texture.AnimatedTexture.Playback;
 import game.GameLogic;
+import game.GameLogic.CONTROL_TYPE;
 import game.GameTools;
 import game.GestureListener;
 import game.GameTools.Gesture;
@@ -43,6 +44,7 @@ public class Player extends GameObject{
 		NDSWIPE("n_dswipe"),
 		AFSWIPE("a_fswipe"),
 		ADSWIPE("a_dswipe"),
+		ADSWIPE2("a_dswipe2"),
 		DFSWIPE("d_fswipe"),
 		DUSWIPE("d_uswipe"),
 		DDSWIPE("d_dswipe"),
@@ -86,20 +88,30 @@ public class Player extends GameObject{
 	private static float COLLISION_BUFFER = 1.0f;
 	public static float CANCEL_STRIKE_FRAMES = 8;
 	private static float JUMP_SPEED = 0.75f;
-
+	
+	private static float SCREEN_HEIGHT_PERCENTAGE = 0.65f;
+	private static float SCREEN_WIDTH_PERCENTAGE = 0.85f;
+	
 	private Enemy struckEnemy;
 	private PlayerState playerState;
 	private float moveToX;
 	private float moveToY;
 	
+	CONTROL_TYPE controlType; 
+	
+	private float cursorX;
+	private float cursorY;
+	
 	private float unprojectedX;
 	private float unprojectedY;
+	
+	private boolean inputHold;
 	
 	private int punchIndex;
 	private int finishIndex;
 	private int counterIndex;
 	
-	public Player(LinkedHashMap<String,GameObject> gameObjects, List<ActionData> actionData, float x, float y){
+	public Player(LinkedHashMap<String,GameObject> gameObjects, List<ActionData> actionData, float x, float y, CONTROL_TYPE controlType){
 		super(gameObjects,actionData,INIT_STATE,x,y);
 		
 		playerState = INIT_STATE;
@@ -108,6 +120,8 @@ public class Player extends GameObject{
 		this.moveToX = x;
 		this.moveToY = y;
 		this.z = -1.0f;
+		
+		this.controlType = controlType;
 		
 		this.punchIndex = 1;
 		this.finishIndex = 1;
@@ -139,6 +153,7 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.NDSWIPE, R.drawable.jack_n_dswipe);
 		animationRef.put(PlayerState.AFSWIPE, R.drawable.jack_a_fswipe);
 		animationRef.put(PlayerState.ADSWIPE, R.drawable.jack_a_dswipe);
+		animationRef.put(PlayerState.ADSWIPE2, R.drawable.jack_a_dswipe);
 		animationRef.put(PlayerState.DFSWIPE, R.drawable.jack_d_fswipe);
 		animationRef.put(PlayerState.DUSWIPE, R.drawable.jack_d_uswipe);
 		animationRef.put(PlayerState.DDSWIPE, R.drawable.jack_d_dswipe);
@@ -185,6 +200,9 @@ public class Player extends GameObject{
 		}
 		*/
 		
+		cursorX = e.getX();
+		cursorY = e.getY();
+		
 		unprojectedX = unprojectedPoints[0];
 		unprojectedY = unprojectedPoints[1];
 		
@@ -202,35 +220,47 @@ public class Player extends GameObject{
 		Plane display = currentAction.getAnimation();
 		float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(g.getDoubleTapX(), g.getDoubleTapY(), display);
 		
-		//if(g.getDoubleTapY() < height/2){
-		if(unprojectedPoints[1] > (this.getY()+this.getHeight())){
-		//if(unprojectedPoints[1] > this.getMidY()){
-			inputList.add(Gesture.DTAP_UP);
-		//} else if(g.getDoubleTapX() > width/2){
-		} else if(unprojectedPoints[0] > this.getX()+this.getWidth()){
-			inputList.add(Gesture.DTAP_RIGHT);
-		//} else if(g.getDoubleTapX() < width/2){
-		} else if(unprojectedPoints[0] < this.getX()){
-			inputList.add(Gesture.DTAP_LEFT);
-		}
-		
-		/*
-		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
+		if(controlType == CONTROL_TYPE.RELATIVE){
 			if(unprojectedPoints[1] > (this.getY()+this.getHeight())){
-				this.playerState = PlayerState.JUMP;
-				initSpeed = true;
-				if(unprojectedPoints[0] > getMidX()){
-					direction = Direction.RIGHT;
-				} else if(unprojectedPoints[0] < getMidX()){
-					direction = Direction.LEFT;
-				}
+			//if(unprojectedPoints[1] > this.getMidY()){
+				inputList.add(Gesture.DTAP_UP);
+			} else if(unprojectedPoints[0] > this.getX()+this.getWidth()){
+				inputList.add(Gesture.DTAP_RIGHT);
+			} else if(unprojectedPoints[0] < this.getX()){
+				inputList.add(Gesture.DTAP_LEFT);
+			}
+		} else if(controlType == CONTROL_TYPE.FIXED){
+			if(g.getDoubleTapY() < height*SCREEN_HEIGHT_PERCENTAGE){
+				inputList.add(Gesture.DTAP_UP);
+			} else if(g.getDoubleTapX() > width*SCREEN_WIDTH_PERCENTAGE){
+				inputList.add(Gesture.DTAP_RIGHT);
+			} else if(g.getDoubleTapX() < width*SCREEN_WIDTH_PERCENTAGE){
+				inputList.add(Gesture.DTAP_LEFT);
 			}
 		}
-		*/
 
 		display.unprojectDisable();
 	}
 
+	public void updateHoldTouchEvent(boolean hold, Gesture g,  WorldRenderer worldRenderer){
+		int width = worldRenderer.getScreenWidth();
+		int height = worldRenderer.getScreenHeight();
+		
+		inputHold = hold;
+		//Log.d("rising_debug",g.getxTap()+" "+g.getyTap());
+		if(controlType == CONTROL_TYPE.FIXED && hold){
+			if(g.getxTap() > width*SCREEN_WIDTH_PERCENTAGE){
+				if(!inputList.contains(Gesture.HOLD_RIGHT)){
+					inputList.add(Gesture.HOLD_RIGHT);
+				}
+			} else if(g.getxTap() < width*SCREEN_WIDTH_PERCENTAGE){
+				if(!inputList.contains(Gesture.HOLD_LEFT)){
+					inputList.add(Gesture.HOLD_LEFT);
+				}
+			}
+		}
+	}
+	
 	@Override
 	public void updateState() {
 		if(hitStopFrames > 0){
@@ -240,14 +270,6 @@ public class Player extends GameObject{
 		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
 			executeMovement();
 		}
-		
-		/*
-		if(playerState == PlayerState.JUMP){
-			if(!initSpeed && this.getY() <= GameLogic.FLOOR && yVelocity <= 0){
-				playerState = PlayerState.LAND;
-			}
-		}
-		*/
 
 		//String state1 = playerState.toString();
 		executeTriggers();
@@ -389,9 +411,9 @@ public class Player extends GameObject{
 		}
 
 		if(!inputList.isEmpty()){
-			//Log.d("rising_debug", inputList.toString()+" "+currentAction.getAnimation().getFrame());
-			//Log.d(playerState.toString(), gesture.toString()+" "+direction.toString());
 			gesture = inputList.getFirst();
+			Log.d("rising_debug", inputList.toString()+" "+direction.toString());
+			//Log.d(playerState.toString(), gesture.toString()+" "+direction.toString());
 			inputList.removeFirst();
 		}
 		
@@ -410,17 +432,32 @@ public class Player extends GameObject{
 					}
 				}
 			}
-			if(!initSpeed){
-				moveToX = unprojectedX;
-				moveToY = unprojectedY;
+			if(controlType == CONTROL_TYPE.RELATIVE){
+				if(!initSpeed){
+					moveToX = unprojectedX;
+					moveToY = unprojectedY;
+				}
+	
+				if(unprojectedX > getMidX()){
+					this.direction = Direction.RIGHT;
+				}else if(unprojectedX < getMidX()){
+					this.direction = Direction.LEFT;
+				}
 			}
-
-			if(unprojectedX > getMidX()){
-				this.direction = Direction.RIGHT;
-			}else if(unprojectedX < getMidX()){
-				this.direction = Direction.LEFT;
+		}else if(gesture == Gesture.HOLD_RIGHT){
+			if(controlType == CONTROL_TYPE.FIXED){
+				if(!initSpeed){
+					this.direction = Direction.RIGHT;
+					moveToX = getMidX() + WALK_SPEED;
+				}
 			}
-
+		}else if(gesture == Gesture.HOLD_LEFT){
+			if(controlType == CONTROL_TYPE.FIXED){
+				if(!initSpeed){
+					this.direction = Direction.LEFT;
+					moveToX = getMidX() - WALK_SPEED;
+				}
+			}
 		} else if(gesture == Gesture.DTAP_UP){
 			if(currentAction.getActionProperties().hasCancel(ActionDataTool.DTAP_U_TRIGGER)){
 				String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.DTAP_U_TRIGGER);
@@ -465,10 +502,14 @@ public class Player extends GameObject{
 					initSpeed = true;
 				}
 
-				if(unprojectedX > getMidX()){
-					this.direction = Direction.RIGHT;
-				}else if(unprojectedX < getMidX()){
-					this.direction = Direction.LEFT;
+				if(controlType == CONTROL_TYPE.RELATIVE){
+					if(unprojectedX > getMidX()){
+						this.direction = Direction.RIGHT;
+					}else if(unprojectedX < getMidX()){
+						this.direction = Direction.LEFT;
+					}
+				}else if(controlType == CONTROL_TYPE.FIXED){
+					//asdf
 				}
 			} else if(GameTools.gestureBreakdownVertical(gesture) == Gesture.SWIPE_DOWN){
 				if(currentAction.getActionProperties().hasCancel(ActionDataTool.SWIPE_D_TRIGGER)){
@@ -476,11 +517,15 @@ public class Player extends GameObject{
 					setStateUsingTotalName(cancel);
 					initSpeed = true;
 				}
-
-				if(unprojectedX > getMidX()){
-					this.direction = Direction.RIGHT;
-				}else if(unprojectedX < getMidX()){
-					this.direction = Direction.LEFT;
+				
+				if(controlType == CONTROL_TYPE.RELATIVE){
+					if(unprojectedX > getMidX()){
+						this.direction = Direction.RIGHT;
+					}else if(unprojectedX < getMidX()){
+						this.direction = Direction.LEFT;
+					}
+				}else if(controlType == CONTROL_TYPE.FIXED){
+					//asdf
 				}
 			}
 
@@ -497,17 +542,25 @@ public class Player extends GameObject{
 	}
 
 	private void executeMovement(){
-		float checkX = getMidX();
-		if(moveToX > checkX){
-			direction = Direction.RIGHT;
-			playerState = PlayerState.RUN;
-		} else if(moveToX < checkX) {
-			direction = Direction.LEFT;
-			playerState = PlayerState.RUN;
-		}
+		if(controlType == CONTROL_TYPE.RELATIVE){
+			float checkX = getMidX();
+			if(moveToX > checkX){
+				direction = Direction.RIGHT;
+				playerState = PlayerState.RUN;
+			} else if(moveToX < checkX) {
+				direction = Direction.LEFT;
+				playerState = PlayerState.RUN;
+			}
 
-		if(moveToX > checkX - Player.BUFFER && moveToX < checkX + Player.BUFFER) {
-			playerState = PlayerState.STAND;
+			if(moveToX > checkX - Player.BUFFER && moveToX < checkX + Player.BUFFER) {
+				playerState = PlayerState.STAND;
+			}
+		} else if(controlType == CONTROL_TYPE.FIXED){
+			if(inputHold){
+				playerState = PlayerState.RUN;
+			} else {
+				playerState = PlayerState.STAND;
+			}
 		}
 	}
 

@@ -31,6 +31,11 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	private static final int GESTURE_INTERVAL_MIN_CHECK = 2;
 	private static final int GESTURE_INTERVAL_MAX_CHECK = 11;
 	
+	public enum CONTROL_TYPE{
+		FIXED,
+		RELATIVE
+	};
+	
 	public static float CAM_X_CHANGE = 0.65f;
 	public static float CAM_Y_CHANGE = 0.65f;
 	public static float CAM_Z_CHANGE = 0.65f;
@@ -41,8 +46,8 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	
 	public static float GRAVITY = -0.098f;
 	public static float FLOOR = -1.0f;
-	public static float WALL_RIGHT = 5.0f;
-	public static float WALL_LEFT = -5.0f;
+	public static float WALL_RIGHT = 7.0f;
+	public static float WALL_LEFT = -7.0f;
 	
 	WorldRenderer worldRenderer;
 	Context context;
@@ -54,6 +59,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	int enemyLimit = 1;
 	int enemyIndex;
 	
+	CONTROL_TYPE controlType = CONTROL_TYPE.FIXED;
 	boolean gameRun = false;
 	
 	LinkedHashMap<String,GameObject> gameObjects;
@@ -78,7 +84,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		parser.readFile(R.raw.jack_frame_data);
 		List<ActionData> playerData = parser.parseFrameData();
 		
-		Player player = new Player(gameObjects, playerData, -3.0f, FLOOR);
+		Player player = new Player(gameObjects, playerData, -3.0f, FLOOR, controlType);
 		player.loadAnimIntoRenderer(worldRenderer);
 		gameObjects.put(player.getName(), player);
 
@@ -256,32 +262,38 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		return Gesture.NONE;
 	}
 	
-	public void passTouchEvents(MotionEvent e, GestureListener dTapListner){
+	public void passTouchEvents(MotionEvent e, GestureListener gestureListener){
 		Player player = (Player) gameObjects.get(Player.OBJNAME);
-		Gesture gesture = gestureProcessing(e, dTapListner);
+		Gesture gesture = gestureProcessing(e, gestureListener);
 		
 		if(e.getAction() == MotionEvent.ACTION_DOWN){
 			for(GameObject gameObject : gameObjects.values()){
 				if(gameObject instanceof Enemy)
 					gameObject.passTouchEvent(e, worldRenderer);
 			}
+			
+			player.updateHoldTouchEvent(true,Gesture.HOLD.setxTap(e.getX()).setyTap(e.getY()), worldRenderer);
 		} else if(e.getAction() == MotionEvent.ACTION_UP){
+			gestureListener.setLongPress(false);
 			if(gesture != Gesture.NONE && gesture != Gesture.TAP){
 				//Log.d("rising_debug_gameLogic_passtouch",gesture.toString());
 				player.addGesture(gesture);
-				dTapListner.setdTapped(false);
-			}else if(dTapListner.isdTapped()){//for if want swipe as precedence dtap 
-				player.passDoubleTouchEvent(dTapListner, worldRenderer);
-				dTapListner.setdTapped(false);
+				gestureListener.setdTapped(false);
+			}else if(gestureListener.isdTapped()){//for if want swipe as precedence dtap 
+				player.passDoubleTouchEvent(gestureListener, worldRenderer);
+				gestureListener.setdTapped(false);
 			} else if(gesture == Gesture.TAP){
 				player.addGesture(gesture);
 			}
+			
+			player.updateHoldTouchEvent(false,Gesture.HOLD.setxTap(e.getX()).setyTap(e.getY()), worldRenderer);
 			
 			if(gesture == Gesture.SWIPE_UP){
 				gameRun = true;
 			}
 			
 		} else if(e.getAction() == MotionEvent.ACTION_MOVE){
+			player.updateHoldTouchEvent(true,Gesture.HOLD.setxTap(e.getX()).setyTap(e.getY()), worldRenderer);
 		}
 		
 		player.passTouchEvent(e, worldRenderer);

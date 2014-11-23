@@ -7,12 +7,22 @@ import android.view.MotionEvent;
 public class GestureListener extends GestureDetector.SimpleOnGestureListener {
 	float doubleTapX = 0;
 	float doubleTapY = 0;
-	
 	boolean dTapped = false;
+	
+	float longPressX = 0;
+	float longPressY = 0;
+	boolean longPress = false;
 	
     @Override
     public boolean onDown(MotionEvent e) {
         return false;
+    }
+    
+    @Override
+    public void onLongPress(MotionEvent e){
+    	longPressX = e.getX();
+        longPressY = e.getY();
+    	longPress = true;
     }
     
     @Override
@@ -55,4 +65,19 @@ public class GestureListener extends GestureDetector.SimpleOnGestureListener {
     public float getDoubleTapY(){
     	return doubleTapY;
     }
+
+	public boolean isLongPress() {
+		return longPress;
+	}
+
+	public void setLongPress(boolean longPress) {
+		this.longPress = longPress;
+	}
+	public float getLongPressX() {
+		return longPressX;
+	}
+
+	public float getLongPressY() {
+		return longPressY;
+	}
 }

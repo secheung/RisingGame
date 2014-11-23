@@ -15,12 +15,17 @@ import object.Player;
 import structure.ActionData;
 import structure.ActionDataTool;
 import structure.HitBox;
+import structure.PlaneData;
 import android.content.Context;
+import android.hardware.display.DisplayManager;
 import android.os.AsyncTask;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.webkit.WebView.FindListener;
 import android.widget.TextView;
+import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
 import game.GameTools.Gesture;
 import game.open2d.R;
@@ -105,6 +110,14 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		enemy2.loadAnimIntoRenderer(worldRenderer);
 		gameObjects.put(enemy2.getName(), enemy2);
 		*/
+
+		//temp control box
+		Plane controlBox = new Plane("controlBox", 1.0f, 1.0f, 0.25f, 0.25f, 0.25f, 0.5f);
+		controlBox.drawEnable();
+		//float[] coord = worldRenderer.getUnprojectedPoints(worldRenderer.getScreenWidth()*Player.SCREEN_WIDTH_PERCENTAGE, worldRenderer.getScreenHeight()*Player.SCREEN_HEIGHT_PERCENTAGE, controlBox);
+		controlBox.setTranslationX(2.35f);
+		controlBox.setTranslationY(0.10f);
+		worldRenderer.addDrawShape(controlBox);
 	}
 	
 	public void update(){
@@ -277,7 +290,8 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 			gestureListener.setLongPress(false);
 			if(gesture != Gesture.NONE && gesture != Gesture.TAP){
 				//Log.d("rising_debug_gameLogic_passtouch",gesture.toString());
-				player.addGesture(gesture);
+				//player.addGesture(gesture);
+				player.passSwipeEvent(gesture, worldRenderer);
 				gestureListener.setdTapped(false);
 			}else if(gestureListener.isdTapped()){//for if want swipe as precedence dtap 
 				player.passDoubleTouchEvent(gestureListener, worldRenderer);

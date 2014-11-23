@@ -2,7 +2,12 @@ package game;
 
 import engine.open2d.renderer.WorldRenderer;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.opengl.GLSurfaceView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -18,7 +23,7 @@ public class GameSurfaceView extends GLSurfaceView{
     private GestureListener gestureListener;
 
 	private GameLogic gameLogic;
-
+	
     public GameSurfaceView(Context context){
 		super(context);
 
@@ -30,6 +35,7 @@ public class GameSurfaceView extends GLSurfaceView{
 		worldRenderer.setBackground(1.0f, 1.0f, 1.0f, 1.0f);
 		worldRenderer.setTrackFPS(false);
 		setRenderer(worldRenderer);
+		
 		setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 
 		gestureListener = new GestureListener();
@@ -38,7 +44,7 @@ public class GameSurfaceView extends GLSurfaceView{
 		gameLogic = new GameLogic(context,worldRenderer);
 		gameLogic.execute();
     }
-
+    
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
 		//requestRender();

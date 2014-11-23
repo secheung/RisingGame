@@ -84,6 +84,9 @@ public class ActionDataTool {
 	public static String DTAP_B_TRIGGER = "dtap_b_trigger";
 	public static String DTAP_D_TRIGGER = "dtap_d_trigger";
 	
+	public static String HOLD_PRESS_TRIGGER = "hold_press_trigger";
+	public static String HOLD_RELEASE_TRIGGER = "hold_release_trigger";
+	
 	Context context;
 	String currentFile;
 	public ActionDataTool(Context context){
@@ -341,6 +344,16 @@ public class ActionDataTool {
 			if(cancelJSON.has(TAP_TRIGGER)){
 				String value = cancelJSON.getString(TAP_TRIGGER);
 				actionProperties.addCancel(TAP_TRIGGER, value);
+			}
+			
+			if(cancelJSON.has(HOLD_PRESS_TRIGGER)){
+				String value = cancelJSON.getString(HOLD_PRESS_TRIGGER);
+				actionProperties.addCancel(HOLD_PRESS_TRIGGER, value);
+			}
+
+			if(cancelJSON.has(HOLD_RELEASE_TRIGGER)){
+				String value = cancelJSON.getString(HOLD_RELEASE_TRIGGER);
+				actionProperties.addCancel(HOLD_RELEASE_TRIGGER, value);
 			}
 			
 			if(cancelJSON.has(SWIPE_F_TRIGGER)){

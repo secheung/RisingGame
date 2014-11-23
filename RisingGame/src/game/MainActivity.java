@@ -1,9 +1,14 @@
 package game;
 
+import object.Player;
+import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
 import android.app.Activity;
 import android.gesture.GestureOverlayView.OnGestureListener;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.view.GestureDetector.OnDoubleTapListener;
@@ -23,6 +28,16 @@ public class MainActivity extends Activity {
 		setContentView(surfaceView);
 		
 		final WorldRenderer render = surfaceView.getWorldRenderer();
+		
+		Display display = getWindowManager().getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		int width = size.x;
+		int height = size.y;
+		
+		render.setScreenWidth(width);
+		render.setScreenHeight(height);
+		
 		textBox = new TextView(surfaceView.getContext());
 		textBox.setText(""+render.getFPS());
 		

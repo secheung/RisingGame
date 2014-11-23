@@ -31,11 +31,14 @@
 		],
 		"action_properties":{
 			"modifiers":{
+				"x_init_speed":0.0,
 				"snap_to_floor":1
 			},
 			"trigger_change":{
 			},
 			"trigger_cancel":{
+				"hold_press_trigger":"run",
+				"hold_release_trigger":"stand",
 				"dtap_u_trigger":"jump_startup",
 				"dtap_f_trigger":"dash",
 				"swipe_u_trigger":"n_uswipe",
@@ -87,10 +90,13 @@
 		],
 		"action_properties":{
 			"modifiers":{
+				"x_init_speed":0.1
 			},
 			"trigger_change":{
 			},
 			"trigger_cancel":{
+				"hold_press_trigger":"run",
+				"hold_release_trigger":"stand",
 				"dtap_u_trigger":"jump_startup",
 				"dtap_f_trigger":"dash",
 				"swipe_u_trigger":"n_uswipe",
@@ -200,6 +206,7 @@
 				"played_trigger":"stand"
 			},
 			"trigger_cancel":{
+				"dtap_u_trigger":"jump_startup",
 				"swipe_f_trigger":"d_fswipe",
 				"swipe_u_trigger":"d_uswipe",
 				"swipe_d_trigger":"d_dswipe"
@@ -473,47 +480,6 @@
 				"ground_trigger":"jump_land"
 			},
 			"trigger_cancel":{
-				"swipe_d_trigger":"a_dswipe2"
-			}
-		},
-		"interaction_properties":{
-			"hit_stop":2,
-			"x_init_speed":0.0,
-			"y_init_speed":0.4,
-			"trigger_change":{
-				"air_hit_trigger":"knock_back"
-			}
-		}
-	},
-	"a_dswipe2_action":{
-		"name":"jack_a_dswipe2",
-		"plane_data":{
-			"width":3.5,
-			"height":3.5,
-			"rows":2,
-			"columns":3,
-			"play_back":"play_once"
-		},
-		"hurt_box":[
-		],
-		"hit_box":[
-			{"left":1.5,"bottom":1.225,"right":2.25,"top":1.85,"active_frame":[5,6]},
-			{"left":1.95,"bottom":0.6,"right":2.7,"top":1.225,"active_frame":[5,6]}
-		],
-		"action_properties":{
-			"frame_cancel":[6],
-			"x_init_speed":0.5,
-			"y_init_speed":-0.3,
-			"x_accel":0.0,
-			"y_accel":-0.098,
-			"modifiers":{
-				"active_after":5
-			},
-			"trigger_change":{
-				"ground_trigger":"jump_land"
-			},
-			"trigger_cancel":{
-				"swipe_d_trigger":"a_dswipe"
 			}
 		},
 		"interaction_properties":{
@@ -553,14 +519,14 @@
 				"played_trigger":"stand"
 			},
 			"trigger_cancel":{
-				"swipe_f_trigger":"n_fswipe",
+				"dtap_u_trigger":"jump_startup",
 				"dtap_f_trigger":"dash"
 			}
 		},
 		"interaction_properties":{
 			"hit_stop":5,
-			"x_init_speed":-1.0,
-			"y_init_speed":0.6,
+			"x_init_speed":-0.6,
+			"y_init_speed":0.7,
 			"trigger_change":{
 				"ground_hit_trigger":"knock_back",
 				"air_hit_trigger":"knock_back"

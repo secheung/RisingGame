@@ -18,18 +18,27 @@ public class GameTools {
 		SWIPE_UP_LEFT,
 		TAP,
 		TAP_UP,
+		TAP_UP_RIGHT,
 		TAP_RIGHT,
+		TAP_DOWN_RIGHT,
 		TAP_DOWN,
+		TAP_DOWN_LEFT,
 		TAP_LEFT,
+		TAP_UP_LEFT,
 		HOLD,
+		HOLD_RELEASE,
 		HOLD_UP,
 		HOLD_RIGHT,
 		HOLD_DOWN,
 		HOLD_LEFT,
 		DTAP_UP,
+		DTAP_UP_RIGHT,
 		DTAP_RIGHT,
+		DTAP_DOWN_RIGHT,
 		DTAP_DOWN,
-		DTAP_LEFT;
+		DTAP_DOWN_LEFT,
+		DTAP_LEFT,
+		DTAP_UP_LEFT;
 		
 		float xTap = 0;
 		float yTap = 0;

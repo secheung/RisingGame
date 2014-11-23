@@ -44,7 +44,6 @@ public class Player extends GameObject{
 		NDSWIPE("n_dswipe"),
 		AFSWIPE("a_fswipe"),
 		ADSWIPE("a_dswipe"),
-		ADSWIPE2("a_dswipe2"),
 		DFSWIPE("d_fswipe"),
 		DUSWIPE("d_uswipe"),
 		DDSWIPE("d_dswipe"),
@@ -89,8 +88,8 @@ public class Player extends GameObject{
 	public static float CANCEL_STRIKE_FRAMES = 8;
 	private static float JUMP_SPEED = 0.75f;
 	
-	private static float SCREEN_HEIGHT_PERCENTAGE = 0.65f;
-	private static float SCREEN_WIDTH_PERCENTAGE = 0.85f;
+	public static float SCREEN_HEIGHT_PERCENTAGE = 0.60f;
+	public static float SCREEN_WIDTH_PERCENTAGE = 0.80f;
 	
 	private Enemy struckEnemy;
 	private PlayerState playerState;
@@ -153,7 +152,6 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.NDSWIPE, R.drawable.jack_n_dswipe);
 		animationRef.put(PlayerState.AFSWIPE, R.drawable.jack_a_fswipe);
 		animationRef.put(PlayerState.ADSWIPE, R.drawable.jack_a_dswipe);
-		animationRef.put(PlayerState.ADSWIPE2, R.drawable.jack_a_dswipe);
 		animationRef.put(PlayerState.DFSWIPE, R.drawable.jack_d_fswipe);
 		animationRef.put(PlayerState.DUSWIPE, R.drawable.jack_d_uswipe);
 		animationRef.put(PlayerState.DDSWIPE, R.drawable.jack_d_dswipe);
@@ -214,9 +212,50 @@ public class Player extends GameObject{
 		}
 	}
 
+	public void passSwipeEvent(Gesture g, WorldRenderer worldRenderer){
+		int screenWidth = worldRenderer.getScreenWidth();
+		int screenHeight = worldRenderer.getScreenHeight();
+		Plane display = currentAction.getAnimation();
+		float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(g.getxTap(), g.getyTap(), display);
+		
+		if(controlType == CONTROL_TYPE.RELATIVE){
+			if(g == Gesture.SWIPE_UP || g == Gesture.SWIPE_UP_LEFT || g == Gesture.SWIPE_UP_RIGHT){
+				if(unprojectedPoints[0] > this.getX()+this.getWidth()){
+					inputList.add(Gesture.SWIPE_UP_RIGHT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
+				} else if(unprojectedPoints[0] < this.getX()+this.getWidth()){
+					inputList.add(Gesture.SWIPE_UP_LEFT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
+				}
+			} else if(g == Gesture.SWIPE_DOWN || g == Gesture.SWIPE_DOWN_LEFT || g == Gesture.SWIPE_DOWN_RIGHT){
+				if(unprojectedPoints[0] > this.getX()+this.getWidth()){
+					inputList.add(Gesture.SWIPE_DOWN_RIGHT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
+				} else if(unprojectedPoints[0] < this.getX()+this.getWidth()){
+					inputList.add(Gesture.SWIPE_DOWN_LEFT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
+				}
+			} else {
+				inputList.add(g);
+			}
+		}else if(controlType == CONTROL_TYPE.FIXED){
+			if(g == Gesture.SWIPE_UP || g == Gesture.SWIPE_UP_LEFT || g == Gesture.SWIPE_UP_RIGHT){
+				if(g.getxTap() > screenWidth*SCREEN_WIDTH_PERCENTAGE){
+					inputList.add(Gesture.SWIPE_UP_RIGHT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
+				} else if(g.getxTap() < screenWidth*SCREEN_WIDTH_PERCENTAGE){
+					inputList.add(Gesture.SWIPE_UP_LEFT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
+				}	
+			} else if(g == Gesture.SWIPE_DOWN || g == Gesture.SWIPE_DOWN_LEFT || g == Gesture.SWIPE_DOWN_RIGHT){
+				if(g.getxTap() > screenWidth*SCREEN_WIDTH_PERCENTAGE){
+					inputList.add(Gesture.SWIPE_DOWN_RIGHT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
+				} else if(g.getxTap() < screenWidth*SCREEN_WIDTH_PERCENTAGE){
+					inputList.add(Gesture.SWIPE_DOWN_LEFT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
+				}
+			} else {
+				inputList.add(g);
+			}
+		}
+	}
+	
 	public void passDoubleTouchEvent(GestureListener g,  WorldRenderer worldRenderer){
-		int width = worldRenderer.getScreenWidth();
-		int height = worldRenderer.getScreenHeight();
+		int screenWidth = worldRenderer.getScreenWidth();
+		int screenHeight = worldRenderer.getScreenHeight();
 		Plane display = currentAction.getAnimation();
 		float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(g.getDoubleTapX(), g.getDoubleTapY(), display);
 		
@@ -230,11 +269,15 @@ public class Player extends GameObject{
 				inputList.add(Gesture.DTAP_LEFT);
 			}
 		} else if(controlType == CONTROL_TYPE.FIXED){
-			if(g.getDoubleTapY() < height*SCREEN_HEIGHT_PERCENTAGE){
-				inputList.add(Gesture.DTAP_UP);
-			} else if(g.getDoubleTapX() > width*SCREEN_WIDTH_PERCENTAGE){
+			if(g.getDoubleTapY() < screenHeight*SCREEN_HEIGHT_PERCENTAGE){
+				if(g.getDoubleTapX() > screenWidth*SCREEN_WIDTH_PERCENTAGE){
+					inputList.add(Gesture.DTAP_UP_RIGHT);
+				} else if(g.getDoubleTapX() < screenWidth*SCREEN_WIDTH_PERCENTAGE){
+					inputList.add(Gesture.DTAP_UP_LEFT);
+				}
+			} else if(g.getDoubleTapX() > screenWidth*SCREEN_WIDTH_PERCENTAGE){
 				inputList.add(Gesture.DTAP_RIGHT);
-			} else if(g.getDoubleTapX() < width*SCREEN_WIDTH_PERCENTAGE){
+			} else if(g.getDoubleTapX() < screenWidth*SCREEN_WIDTH_PERCENTAGE){
 				inputList.add(Gesture.DTAP_LEFT);
 			}
 		}
@@ -248,14 +291,22 @@ public class Player extends GameObject{
 		
 		inputHold = hold;
 		//Log.d("rising_debug",g.getxTap()+" "+g.getyTap());
-		if(controlType == CONTROL_TYPE.FIXED && hold){
-			if(g.getxTap() > width*SCREEN_WIDTH_PERCENTAGE){
-				if(!inputList.contains(Gesture.HOLD_RIGHT)){
-					inputList.add(Gesture.HOLD_RIGHT);
+		if(controlType == CONTROL_TYPE.FIXED){
+			if(hold){
+				if(g.getxTap() > width*SCREEN_WIDTH_PERCENTAGE){
+					//if(!inputList.contains(Gesture.HOLD_RIGHT)){
+					if(inputList.isEmpty()){
+						inputList.add(Gesture.HOLD_RIGHT);
+					}
+				} else if(g.getxTap() < width*SCREEN_WIDTH_PERCENTAGE){
+					//if(!inputList.contains(Gesture.HOLD_LEFT)){
+					if(inputList.isEmpty()){
+						inputList.add(Gesture.HOLD_LEFT);
+					}
 				}
-			} else if(g.getxTap() < width*SCREEN_WIDTH_PERCENTAGE){
-				if(!inputList.contains(Gesture.HOLD_LEFT)){
-					inputList.add(Gesture.HOLD_LEFT);
+			} else {
+				if(!inputList.contains(Gesture.HOLD_RELEASE)){
+					inputList.add(Gesture.HOLD_RELEASE);
 				}
 			}
 		}
@@ -412,8 +463,8 @@ public class Player extends GameObject{
 
 		if(!inputList.isEmpty()){
 			gesture = inputList.getFirst();
-			Log.d("rising_debug", inputList.toString()+" "+direction.toString());
-			//Log.d(playerState.toString(), gesture.toString()+" "+direction.toString());
+			//Log.d("rising_debug", inputList.toString()+" "+direction.toString());
+			Log.d(playerState.toString(), gesture.toString()+" "+direction.toString() + " xdiff "+gesture.getXDiffSize()+" ydiff "+gesture.getYDiffSize());
 			inputList.removeFirst();
 		}
 		
@@ -445,24 +496,40 @@ public class Player extends GameObject{
 				}
 			}
 		}else if(gesture == Gesture.HOLD_RIGHT){
-			if(controlType == CONTROL_TYPE.FIXED){
-				if(!initSpeed){
-					this.direction = Direction.RIGHT;
-					moveToX = getMidX() + WALK_SPEED;
-				}
+			if(currentAction.getActionProperties().hasCancel(ActionDataTool.HOLD_PRESS_TRIGGER)){
+				String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.HOLD_PRESS_TRIGGER);
+				setStateUsingTotalName(cancel);
+				initSpeed = true;
+				
+				this.direction = Direction.RIGHT;
+				//moveToX = getMidX() + WALK_SPEED;
 			}
 		}else if(gesture == Gesture.HOLD_LEFT){
-			if(controlType == CONTROL_TYPE.FIXED){
-				if(!initSpeed){
-					this.direction = Direction.LEFT;
-					moveToX = getMidX() - WALK_SPEED;
-				}
-			}
-		} else if(gesture == Gesture.DTAP_UP){
+			if(currentAction.getActionProperties().hasCancel(ActionDataTool.HOLD_PRESS_TRIGGER)){
+				String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.HOLD_PRESS_TRIGGER);
+				setStateUsingTotalName(cancel);
+				initSpeed = true;
+				
+				this.direction = Direction.LEFT;
+				//moveToX = getMidX() - WALK_SPEED;
+			}			
+		}else if(gesture == Gesture.HOLD_RELEASE){
+			if(currentAction.getActionProperties().hasCancel(ActionDataTool.HOLD_RELEASE_TRIGGER)){
+				String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.HOLD_RELEASE_TRIGGER);
+				setStateUsingTotalName(cancel);
+				//initSpeed = true;
+			}			
+		} else if(gesture == Gesture.DTAP_UP || gesture == Gesture.DTAP_UP_LEFT || gesture == Gesture.DTAP_UP_RIGHT){
 			if(currentAction.getActionProperties().hasCancel(ActionDataTool.DTAP_U_TRIGGER)){
 				String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.DTAP_U_TRIGGER);
 				setStateUsingTotalName(cancel);
 				initSpeed = true;
+				
+				if(gesture == Gesture.DTAP_UP_LEFT){
+					this.direction = Direction.LEFT;
+				} else if(gesture == Gesture.DTAP_UP_RIGHT){
+					this.direction = Direction.RIGHT;
+				}
 			}
 		} else if(gesture == Gesture.DTAP_LEFT || gesture == Gesture.DTAP_RIGHT){
 			if(currentAction.getActionProperties().hasCancel(ActionDataTool.DTAP_F_TRIGGER)){
@@ -501,7 +568,14 @@ public class Player extends GameObject{
 					setStateUsingTotalName(cancel);
 					initSpeed = true;
 				}
-
+				
+				if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.SWIPE_RIGHT){
+					this.direction = Direction.RIGHT;
+				} else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.SWIPE_LEFT){
+					this.direction = Direction.LEFT;
+				}
+				
+				/*
 				if(controlType == CONTROL_TYPE.RELATIVE){
 					if(unprojectedX > getMidX()){
 						this.direction = Direction.RIGHT;
@@ -511,6 +585,7 @@ public class Player extends GameObject{
 				}else if(controlType == CONTROL_TYPE.FIXED){
 					//asdf
 				}
+				*/
 			} else if(GameTools.gestureBreakdownVertical(gesture) == Gesture.SWIPE_DOWN){
 				if(currentAction.getActionProperties().hasCancel(ActionDataTool.SWIPE_D_TRIGGER)){
 					String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.SWIPE_D_TRIGGER);
@@ -518,6 +593,13 @@ public class Player extends GameObject{
 					initSpeed = true;
 				}
 				
+				if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.SWIPE_RIGHT){
+					this.direction = Direction.RIGHT;
+				} else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.SWIPE_LEFT){
+					this.direction = Direction.LEFT;
+				}
+				
+				/*
 				if(controlType == CONTROL_TYPE.RELATIVE){
 					if(unprojectedX > getMidX()){
 						this.direction = Direction.RIGHT;
@@ -527,15 +609,8 @@ public class Player extends GameObject{
 				}else if(controlType == CONTROL_TYPE.FIXED){
 					//asdf
 				}
+				*/
 			}
-
-			/*
-			if(gesture.getXDiffSize() > 0){
-				this.direction = Direction.LEFT;
-			} else if(gesture.getXDiffSize() < 0) {
-				this.direction = Direction.RIGHT;
-			}
-			*/
 		}
 		
 		return;
@@ -556,11 +631,13 @@ public class Player extends GameObject{
 				playerState = PlayerState.STAND;
 			}
 		} else if(controlType == CONTROL_TYPE.FIXED){
+			/*
 			if(inputHold){
 				playerState = PlayerState.RUN;
 			} else {
 				playerState = PlayerState.STAND;
 			}
+			*/
 		}
 	}
 

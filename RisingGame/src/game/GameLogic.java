@@ -65,7 +65,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	int enemyLimit = 1;
 	int enemyIndex;
 	
-	CONTROL_TYPE controlType = CONTROL_TYPE.FIXED;
+	CONTROL_TYPE controlType = CONTROL_TYPE.RELATIVE;
 	boolean gameRun = false;
 	
 	LinkedHashMap<String,GameObject> gameObjects;

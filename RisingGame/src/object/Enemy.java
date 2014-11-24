@@ -228,10 +228,11 @@ public class Enemy extends GameObject {
 
 	@Override
 	public void updateLogic() {
+		/*
 		if(!inputList.isEmpty()){
 			this.inputList.removeFirst();
 		}
-		
+		*/
 		if(hitStopFrames > 0){
 			hitStopFrames--;
 			return;

@@ -331,15 +331,15 @@ public class ActionDataTool {
 			}
 		}
 		
+		if(propertyData.has(CANCEL_FRAME)){
+			JSONArray value = propertyData.getJSONArray(CANCEL_FRAME);
+			for(int index = 0; index < value.length(); index++){
+				actionProperties.addCancelFrame(value.getInt(index));
+			}
+		}
+		
 		if(propertyData.has(TRIGGER_CANCEL)){
 			JSONObject cancelJSON = propertyData.getJSONObject(TRIGGER_CANCEL);
-
-			if(cancelJSON.has(CANCEL_FRAME)){
-				JSONArray value = cancelJSON.getJSONArray(CANCEL_FRAME);
-				for(int index = 0; index < value.length(); index++){
-					actionProperties.addCancelFrame(value.getInt(index));
-				}
-			}
 
 			if(cancelJSON.has(TAP_TRIGGER)){
 				String value = cancelJSON.getString(TAP_TRIGGER);

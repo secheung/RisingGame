@@ -43,6 +43,7 @@ public class Player extends GameObject{
 		NUSWIPE("n_uswipe"),
 		NDSWIPE("n_dswipe"),
 		AFSWIPE("a_fswipe"),
+		AUSWIPE("a_uswipe"),
 		ADSWIPE("a_dswipe"),
 		DFSWIPE("d_fswipe"),
 		DUSWIPE("d_uswipe"),
@@ -151,6 +152,7 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.NUSWIPE, R.drawable.jack_n_uswipe);
 		animationRef.put(PlayerState.NDSWIPE, R.drawable.jack_n_dswipe);
 		animationRef.put(PlayerState.AFSWIPE, R.drawable.jack_a_fswipe);
+		animationRef.put(PlayerState.AUSWIPE, R.drawable.jack_d_uswipe);
 		animationRef.put(PlayerState.ADSWIPE, R.drawable.jack_a_dswipe);
 		animationRef.put(PlayerState.DFSWIPE, R.drawable.jack_d_fswipe);
 		animationRef.put(PlayerState.DUSWIPE, R.drawable.jack_d_uswipe);
@@ -179,11 +181,19 @@ public class Player extends GameObject{
 		StringBuffer buffer = new StringBuffer(PlayerState.OBJECT);
 		buffer.append("_");
 		buffer.append(state);
-		this.playerState = PlayerState.getStateFromTotalName(buffer.toString());
+		if(playerState == PlayerState.getStateFromTotalName(buffer.toString())){
+			resetAnim = true;
+		}else{
+			this.playerState = PlayerState.getStateFromTotalName(buffer.toString());
+		}
 	}
 	
 	public void setPlayerState(PlayerState playerState) {
-		this.playerState = playerState;
+		if(this.playerState == playerState){
+			resetAnim = true;
+		}else{
+			this.playerState = playerState;
+		}
 	}
 	
 	@Override

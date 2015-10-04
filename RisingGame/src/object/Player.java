@@ -182,7 +182,8 @@ public class Player extends GameObject{
 		buffer.append("_");
 		buffer.append(state);
 		if(playerState == PlayerState.getStateFromTotalName(buffer.toString())){
-			resetAnim = true;
+			if(playerState != PlayerState.RUN)//TODO: VERY TEMP SHOULD BE A CONTINUE ANIMATION IN MODIFIER
+				resetAnim = true;
 		}else{
 			this.playerState = PlayerState.getStateFromTotalName(buffer.toString());
 		}

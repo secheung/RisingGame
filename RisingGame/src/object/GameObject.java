@@ -32,6 +32,7 @@ public abstract class GameObject {
 	}
 	
 	public static int INPUT_LIST_SIZE = 2;
+	public static int FRAME_BUFFER_COUNT = 5;
 	
 	protected Direction direction;
 	
@@ -66,6 +67,7 @@ public abstract class GameObject {
 	protected boolean hitActive;
 	protected boolean hitAvailable;
 	protected LinkedList<Gesture> inputList;
+	protected float frameBufferCount;
 	//protected Gesture gesture;
 	
 	protected int hitStopFrames;
@@ -93,6 +95,7 @@ public abstract class GameObject {
 		currentLogic = new GameObjectLogic();
 		//gesture = Gesture.NONE;
 		inputList = new LinkedList<Gesture>();
+		this.frameBufferCount = 0;
 
 		this.width = currentAction.getPlaneData().getWidth();
 		this.height = currentAction.getPlaneData().getHeight();
@@ -337,7 +340,8 @@ public abstract class GameObject {
 
 	public void addGesture(Gesture gesture){
 		//if(inputList.size() <= INPUT_LIST_SIZE){
-			inputList.push(gesture);
+			inputList.add(gesture);
+			frameBufferCount = Math.max(10, currentAction.getActionProperties().getCancelFrame().size());
 		//}
 	}
 	

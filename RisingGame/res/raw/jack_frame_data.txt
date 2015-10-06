@@ -30,8 +30,9 @@
 					{"left":0.9,"bottom":0.4,"right":2.7,"top":0.8}
 		],
 		"action_properties":{
+			"x_init_speed":0.0,
+			"x_accel":0.0,
 			"modifiers":{
-				"x_init_speed":0.0,
 				"snap_to_floor":1
 			},
 			"trigger_change":{
@@ -89,8 +90,8 @@
 		"hit_box":[
 		],
 		"action_properties":{
+			"x_init_speed":0.2,
 			"modifiers":{
-				"x_init_speed":0.1
 			},
 			"trigger_change":{
 			},
@@ -172,6 +173,8 @@
 		"hurt_box":[
 		],
 		"action_properties":{
+			"x_init_speed":0.0,
+			"x_accel":0.0,
 			"modifiers":{
 				"snap_to_floor":1
 			},
@@ -527,8 +530,7 @@
 			},
 			"trigger_cancel":{
 				"cancel_frame":[5],
-				"swipe_u_trigger":"a_uswipe",
-				"swipe_d_trigger":"a_dswipe"
+				"swipe_u_trigger":"a_uswipe"
 			}
 		},
 		"interaction_properties":{

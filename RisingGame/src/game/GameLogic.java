@@ -291,18 +291,19 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 			gestureListener.setLongPress(false);
 			if(gesture != Gesture.NONE && gesture != Gesture.TAP){
 				//Log.d("rising_debug_gameLogic_passtouch",gesture.toString());
-				//player.addGesture(gesture);
 				player.passSwipeEvent(gesture, worldRenderer);
+				player.saveHoldState(Gesture.HOLD_RELEASE);
 				gestureListener.setdTapped(false);
-			}else if(gestureListener.isdTapped()){//for if want swipe as precedence dtap 
+			}/*else if(gestureListener.isdTapped()){//for if want swipe as precedence dtap 
 				player.passDoubleTouchEvent(gestureListener, worldRenderer);
 				gestureListener.setdTapped(false);
-			} else if(gesture == Gesture.TAP){
-				player.addGesture(gesture);
+			}*/ /*else if(gesture == Gesture.TAP){
+				player.setGesture(gesture);
+			}*/else{
+				player.updateHoldTouchEvent(false,Gesture.HOLD.setxTap(e.getX()).setyTap(e.getY()), worldRenderer);	
 			}
 			
-			player.updateHoldTouchEvent(false,Gesture.HOLD.setxTap(e.getX()).setyTap(e.getY()), worldRenderer);
-			
+			//TODO:: don't need this
 			if(gesture == Gesture.SWIPE_UP){
 				gameRun = true;
 			}

@@ -15,6 +15,7 @@ public class GestureListener extends GestureDetector.SimpleOnGestureListener {
 	
     @Override
     public boolean onDown(MotionEvent e) {
+    	//Log.d("rising_debug", "down at: (" + e.getX() + "," + e.getY() + ")");
         return false;
     }
     

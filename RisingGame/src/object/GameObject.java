@@ -66,7 +66,8 @@ public abstract class GameObject {
 	public boolean selected;
 	protected boolean hitActive;
 	protected boolean hitAvailable;
-	protected LinkedList<Gesture> inputList;
+	protected Gesture input;
+	protected Gesture saveHoldState;
 	protected float frameBufferCount;
 	//protected Gesture gesture;
 	
@@ -93,8 +94,8 @@ public abstract class GameObject {
 
 		currentAction = this.actionData.get(initState);
 		currentLogic = new GameObjectLogic();
-		//gesture = Gesture.NONE;
-		inputList = new LinkedList<Gesture>();
+		input = Gesture.NONE;
+		saveHoldState = Gesture.HOLD_RELEASE;
 		this.frameBufferCount = 0;
 
 		this.width = currentAction.getPlaneData().getWidth();
@@ -338,18 +339,17 @@ public abstract class GameObject {
 		return setAccel;
 	}
 
-	public void addGesture(Gesture gesture){
+	public void setGesture(Gesture gesture){
 		//if(inputList.size() <= INPUT_LIST_SIZE){
-			inputList.add(gesture);
+			input = gesture;
 			frameBufferCount = Math.max(10, currentAction.getActionProperties().getCancelFrame().size());
 		//}
 	}
 	
-	/*
-	public void setGesture(Gesture gesture){
-		this.gesture = gesture; 
+	public void saveHoldState(Gesture gesture){
+		if(gesture.isHold() || gesture.isRelease())
+			saveHoldState = gesture;
 	}
-	*/
 	
 	public boolean isInAir(){
 		List<HurtBox> hurtBoxes = currentAction.getHurtBoxes();

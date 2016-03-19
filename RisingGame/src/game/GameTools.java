@@ -80,6 +80,25 @@ public class GameTools {
 		public float getYDiffSize(){
 			return yDiffSize;
 		}
+		
+		public boolean isSwipe(){
+			return (this == Gesture.SWIPE_UP       || this == Gesture.SWIPE_UP_RIGHT  || this == Gesture.SWIPE_RIGHT || this == Gesture.SWIPE_DOWN_RIGHT  ||
+					this == Gesture.SWIPE_DOWN     || this == Gesture.SWIPE_DOWN_LEFT || this == Gesture.SWIPE_LEFT  || this == Gesture.SWIPE_UP_LEFT);
+		}
+		
+		public boolean isDTap(){
+			return (this == Gesture.DTAP_UP       || this == Gesture.DTAP_UP_RIGHT  || this == Gesture.DTAP_RIGHT || this == Gesture.DTAP_DOWN_RIGHT  ||
+					this == Gesture.DTAP_DOWN     || this == Gesture.DTAP_DOWN_LEFT || this == Gesture.DTAP_LEFT  || this == Gesture.DTAP_UP_LEFT);
+		}
+		
+		public boolean isHold(){
+			return (this == Gesture.HOLD_UP       || this == Gesture.HOLD_RIGHT || 
+					this == Gesture.HOLD_DOWN     || this == Gesture.HOLD_LEFT);
+		}
+		
+		public boolean isRelease(){
+			return (this == Gesture.HOLD_RELEASE);
+		}
 	}
 	
 	public static final int SWIPE_LEFT_DIFF = 30;

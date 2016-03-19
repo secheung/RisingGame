@@ -105,8 +105,6 @@ public class Player extends GameObject{
 	private float unprojectedX;
 	private float unprojectedY;
 	
-	private boolean inputHold;
-	
 	private int punchIndex;
 	private int finishIndex;
 	private int counterIndex;
@@ -232,38 +230,38 @@ public class Player extends GameObject{
 		if(controlType == CONTROL_TYPE.RELATIVE){
 			if(g == Gesture.SWIPE_UP || g == Gesture.SWIPE_UP_LEFT || g == Gesture.SWIPE_UP_RIGHT){
 				if(unprojectedPoints[0] > this.getX()+this.getWidth()){
-					addGesture(Gesture.SWIPE_UP_RIGHT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
+					setGesture(Gesture.SWIPE_UP_RIGHT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
 				} else if(unprojectedPoints[0] < this.getX()){
-					addGesture(Gesture.SWIPE_UP_LEFT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
+					setGesture(Gesture.SWIPE_UP_LEFT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
 				} else{
-					addGesture(Gesture.SWIPE_UP.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
+					setGesture(Gesture.SWIPE_UP.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
 				}
 			} else if(g == Gesture.SWIPE_DOWN || g == Gesture.SWIPE_DOWN_LEFT || g == Gesture.SWIPE_DOWN_RIGHT){
 				if(unprojectedPoints[0] > this.getX()+this.getWidth()){
-					addGesture(Gesture.SWIPE_DOWN_RIGHT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
+					setGesture(Gesture.SWIPE_DOWN_RIGHT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
 				} else if(unprojectedPoints[0] < this.getX()){
-					addGesture(Gesture.SWIPE_DOWN_LEFT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
+					setGesture(Gesture.SWIPE_DOWN_LEFT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
 				} else{
-					addGesture(Gesture.SWIPE_DOWN.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
+					setGesture(Gesture.SWIPE_DOWN.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
 				}
 			} else {
-				addGesture(g);
+				setGesture(g);
 			}
 		}else if(controlType == CONTROL_TYPE.FIXED){
 			if(g == Gesture.SWIPE_UP || g == Gesture.SWIPE_UP_LEFT || g == Gesture.SWIPE_UP_RIGHT){
 				if(g.getxTap() > screenWidth*SCREEN_WIDTH_PERCENTAGE){
-					addGesture(Gesture.SWIPE_UP_RIGHT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
+					setGesture(Gesture.SWIPE_UP_RIGHT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
 				} else if(g.getxTap() < screenWidth*SCREEN_WIDTH_PERCENTAGE){
-					addGesture(Gesture.SWIPE_UP_LEFT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
+					setGesture(Gesture.SWIPE_UP_LEFT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
 				}	
 			} else if(g == Gesture.SWIPE_DOWN || g == Gesture.SWIPE_DOWN_LEFT || g == Gesture.SWIPE_DOWN_RIGHT){
 				if(g.getxTap() > screenWidth*SCREEN_WIDTH_PERCENTAGE){
-					addGesture(Gesture.SWIPE_DOWN_RIGHT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
+					setGesture(Gesture.SWIPE_DOWN_RIGHT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
 				} else if(g.getxTap() < screenWidth*SCREEN_WIDTH_PERCENTAGE){
-					addGesture(Gesture.SWIPE_DOWN_LEFT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
+					setGesture(Gesture.SWIPE_DOWN_LEFT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
 				}
 			} else {
-				addGesture(g);
+				setGesture(g);
 			}
 		}
 	}
@@ -279,80 +277,64 @@ public class Player extends GameObject{
 			if(unprojectedPoints[1] > (this.getY()+this.getHeight())){
 			//if(unprojectedPoints[1] > this.getMidY()){
 				if(unprojectedPoints[0] >= this.getX()+this.getWidth()){
-					addGesture(Gesture.DTAP_UP_RIGHT);
+					setGesture(Gesture.DTAP_UP_RIGHT);
 				} else if(unprojectedPoints[0] < this.getX()){
-					addGesture(Gesture.DTAP_UP_LEFT);
+					setGesture(Gesture.DTAP_UP_LEFT);
 				}else{
-					addGesture(Gesture.DTAP_UP);
+					setGesture(Gesture.DTAP_UP);
 				}
 			} else if(unprojectedPoints[0] > this.getX()+this.getWidth()){
-				addGesture(Gesture.DTAP_RIGHT);
+				setGesture(Gesture.DTAP_RIGHT);
 			} else if(unprojectedPoints[0] < this.getX()){
-				addGesture(Gesture.DTAP_LEFT);
+				setGesture(Gesture.DTAP_LEFT);
 			}
 		} else if(controlType == CONTROL_TYPE.FIXED){
 			if(g.getDoubleTapY() < screenHeight*SCREEN_HEIGHT_PERCENTAGE){
 				if(g.getDoubleTapX() > screenWidth*SCREEN_WIDTH_PERCENTAGE){
-					addGesture(Gesture.DTAP_UP_RIGHT);
+					setGesture(Gesture.DTAP_UP_RIGHT);
 				} else if(g.getDoubleTapX() < screenWidth*SCREEN_WIDTH_PERCENTAGE){
-					addGesture(Gesture.DTAP_UP_LEFT);
+					setGesture(Gesture.DTAP_UP_LEFT);
 				}
 			} else if(g.getDoubleTapX() > screenWidth*SCREEN_WIDTH_PERCENTAGE){
-				addGesture(Gesture.DTAP_RIGHT);
+				setGesture(Gesture.DTAP_RIGHT);
 			} else if(g.getDoubleTapX() < screenWidth*SCREEN_WIDTH_PERCENTAGE){
-				addGesture(Gesture.DTAP_LEFT);
+				setGesture(Gesture.DTAP_LEFT);
 			}
 		}
 
 		display.unprojectDisable();
 	}
-
+	
 	public void updateHoldTouchEvent(boolean hold, Gesture g,  WorldRenderer worldRenderer){
 		int width = worldRenderer.getScreenWidth();
 		int height = worldRenderer.getScreenHeight();
 		Plane display = currentAction.getAnimation();
 		float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(g.getxTap(), g.getyTap(), display);
 		
-		inputHold = hold;
-		//Log.d("rising_debug",g.getxTap()+" "+g.getyTap());
 		if(controlType == CONTROL_TYPE.RELATIVE){
 			if(hold){
 				moveToX = unprojectedPoints[0];
 				if(unprojectedPoints[0] > this.getX()+this.getWidth()){
-					//if(!inputList.contains(Gesture.HOLD_RIGHT)){
-					if(inputList.isEmpty()){
-						addGesture(Gesture.HOLD_RIGHT);
-					}
+					setGesture(Gesture.HOLD_RIGHT);
 				} else if(unprojectedPoints[0] < this.getX()){
-					//if(!inputList.contains(Gesture.HOLD_LEFT)){
-					if(inputList.isEmpty()){
-						addGesture(Gesture.HOLD_LEFT);
-					}
+					setGesture(Gesture.HOLD_LEFT);
 				}
 			} else {
-				if(!inputList.contains(Gesture.HOLD_RELEASE)){
-					addGesture(Gesture.HOLD_RELEASE);
-				}
+				setGesture(Gesture.HOLD_RELEASE);
 			}
 		}else if(controlType == CONTROL_TYPE.FIXED){
 			if(hold){
 				if(g.getxTap() > width*SCREEN_WIDTH_PERCENTAGE){
-					//if(!inputList.contains(Gesture.HOLD_RIGHT)){
-					if(inputList.isEmpty()){
-						addGesture(Gesture.HOLD_RIGHT);
-					}
+					setGesture(Gesture.HOLD_RIGHT);
 				} else if(g.getxTap() < width*SCREEN_WIDTH_PERCENTAGE){
-					//if(!inputList.contains(Gesture.HOLD_LEFT)){
-					if(inputList.isEmpty()){
-						addGesture(Gesture.HOLD_LEFT);
-					}
+					setGesture(Gesture.HOLD_LEFT);
 				}
 			} else {
-				if(!inputList.contains(Gesture.HOLD_RELEASE)){
-					addGesture(Gesture.HOLD_RELEASE);
-				}
+				setGesture(Gesture.HOLD_RELEASE);
 			}
 		}
+		
+		saveHoldState(input);//save the gesture when it needs to be replaced
 	}
 	
 	@Override
@@ -500,8 +482,8 @@ public class Player extends GameObject{
 		
 		if(frameBufferCount > 0){
 			frameBufferCount--;
-			if(frameBufferCount == 0 && !inputList.isEmpty()){
-				inputList.clear();
+			if(frameBufferCount == 0 && input != Gesture.NONE){
+				input = Gesture.NONE;
 			}
 		}
 		
@@ -512,14 +494,19 @@ public class Player extends GameObject{
 			}
 		}
 
-		if(!inputList.isEmpty()){
-			gesture = inputList.getFirst();
-			//Log.d("rising_debug", inputList.toString()+" "+direction.toString());
-			Log.d(playerState.toString(), gesture.toString()+" "+direction.toString() + " xdiff "+gesture.getXDiffSize()+" ydiff "+gesture.getYDiffSize());
-			inputList.removeFirst();
-		}
 		
-
+		
+		if(input != Gesture.NONE)
+			Log.d("rising_debug", playerState.toString() + " " + gesture.toString()+" "+direction.toString() + " xdiff "+gesture.getXDiffSize()+" ydiff "+gesture.getYDiffSize());
+		
+		//eat input here/////////////////////////////////////
+		gesture = input;
+		if(saveHoldState.isHold())
+			input = saveHoldState;//since no constant polling on touch screen inputs save the hold state if happening
+		else
+			input = Gesture.NONE;//eat the input
+		/////////////////////////////////////////////////////
+		
 		if(gesture == Gesture.TAP){
 			if(currentAction.getActionProperties().hasCancel(ActionDataTool.TAP_TRIGGER)){
 				for(GameObject gameObject : gameObjects.values()){
@@ -674,9 +661,9 @@ public class Player extends GameObject{
 			float checkX = getMidX();
 			if(moveToX > checkX - Player.BUFFER && moveToX < checkX + Player.BUFFER) {
 				//playerState = PlayerState.STAND;
-				if(!inputList.contains(Gesture.HOLD_RELEASE)){
-					inputList.add(Gesture.HOLD_RELEASE);
-				}
+				//if(!input.contains(Gesture.HOLD_RELEASE)){
+				//	input.add(Gesture.HOLD_RELEASE);
+				//}
 			}
 			
 

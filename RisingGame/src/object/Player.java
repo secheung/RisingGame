@@ -78,7 +78,7 @@ public class Player extends GameObject{
 	public static String OBJNAME = "player";
 	private static PlayerState INIT_STATE = PlayerState.STAND;
 
-	private static final int TEMP_FRAME = 5;
+	private static final int TEMP_FRAME = 8;//index starts at 0 TODO: should probably change that to start at 1
 
 	private static float WALK_SPEED = 0.2f;
 	private static float STRIKE_SPEED = 0.1f;
@@ -134,7 +134,7 @@ public class Player extends GameObject{
 	public void setupAnimRef() {
 		animationRef = new HashMap<GameObjectState, Integer>();
 		//animationRef.put(PlayerState.STAND, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.STAND.getName(), width, height, 4, 7));
-		animationRef.put(PlayerState.TEMP, R.drawable.jack_n_combo2);
+		animationRef.put(PlayerState.TEMP, R.drawable.jack_d_fswipe2);
 		animationRef.put(PlayerState.STAND, R.drawable.jack_stand);
 		animationRef.put(PlayerState.DEAD, R.drawable.rising_stance);
 		animationRef.put(PlayerState.RUN, R.drawable.jack_run);
@@ -152,7 +152,7 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.AFSWIPE, R.drawable.jack_a_fswipe);
 		animationRef.put(PlayerState.AUSWIPE, R.drawable.jack_d_uswipe);
 		animationRef.put(PlayerState.ADSWIPE, R.drawable.jack_a_dswipe);
-		animationRef.put(PlayerState.DFSWIPE, R.drawable.jack_d_fswipe);
+		animationRef.put(PlayerState.DFSWIPE, R.drawable.jack_d_fswipe2);
 		animationRef.put(PlayerState.DUSWIPE, R.drawable.jack_d_uswipe);
 		animationRef.put(PlayerState.DDSWIPE, R.drawable.jack_d_dswipe);
 		animationRef.put(PlayerState.DDSWIPEFOLLWUP, R.drawable.jack_d_dswipe_followup);
@@ -217,7 +217,7 @@ public class Player extends GameObject{
 		
 		if(playerState == PlayerState.TEMP){
 			float[] coord = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), this.getDisplay());
-			Log.i("rising_debug",coord[0] + " " + coord[1] + " " + coord[2] +" "+getMidX());
+			Log.i("rising_debug","x: "+coord[0] + " y: " + coord[1] + " z: " + coord[2] +" "+getMidX());
 		}
 	}
 
@@ -497,7 +497,7 @@ public class Player extends GameObject{
 		
 		
 		if(input != Gesture.NONE)
-			Log.d("rising_debug", playerState.toString() + " " + gesture.toString()+" "+direction.toString() + " xdiff "+gesture.getXDiffSize()+" ydiff "+gesture.getYDiffSize());
+			//Log.d("rising_debug", playerState.toString() + " " + gesture.toString()+" "+direction.toString() + " xdiff "+gesture.getXDiffSize()+" ydiff "+gesture.getYDiffSize());
 		
 		//eat input here/////////////////////////////////////
 		gesture = input;

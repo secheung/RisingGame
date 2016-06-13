@@ -135,12 +135,12 @@
 		],
 		"action_properties":{
 			"modifiers":{
-				"cont_speed":"both",
 				"snap_to_floor":1
 			},
 			"trigger_change":{
 				"played_trigger":"stand"
 			},
+			"x_init_speed":0.3,
 			"x_accel":-0.03,
 			"y_accel":0.0
 		}

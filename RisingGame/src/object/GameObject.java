@@ -257,7 +257,10 @@ public abstract class GameObject {
 				initxSpeed = -1*initxSpeed;
 			}
 			
-			if(!currentAction.getActionProperties().hasModifier(ActionDataTool.CONT_SPEED)){
+			boolean cont_x_speed = 	 currentAction.getActionProperties().hasModifier(ActionDataTool.CONT_SPEED) && 
+									(currentAction.getActionProperties().getModifier(ActionDataTool.CONT_SPEED) == ActionDataTool.CONT_SPEED_X_DIR ||
+									 currentAction.getActionProperties().getModifier(ActionDataTool.CONT_SPEED) == ActionDataTool.CONT_SPEED_BOTH_DIR);
+			if(!cont_x_speed){//if not continuing speed set init speed in correct direction
 				if(direction == Direction.RIGHT){
 					initxSpeed = initxSpeed;
 				} else if(direction == Direction.LEFT){

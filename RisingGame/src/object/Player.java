@@ -33,6 +33,7 @@ public class Player extends GameObject{
 		JUMP("jump_startup"),
 		ARC("jump_arc"),
 		LAND("jump_land"),
+		JUMP_OUT_OF_MOVE("jump_out_of_move"),
 		DASH("dash"),
 		DODGE("dodge"),
 		DEAD("dead"),
@@ -141,6 +142,7 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.JUMP, R.drawable.jack_jump_startup);
 		animationRef.put(PlayerState.ARC, R.drawable.jack_jump_arc);
 		animationRef.put(PlayerState.LAND, R.drawable.jack_jump_land);
+		animationRef.put(PlayerState.JUMP_OUT_OF_MOVE, R.drawable.jack_jump_arc);
 		animationRef.put(PlayerState.DASH, R.drawable.jack_dash);
 		animationRef.put(PlayerState.DODGE, R.drawable.rising_dodge);
 		animationRef.put(PlayerState.NTAP, R.drawable.jack_n_tap);

@@ -57,7 +57,12 @@ public class ActionDataTool {
 	public static String ACTIVE_AFTER = "active_after";
 	public static String ACTIVE_BEFORE = "active_before";
 	public static String REVERSE_X = "reverse_x";
+	
 	public static String CONT_SPEED = "cont_speed";//options - both-1, x-2, y-3
+	public static int CONT_SPEED_BOTH_DIR = 1;
+	public static int CONT_SPEED_X_DIR    = 2;
+	public static int CONT_SPEED_Y_DIR    = 3;
+	
 	public static String SNAP_TO_FLOOR = "snap_to_floor";
 
 	public static String CANCEL_FRAME = "cancel_frame";
@@ -321,7 +326,14 @@ public class ActionDataTool {
 			}
 			
 			if(modifiersJSON.has(CONT_SPEED)){
-				int value = modifiersJSON.getInt(CONT_SPEED);
+				String speed_type = modifiersJSON.getString(CONT_SPEED);
+				int value = -1;
+				if(speed_type.equals("x"))
+					value = CONT_SPEED_X_DIR;
+				else if(speed_type.equals("y"))
+					value = CONT_SPEED_Y_DIR;
+				else
+					value = CONT_SPEED_BOTH_DIR;
 				actionProperties.addModifier(CONT_SPEED, value);
 			}
 			

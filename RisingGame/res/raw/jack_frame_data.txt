@@ -149,7 +149,7 @@
 			"x_accel":0,
 			"y_accel":-0.098,
 			"modifiers":{
-				"cont_speed":1
+				"cont_speed":"both"
 			},
 			"trigger_change":{
 				"ground_trigger":"jump_land"
@@ -205,7 +205,7 @@
 			"y_init_speed":0.6,
 			"y_accel":-0.098,
 			"modifiers":{
-				"cont_speed":2
+				"cont_speed":"x"
 			},
 			"trigger_change":{
 				"ground_trigger":"jump_land"
@@ -708,7 +708,7 @@
 		"action_properties":{
 			"x_accel":-0.06,
 			"modifiers":{
-				"cont_speed":1,
+				"cont_speed":"both",
 				"snap_to_floor":1
 			},
 			"trigger_change":{

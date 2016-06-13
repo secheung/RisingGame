@@ -47,13 +47,13 @@ public class GameObjectLogic {
 
 	public void buildContSpeedLogic(GameObject gameObject, ActionProperties actProperties){
 		int action_dir = actProperties.getModifier(ActionDataTool.CONT_SPEED);
-		if(action_dir == 1){//both
+		if(action_dir == ActionDataTool.CONT_SPEED_BOTH_DIR){
 			xInitSpeed = gameObject.getxVelocity();
 			yInitSpeed = gameObject.getyVelocity();
-		}else if(action_dir == 2){//x
+		}else if(action_dir == ActionDataTool.CONT_SPEED_X_DIR){
 			xInitSpeed = gameObject.getxVelocity();
 			yInitSpeed = actProperties.getyInitSpeed();
-		}else if(action_dir == 3){//y
+		}else if(action_dir == ActionDataTool.CONT_SPEED_Y_DIR){
 			xInitSpeed = actProperties.getxInitSpeed();
 			yInitSpeed = gameObject.getyVelocity();
 		}

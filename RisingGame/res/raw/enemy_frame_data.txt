@@ -111,7 +111,7 @@
 			"x_accel":-0.1,
 			"y_accel":0.0,
 			"modifiers":{
-				"cont_speed":1,
+				"cont_speed":"both",
 				"snap_to_floor":1
 			},
 			"trigger_change":{
@@ -135,7 +135,7 @@
 		],
 		"action_properties":{
 			"modifiers":{
-				"cont_speed":1,
+				"cont_speed":"both",
 				"snap_to_floor":1
 			},
 			"trigger_change":{
@@ -254,7 +254,7 @@
 		],
 		"action_properties":{
 			"modifiers":{
-				"cont_speed":1,
+				"cont_speed":"both",
 				"active_after":9,
 				"reverse_x":1
 			},

@@ -202,10 +202,10 @@
 		"hurt_box":[
 		],
 		"action_properties":{
-			"y_init_speed":0.75,
+			"y_init_speed":0.6,
 			"y_accel":-0.098,
 			"modifiers":{
-				"cont_speed":1
+				"cont_speed":2
 			},
 			"trigger_change":{
 				"ground_trigger":"jump_land"
@@ -596,7 +596,7 @@
 			},
 			"trigger_cancel":{
 				"cancel_frame":[5,6,7,8,9,10,11],
-				"dtap_u_trigger":"jump_startup",
+				"dtap_u_trigger":"jump_out_of_move",
 				"dtap_f_trigger":"dash"
 			}
 		},

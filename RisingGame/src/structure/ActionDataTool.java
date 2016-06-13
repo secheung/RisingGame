@@ -57,7 +57,7 @@ public class ActionDataTool {
 	public static String ACTIVE_AFTER = "active_after";
 	public static String ACTIVE_BEFORE = "active_before";
 	public static String REVERSE_X = "reverse_x";
-	public static String CONT_SPEED = "cont_speed";
+	public static String CONT_SPEED = "cont_speed";//options - both-1, x-2, y-3
 	public static String SNAP_TO_FLOOR = "snap_to_floor";
 
 	public static String CANCEL_FRAME = "cancel_frame";
@@ -69,8 +69,8 @@ public class ActionDataTool {
 	public static String WALL_TRIGGER = "wall_trigger";
 	public static String GROUND_TRIGGER = "ground_trigger";
 	public static String PLAYED_TRIGGER = "played_trigger";
-	public static String STOPPED_X_TRIGGER = "stopped_x_trigger";
-	public static String STOPPED_Y_TRIGGER = "stopped_y_trigger";
+	public static String STOPPED_X_TRIGGER = "stopped_x_trigger";//triggers when x movement stopped
+	public static String STOPPED_Y_TRIGGER = "stopped_y_trigger";//triggers when y movement stopped
 	
 	public static String SWIPE_F_TRIGGER = "swipe_f_trigger";
 	public static String SWIPE_U_TRIGGER = "swipe_u_trigger";

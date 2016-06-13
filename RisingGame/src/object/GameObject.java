@@ -249,7 +249,9 @@ public abstract class GameObject {
 		
 		if(initSpeed){
 			float initxSpeed = currentLogic.getxInitSpeed();
+			float initySpeed = currentLogic.getyInitSpeed();
 			float xAccel = currentLogic.getxAccel();
+			float yAccel = currentLogic.getyAccel();
 			
 			if(currentAction.getActionProperties().hasModifier(ActionDataTool.REVERSE_X)){
 				initxSpeed = -1*initxSpeed;
@@ -266,7 +268,7 @@ public abstract class GameObject {
 			xAccel = getAccelFromSpeed(initxSpeed, xAccel);
 
 			initXPhys(initxSpeed, xAccel);
-			initYPhys(currentLogic.getyInitSpeed(), currentLogic.getyAccel());
+			initYPhys(initySpeed, yAccel);
 			initSpeed = false;
 
 			//executeXPhys();

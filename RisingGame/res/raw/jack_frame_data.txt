@@ -501,12 +501,12 @@
 			{"left":1.8,"bottom":1.83,"right":3.15,"top":2.275,"active_frame":[7,8,9,10,11,12,13,14,15]}
 		],
 		"action_properties":{
-			"x_init_speed":1.2,
-			"x_accel":-0.17,
-			"y_accel":-0.098,
+			"x_init_speed":1.0,
+			"y_init_speed":0.1,
+			"x_accel":-0.12,
+			"y_accel":-0.085,
 			"modifiers":{
-				"active_after":7,
-				"cont_speed":"y"
+				"active_after":7
 			},
 			"trigger_change":{
 				"ground_trigger":"jump_land"
@@ -516,8 +516,8 @@
 		},
 		"interaction_properties":{
 			"hit_stop":3,
-			"x_init_speed":-1.0,
-			"y_init_speed":0.0,
+			"x_init_speed":-1.2,
+			"y_init_speed":0.3,
 			"trigger_change":{
 				"ground_hit_trigger":"knock_back",
 				"air_hit_trigger":"knock_back",

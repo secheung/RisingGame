@@ -430,7 +430,7 @@ public abstract class GameObject {
 			if(xVelocity > 0 && x+width/2 >= GameLogic.WALL_RIGHT)
 				return true;
 			
-			if(xVelocity < 0 && x+width/2 <= GameLogic.WALL_LEFT)
+			if(xVelocity < 0 && x-width/2 <= GameLogic.WALL_LEFT)
 				return true;
 		}
 		

@@ -11,9 +11,11 @@ import engine.open2d.renderer.WorldRenderer;
 public class ActionData {
 	private final static String LOG_PREFIX = "ACTION_DATA";
 	private final static boolean HITBOX_DEBUG = false;
+	private final static boolean POINT_DEBUG = true;
 	
 	private List<HitBox> hitBoxes;
 	private List<HurtBox> hurtBoxes;
+	private Plane pointBox;
 	
 	String name;
 	int frames;
@@ -35,6 +37,8 @@ public class ActionData {
 		hitBoxes = new LinkedList<HitBox>();
 		hurtBoxes = new LinkedList<HurtBox>();
 		
+		pointBox = new Plane(name+"_pointBox",0.15f,0.15f,0.0f,1.0f,0.0f,0.5f);
+		
 		actionProperties = new ActionProperties();
 		interProperties = new InteractionProperties();
 	}
@@ -47,7 +51,14 @@ public class ActionData {
 	public void updateDrawData(WorldRenderer worldRenderer, GameObject pairedObj){
 		//Log.d("debug", pairedObj.getX()+ " " + pairedObj.getY() + " " + pairedObj.getZ());
 		//Log.d("debug",animation.name+" "+(animation.isDrawEnabled()));
-		worldRenderer.updateDrawObject(animation, pairedObj.getX(), pairedObj.getY(), pairedObj.getZ());
+		
+		float offset_width = planeData.getWidth()/2;//draw in middle
+		worldRenderer.updateDrawObject(animation, pairedObj.getX()-offset_width, pairedObj.getY(), pairedObj.getZ());
+		
+		if(POINT_DEBUG){
+			float pointBox_width = 0.15f/2;
+			worldRenderer.updateDrawObject(pointBox,pairedObj.getX()-pointBox_width,pairedObj.getY(),pairedObj.getZ()+0.01f);
+		}
 		
 		if(HITBOX_DEBUG){
 			float boxOffsetX = 0;
@@ -94,6 +105,10 @@ public class ActionData {
 	
 	public void loadAnimIntoRenderer(WorldRenderer worldRenderer){
 		worldRenderer.addDrawShape(animation);
+		if(POINT_DEBUG){
+			worldRenderer.addDrawShape(pointBox);
+		}
+			
 		if(HITBOX_DEBUG){
 			for(HitBox box : hitBoxes){
 				worldRenderer.addDrawShape(box.getDrawBox());
@@ -107,6 +122,11 @@ public class ActionData {
 	
 	public void unloadAnimFromRenderer(WorldRenderer worldRenderer){
 		worldRenderer.removeDrawShape(animation);
+		
+		if(POINT_DEBUG){
+			worldRenderer.removeDrawShape(pointBox);
+		}
+		
 		if(HITBOX_DEBUG){
 			for(HitBox box : hitBoxes){
 				worldRenderer.removeDrawShape(box.getDrawBox());
@@ -121,6 +141,10 @@ public class ActionData {
 	public void drawDisable(){
 		animation.drawDisable();
 		
+		if(POINT_DEBUG){
+			pointBox.drawDisable();
+		}
+		
 		for(HitBox box : hitBoxes){
 			box.getDrawBox().drawDisable();
 		}
@@ -132,6 +156,10 @@ public class ActionData {
 
 	public void drawEnable(){
 		animation.drawEnable();
+		
+		if(POINT_DEBUG){
+			pointBox.drawEnable();
+		}
 		
 		for(HitBox box : hitBoxes){
 			box.getDrawBox().drawEnable();
@@ -155,7 +183,7 @@ public class ActionData {
 			animation.flipTexture(flip);
 			for(HitBox box : hitBoxes){
 				RectF boxData = box.getBoxData();
-				float left = planeData.getWidth() - boxData.width() - boxData.left;
+				float left = (planeData.getWidth()/2 - boxData.width() - boxData.left) - planeData.getWidth()/2;
 				float right = left + boxData.width();
 				box.getBoxData().set(left, boxData.top, right, boxData.bottom);
 			}
@@ -164,7 +192,7 @@ public class ActionData {
 				//RectF boxData = box.getBoxData(); 
 				//box.getBoxData().set(planeData.getWidth() - boxData.width() - boxData.left, boxData.top, planeData.getWidth() - boxData.width() - boxData.right, boxData.bottom);
 				RectF boxData = box.getBoxData(); 
-				float left = planeData.getWidth() - boxData.width() - boxData.left;
+				float left = (planeData.getWidth()/2 - boxData.width() - boxData.left) - planeData.getWidth()/2;
 				float right = left + boxData.width();
 				box.getBoxData().set(left, boxData.top, right, boxData.bottom);
 			}

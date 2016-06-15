@@ -91,7 +91,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		List<ActionData> playerData = parser.parseFrameData();
 		
 		Player player = new Player(gameObjects, playerData, -3.0f, FLOOR, controlType);
-		player.loadAnimIntoRenderer(worldRenderer);
+		player.prepareGameObject(worldRenderer);
 		gameObjects.put(player.getName(), player);
 
 		enemyIndex = 1;
@@ -100,7 +100,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		//Enemy enemy = new Enemy(gameObjects, (Player)gameObjects.get("player"), 0, (float)(5.7f), -1.0f, 3.5f, 3.5f);
 		Enemy enemy = new Enemy(gameObjects, enemyData, (Player)gameObjects.get("player"), enemyIndex, 1.0f, -1.0f);
 		//enemy.getDisplay().drawDisable();
-		enemy.loadAnimIntoRenderer(worldRenderer);
+		enemy.prepareGameObject(worldRenderer);
 		gameObjects.put(enemy.getName(), enemy);
 
 		/*

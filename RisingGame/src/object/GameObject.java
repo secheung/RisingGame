@@ -123,6 +123,11 @@ public abstract class GameObject {
 		currentAction.updateDrawData(worldRenderer,this);
 	}
 	
+	public void prepareGameObject(WorldRenderer worldRenderer){
+		loadAnimIntoRenderer(worldRenderer);
+		prepareBoxData();
+	}
+
 	public void loadAnimIntoRenderer(WorldRenderer worldRenderer){
 		for(ActionData data : actionData.values()){
 			data.loadAnimIntoRenderer(worldRenderer);
@@ -135,6 +140,19 @@ public abstract class GameObject {
 		}
 	}
 	
+	public void prepareBoxData(){
+		for(ActionData data : actionData.values()){
+			//offset box data to middle of frame
+			for(HitBox box : data.getHitBoxes()){
+				box.getBoxData().offset(-data.getPlaneData().getWidth()/2, 0);
+			}
+
+			for(HurtBox box : data.getHurtBoxes()){
+				box.getBoxData().offset(-data.getPlaneData().getWidth()/2, 0);
+			}
+		}
+	}
+
 	//Currently not used
 	public void incrementGameFrame(){
 		int totalFrames = currentAction.getAnimation().getTotalFrame();
@@ -409,10 +427,10 @@ public abstract class GameObject {
 		}
 		
 		if(hurtBoxes.isEmpty()){
-			if(xVelocity > 0 && x+width >= GameLogic.WALL_RIGHT)
+			if(xVelocity > 0 && x+width/2 >= GameLogic.WALL_RIGHT)
 				return true;
 			
-			if(xVelocity < 0 && x <= GameLogic.WALL_LEFT)
+			if(xVelocity < 0 && x+width/2 <= GameLogic.WALL_LEFT)
 				return true;
 		}
 		

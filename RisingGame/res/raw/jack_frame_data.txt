@@ -606,7 +606,8 @@
 			"x_init_speed":0.0,
 			"y_init_speed":0.4,
 			"trigger_change":{
-				"air_hit_trigger":"knock_back"
+				"air_hit_trigger":"knock_back",
+				"ground_hit_trigger":"knock_back"
 			}
 		}
 	},

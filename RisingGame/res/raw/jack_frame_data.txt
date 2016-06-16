@@ -482,7 +482,8 @@
 			"x_init_speed":0.0,
 			"y_init_speed":0.0,
 			"trigger_change":{
-				"air_hit_trigger":"hover"
+				"air_hit_trigger":"hover",
+				"ground_hit_trigger":"knock_down"
 			}
 		}
 	},

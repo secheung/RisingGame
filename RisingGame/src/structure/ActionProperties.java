@@ -9,6 +9,8 @@ public class ActionProperties {
 	protected float yInitSpeed;
 	protected float xAccel;
 	protected float yAccel;
+	protected float xPtOffset;
+	protected float yPtOffset;
 	
 	LinkedHashMap<String,String> triggerChange;
 	LinkedHashMap<String,String> triggerCancel;
@@ -22,6 +24,8 @@ public class ActionProperties {
 		yInitSpeed = 0;
 		xAccel = 0;
 		yAccel = 0;
+		xPtOffset = 0.0f;
+		yPtOffset = 0.0f;
 
 		triggerChange = new LinkedHashMap<String, String>();
 		triggerCancel = new LinkedHashMap<String, String>();
@@ -67,6 +71,22 @@ public class ActionProperties {
 
 	public void setyAccel(float yAccel) {
 		this.yAccel = yAccel;
+	}
+
+	public float getxPtOffset() {
+		return xPtOffset;
+	}
+
+	public void setxPtOffset(float xPtOffset) {
+		this.xPtOffset = xPtOffset;
+	}
+
+	public float getyPtOffset() {
+		return yPtOffset;
+	}
+
+	public void setyPtOffset(float yPtOffset) {
+		this.yPtOffset = yPtOffset;
 	}
 
 	public void addTriggerChange(String trigger, String nextState){

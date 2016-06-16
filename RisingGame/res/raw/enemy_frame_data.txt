@@ -164,6 +164,7 @@
 		"action_properties":{
 			"x_accel":-0.1,
 			"y_accel":-0.098,
+			"y_pt_offset":1.0,
 			"trigger_change":{
 				"ground_trigger":"knock_down_forward"
 			}
@@ -211,6 +212,7 @@
 		"action_properties":{
 			"x_accel":-0.1,
 			"y_accel":-0.098,
+			"y_pt_offset":1.0,
 			"trigger_change":{
 				"ground_trigger":"knock_down"
 			}

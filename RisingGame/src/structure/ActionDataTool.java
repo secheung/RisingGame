@@ -57,6 +57,8 @@ public class ActionDataTool {
 	public static String ACTIVE_AFTER = "active_after";
 	public static String ACTIVE_BEFORE = "active_before";
 	public static String REVERSE_X = "reverse_x";
+	public static String X_POINT_OFFSET = "x_pt_offset";
+	public static String Y_POINT_OFFSET = "y_pt_offset";
 	
 	public static String CONT_SPEED = "cont_speed";//options - both-1, x-2, y-3
 	public static int CONT_SPEED_BOTH_DIR = 1;
@@ -267,6 +269,14 @@ public class ActionDataTool {
 		
 		if(propertyData.has(Y_ACCEL)){
 			actionProperties.setyAccel((float)propertyData.getDouble(Y_ACCEL));
+		}
+		
+		if(propertyData.has(X_POINT_OFFSET)){
+			actionProperties.setxPtOffset((float)propertyData.getDouble(X_POINT_OFFSET));
+		}
+		
+		if(propertyData.has(Y_POINT_OFFSET)){
+			actionProperties.setyPtOffset((float)propertyData.getDouble(Y_POINT_OFFSET));
 		}
 		
 		//trigger parsing

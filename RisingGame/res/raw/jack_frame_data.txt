@@ -505,6 +505,7 @@
 			"y_init_speed":0.1,
 			"x_accel":-0.12,
 			"y_accel":-0.085,
+			"y_pt_offset":1.0,
 			"modifiers":{
 				"active_after":7
 			},

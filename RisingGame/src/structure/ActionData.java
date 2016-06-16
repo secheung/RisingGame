@@ -10,7 +10,7 @@ import engine.open2d.renderer.WorldRenderer;
 
 public class ActionData {
 	private final static String LOG_PREFIX = "ACTION_DATA";
-	private final static boolean HITBOX_DEBUG = true;
+	private final static boolean HITBOX_DEBUG = false;
 	private final static boolean POINT_DEBUG = true;
 	
 	private List<HitBox> hitBoxes;
@@ -57,7 +57,7 @@ public class ActionData {
 		
 		if(POINT_DEBUG){
 			float pointBox_width = 0.15f/2;
-			worldRenderer.updateDrawObject(pointBox,pairedObj.getX()-pointBox_width,pairedObj.getY(),pairedObj.getZ()+0.01f);
+			worldRenderer.updateDrawObject(pointBox,pairedObj.getOffsetX()-pointBox_width,pairedObj.getOffsetY(),pairedObj.getZ()+0.01f);
 		}
 		
 		if(HITBOX_DEBUG){

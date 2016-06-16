@@ -375,38 +375,40 @@ public abstract class GameObject {
 	}
 	
 	public boolean isInAir(){
-		List<HurtBox> hurtBoxes = currentAction.getHurtBoxes();
-		float lowest = y + height;
-		for(HurtBox box : hurtBoxes){
-			if(y+box.getBoxData().bottom <= lowest)
-				lowest = y+box.getBoxData().bottom;
-		}
+//		List<HurtBox> hurtBoxes = currentAction.getHurtBoxes();
+//		float lowest = y + height;
+//		for(HurtBox box : hurtBoxes){
+//			if(y+box.getBoxData().bottom <= lowest)
+//				lowest = y+box.getBoxData().bottom;
+//		}
+//		
+//		if(lowest > GameLogic.FLOOR)
+//			return true;
+//
+//		if(hurtBoxes.isEmpty()){
+//			//hard code offset bad bad bad
+//			if(y+0.01f <= GameLogic.FLOOR){
+//			//if(y <= GameLogic.FLOOR){
+//				return true;
+//			}
+//		}
 		
-		if(lowest > GameLogic.FLOOR)
+		if(getOffsetY() > GameLogic.FLOOR)
 			return true;
-
-		if(hurtBoxes.isEmpty()){
-			//hard code offset bad bad bad
-			if(y+0.01f <= GameLogic.FLOOR){
-			//if(y <= GameLogic.FLOOR){
-				return true;
-			}
-		}
 
 		return false;
 	}
 	
 	public boolean isOnGround(){
-		List<HurtBox> hurtBoxes = currentAction.getHurtBoxes();
-		for(HurtBox box : hurtBoxes){
-			if(y+box.getBoxData().bottom <= GameLogic.FLOOR)
-				return true;
-		}
+		//check using lowest hurt box
+		//List<HurtBox> hurtBoxes = currentAction.getHurtBoxes();
+		//for(HurtBox box : hurtBoxes){
+		//	if(y+box.getBoxData().bottom <= GameLogic.FLOOR)
+		//		return true;
+		//}
 
-		//if(hurtBoxes.isEmpty()){
-		//hard code offset bad bad bad
-		//if(y+0.01f <= GameLogic.FLOOR){
-		if(y <= GameLogic.FLOOR){
+		//if(hurtBoxes.isEmpty())
+		if(getOffsetY() <= GameLogic.FLOOR){
 			return true;
 		}
 		//}
@@ -513,6 +515,14 @@ public abstract class GameObject {
 	
 	public float getMidY(){
 		return y+width/2;
+	}
+	
+	public float getOffsetX(){
+		return x+currentAction.getActionProperties().getxPtOffset();
+	}
+	
+	public float getOffsetY(){
+		return y+currentAction.getActionProperties().getyPtOffset();
 	}
 	
 	public float getWidth() {

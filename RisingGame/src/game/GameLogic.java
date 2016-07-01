@@ -326,7 +326,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	@Override
 	protected Void doInBackground(Void... params) {
 		//TODO fix up later - find method for manual renders
-	    int TICKS_PER_SECOND = 24;
+	    int TICKS_PER_SECOND = 30;
 	    int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
 
 	    long next_game_tick = System.currentTimeMillis();

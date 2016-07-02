@@ -81,25 +81,13 @@ public class Player extends GameObject{
 	private static PlayerState INIT_STATE = PlayerState.STAND;
 
 	private static final int TEMP_FRAME = 8;//index starts at 0 TODO: should probably change that to start at 1
-
-	private static float WALK_SPEED = 0.2f;
-	private static float STRIKE_SPEED = 0.1f;
-	private static float NFSWIPE_SPEED = 0.2f;
-	private static float DODGE_SPEED = 0.23f;
-	private static float BUFFER = 0.4f;
-	private static float COLLISION_BUFFER = 1.0f;
-	public static float CANCEL_STRIKE_FRAMES = 8;
-	private static float JUMP_SPEED = 0.75f;
 	
 	public static float SCREEN_HEIGHT_PERCENTAGE = 0.60f;
 	public static float SCREEN_WIDTH_PERCENTAGE = 0.80f;
 	
-	private Enemy struckEnemy;
 	private PlayerState playerState;
-	private float moveToX;
-	private float moveToY;
 	
-	CONTROL_TYPE controlType; 
+	CONTROL_TYPE controlType;
 	
 	private float cursorX;
 	private float cursorY;
@@ -107,25 +95,15 @@ public class Player extends GameObject{
 	private float unprojectedX;
 	private float unprojectedY;
 	
-	private int punchIndex;
-	private int finishIndex;
-	private int counterIndex;
-	
 	public Player(LinkedHashMap<String,GameObject> gameObjects, List<ActionData> actionData, float x, float y, CONTROL_TYPE controlType){
 		super(gameObjects,actionData,INIT_STATE,x,y);
 		
 		playerState = INIT_STATE;
 		this.name = OBJNAME;
 		
-		this.moveToX = x;
-		this.moveToY = y;
 		this.z = -1.0f;
 		
 		this.controlType = controlType;
-		
-		this.punchIndex = 1;
-		this.finishIndex = 1;
-		this.counterIndex = 1;
 		
 		//this.currentAction = this.actionData.get(INIT_STATE);
 		this.currentAction.drawEnable();
@@ -135,7 +113,6 @@ public class Player extends GameObject{
 	@Override
 	public void setupAnimRef() {
 		animationRef = new HashMap<GameObjectState, Integer>();
-		//animationRef.put(PlayerState.STAND, new Plane(R.drawable.rising_stance, name+"_"+PlayerState.STAND.getName(), width, height, 4, 7));
 		animationRef.put(PlayerState.TEMP, R.drawable.jack_d_fswipe2);
 		animationRef.put(PlayerState.STAND, R.drawable.jack_stand);
 		animationRef.put(PlayerState.DEAD, R.drawable.rising_stance);
@@ -184,8 +161,7 @@ public class Player extends GameObject{
 		buffer.append("_");
 		buffer.append(state);
 		if(playerState == PlayerState.getStateFromTotalName(buffer.toString())){
-			if(playerState != PlayerState.RUN)//TODO: VERY TEMP SHOULD BE A CONTINUE ANIMATION IN MODIFIER
-				resetAnim = true;
+			resetAnim = true;
 		}else{
 			this.playerState = PlayerState.getStateFromTotalName(buffer.toString());
 		}
@@ -203,13 +179,6 @@ public class Player extends GameObject{
 	public void passTouchEvent(MotionEvent e, WorldRenderer worldRenderer){
 		Plane display = currentAction.getAnimation();
 		float[] unprojectedPoints = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), display);
-		/*
-		//if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
-		if(inputList.isEmpty()){
-			moveToX = unprojectedPoints[0];
-			moveToY = unprojectedPoints[1];
-		}
-		*/
 		
 		cursorX = e.getX();
 		cursorY = e.getY();
@@ -317,7 +286,6 @@ public class Player extends GameObject{
 		
 		if(controlType == CONTROL_TYPE.RELATIVE){
 			if(hold){
-				moveToX = unprojectedPoints[0];
 				if(unprojectedPoints[0] > this.getX()+this.getWidth()){
 					setGesture(Gesture.HOLD_RIGHT);
 				} else if(unprojectedPoints[0] < this.getX()){
@@ -346,10 +314,6 @@ public class Player extends GameObject{
 		if(hitStopFrames > 0){
 			return;
 		}
-		
-		if(playerState == PlayerState.RUN || playerState == PlayerState.STAND){
-			executeMovement();
-		}
 
 		//String state1 = playerState.toString();
 		executeTriggers();
@@ -377,10 +341,10 @@ public class Player extends GameObject{
 			this.setHitActive(false);
 		}
 		
-		String hitType = currentAction.getActionProperties().getHitType(); 
-		if(hitType.equals(ActionDataTool.SINGLE_HIT)){
-			
-		}
+		//String hitType = currentAction.getActionProperties().getHitType(); 
+		//if(hitType.equals(ActionDataTool.SINGLE_HIT)){
+		//	
+		//}
 		
 		//should hitstop return from function?
 		if(hitStopFrames > 0){
@@ -389,37 +353,14 @@ public class Player extends GameObject{
 			return;
 		}
 		
+		//temp state for debugging
 		if(playerState == PlayerState.TEMP){
 			currentAction.getAnimation().setFrame(TEMP_FRAME-1);
 			direction = Direction.RIGHT;
 			//currentAction.getAnimation().setPlayback(Playback.PAUSE);
 		}
-
-		if(playerState == PlayerState.RUN){
-			executeLogic();
-			//if(direction == Direction.RIGHT)
-			//	x += WALK_SPEED;
-			//else if(direction == Direction.LEFT)
-			//	x -= WALK_SPEED;
-		} else if(playerState == PlayerState.LAND){
-			executeLogic();
-			//moveToX = getMidX();
-			//moveToY = getMidY();
-		} else if(	playerState == PlayerState.NFSWIPE||
-					playerState == PlayerState.NFSWIPECOMBO1||
-					playerState == PlayerState.NFSWIPECOMBO2||
-					playerState == PlayerState.NUSWIPE||
-					playerState == PlayerState.AFSWIPE||
-					playerState == PlayerState.NTAP||
-					playerState == PlayerState.DFSWIPE||
-					playerState == PlayerState.DDSWIPE||
-					playerState == PlayerState.DDSWIPEFOLLWUP||
-					playerState == PlayerState.DASH){
-			executeLogic();
-			moveToX = getMidX();
-		} else {
-			executeLogic();
-		}
+		
+		executeLogic();
 
 		if(playerState != PlayerState.STAND && playerState != PlayerState.RUN){
 			//Log.d(playerState.toString(), "playerpos "+getMidX()+" tap "+unprojectedX);
@@ -460,7 +401,6 @@ public class Player extends GameObject{
 		
 		if(display.isPlayed()){
 			if(	playerState==PlayerState.DODGE){
-				//gesture = Gesture.NONE;
 				display.resetAnimation();
 				playerState = PlayerState.STAND;				
 			}
@@ -525,20 +465,6 @@ public class Player extends GameObject{
 					}
 				}
 			}
-			/*
-			if(controlType == CONTROL_TYPE.RELATIVE){
-				if(!initSpeed){
-					moveToX = unprojectedX;
-					moveToY = unprojectedY;
-				}
-	
-				if(unprojectedX > getMidX()){
-					this.direction = Direction.RIGHT;
-				}else if(unprojectedX < getMidX()){
-					this.direction = Direction.LEFT;
-				}
-			}
-			*/
 		}else if(gesture == Gesture.HOLD_RIGHT){
 			if(currentAction.getActionProperties().hasCancel(ActionDataTool.HOLD_PRESS_TRIGGER)){
 				String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.HOLD_PRESS_TRIGGER);
@@ -546,7 +472,6 @@ public class Player extends GameObject{
 				initSpeed = true;
 				
 				this.direction = Direction.RIGHT;
-				//moveToX = getMidX() + WALK_SPEED;
 			}
 		}else if(gesture == Gesture.HOLD_LEFT){
 			if(currentAction.getActionProperties().hasCancel(ActionDataTool.HOLD_PRESS_TRIGGER)){
@@ -555,7 +480,6 @@ public class Player extends GameObject{
 				initSpeed = true;
 				
 				this.direction = Direction.LEFT;
-				//moveToX = getMidX() - WALK_SPEED;
 			}			
 		}else if(gesture == Gesture.HOLD_RELEASE){
 			if(currentAction.getActionProperties().hasCancel(ActionDataTool.HOLD_RELEASE_TRIGGER)){
@@ -619,17 +543,6 @@ public class Player extends GameObject{
 					this.direction = Direction.LEFT;
 				}
 				
-				/*
-				if(controlType == CONTROL_TYPE.RELATIVE){
-					if(unprojectedX > getMidX()){
-						this.direction = Direction.RIGHT;
-					}else if(unprojectedX < getMidX()){
-						this.direction = Direction.LEFT;
-					}
-				}else if(controlType == CONTROL_TYPE.FIXED){
-					//asdf
-				}
-				*/
 			} else if(GameTools.gestureBreakdownVertical(gesture) == Gesture.SWIPE_DOWN){
 				if(currentAction.getActionProperties().hasCancel(ActionDataTool.SWIPE_D_TRIGGER)){
 					String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.SWIPE_D_TRIGGER);
@@ -642,36 +555,9 @@ public class Player extends GameObject{
 				} else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.SWIPE_LEFT){
 					this.direction = Direction.LEFT;
 				}
-				
-				/*
-				if(controlType == CONTROL_TYPE.RELATIVE){
-					if(unprojectedX > getMidX()){
-						this.direction = Direction.RIGHT;
-					}else if(unprojectedX < getMidX()){
-						this.direction = Direction.LEFT;
-					}
-				}else if(controlType == CONTROL_TYPE.FIXED){
-					//asdf
-				}
-				*/
 			}
 		}
 		
 		return;
-	}
-
-	private void executeMovement(){
-		if(controlType == CONTROL_TYPE.RELATIVE){
-			float checkX = getMidX();
-			if(moveToX > checkX - Player.BUFFER && moveToX < checkX + Player.BUFFER) {
-				//playerState = PlayerState.STAND;
-				//if(!input.contains(Gesture.HOLD_RELEASE)){
-				//	input.add(Gesture.HOLD_RELEASE);
-				//}
-			}
-			
-
-		} else if(controlType == CONTROL_TYPE.FIXED){
-		}
 	}
 }

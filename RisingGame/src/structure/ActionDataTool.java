@@ -50,6 +50,8 @@ public class ActionDataTool {
 	private static String PLANE_COLUMNS = "columns";
 	private static String PLANE_PLAY_BACK = "play_back";
 
+	public static String CONT_ANIM = "cont_anim";//continues animation from previous state. current maps to 1 with no value meaning. as long as modifier exists
+	
 	private static String ACTION_PROPERTIES = "action_properties";
 	private static String INTERACTION_PROPERTIES = "interaction_properties";
 	
@@ -319,6 +321,7 @@ public class ActionDataTool {
 		}
 		
 		if(propertyData.has(MODIFIERS)){
+			//TODO: consider changing these propertyies to enum array so can just cycle throught when adding
 			JSONObject modifiersJSON = propertyData.getJSONObject(MODIFIERS);
 			if(modifiersJSON.has(ACTIVE_AFTER)){
 				int value = modifiersJSON.getInt(ACTIVE_AFTER);
@@ -333,6 +336,11 @@ public class ActionDataTool {
 			if(modifiersJSON.has(REVERSE_X)){
 				int value = modifiersJSON.getInt(REVERSE_X);
 				actionProperties.addModifier(REVERSE_X, value);
+			}
+			
+			if(modifiersJSON.has(CONT_ANIM)){
+				int value = modifiersJSON.getInt(CONT_ANIM);
+				actionProperties.addModifier(CONT_ANIM, value);
 			}
 			
 			if(modifiersJSON.has(CONT_SPEED)){

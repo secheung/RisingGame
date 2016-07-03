@@ -92,6 +92,7 @@
 		"action_properties":{
 			"x_init_speed":0.2,
 			"modifiers":{
+				"cont_anim":1
 			},
 			"trigger_change":{
 			},

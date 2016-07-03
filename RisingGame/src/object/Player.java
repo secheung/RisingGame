@@ -161,7 +161,8 @@ public class Player extends GameObject{
 		buffer.append("_");
 		buffer.append(state);
 		if(playerState == PlayerState.getStateFromTotalName(buffer.toString())){
-			resetAnim = true;
+			if(!currentAction.getActionProperties().hasModifier(ActionDataTool.CONT_ANIM))
+				resetAnim = true;
 		}else{
 			this.playerState = PlayerState.getStateFromTotalName(buffer.toString());
 		}

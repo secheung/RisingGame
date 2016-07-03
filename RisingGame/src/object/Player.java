@@ -222,12 +222,18 @@ public class Player extends GameObject{
 				setGesture(g);
 			}
 		}else if(controlType == CONTROL_TYPE.FIXED){
+			//if horizontal swipe set gesture as is
+			if(Math.abs(g.getXDiffSize()) > Math.abs(g.getYDiffSize())){
+				setGesture(g);
+			}
+			
+			//if vertical swipe set swipe direction based on relative distance to control square
 			if(g == Gesture.SWIPE_UP || g == Gesture.SWIPE_UP_LEFT || g == Gesture.SWIPE_UP_RIGHT){
 				if(g.getxTap() > screenWidth*SCREEN_WIDTH_PERCENTAGE){
 					setGesture(Gesture.SWIPE_UP_RIGHT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
 				} else if(g.getxTap() < screenWidth*SCREEN_WIDTH_PERCENTAGE){
 					setGesture(Gesture.SWIPE_UP_LEFT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
-				}	
+				}
 			} else if(g == Gesture.SWIPE_DOWN || g == Gesture.SWIPE_DOWN_LEFT || g == Gesture.SWIPE_DOWN_RIGHT){
 				if(g.getxTap() > screenWidth*SCREEN_WIDTH_PERCENTAGE){
 					setGesture(Gesture.SWIPE_DOWN_RIGHT.setXDiffSize(g.getXDiffSize()).setYDiffSize(g.getYDiffSize()));
@@ -415,8 +421,8 @@ public class Player extends GameObject{
 
 	private void executeInput(){
 		Gesture gesture = Gesture.NONE;
-		//if(!inputList.isEmpty())
-		//	Log.d("rising_debug_execute_input", inputList.toString()+" "+ playerState + " "+currentAction.getAnimation().getFrame());
+		if(input != Gesture.NONE)
+			Log.d("rising_debug_execute_input", input.toString()+" "+ playerState + " "+currentAction.getAnimation().getFrame());
 		
 		/*
 		if(hitStopFrames > 0){

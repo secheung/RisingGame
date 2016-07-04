@@ -9,8 +9,10 @@ import android.graphics.Point;
 import android.opengl.GLSurfaceView;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.WindowManager;
 
 public class GameSurfaceView extends GLSurfaceView{
 
@@ -29,12 +31,20 @@ public class GameSurfaceView extends GLSurfaceView{
 
 		setEGLContextClientVersion(2);
 
-		//WorldRenderer = WorldRenderer.getInstance();
 		worldRenderer = new WorldRenderer(context);
 		worldRenderer.setTextureQuality(TEXTURE_QUALITY);
 		worldRenderer.setBackground(1.0f, 1.0f, 1.0f, 1.0f);
 		worldRenderer.setTrackFPS(false);
 		setRenderer(worldRenderer);
+		
+		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+		Display display = wm.getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		int width = size.x;
+		int height = size.y;
+		worldRenderer.setCamera(GameLogic.CAM_X_DEFAULT, GameLogic.CAM_Y_DEFAULT, GameLogic.CAM_Z_DEFAULT);//init view matrix
+		worldRenderer.setupFrustrum(width,height);//init projection matrix
 		
 		setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 

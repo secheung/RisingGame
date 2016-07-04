@@ -82,7 +82,7 @@ public class Player extends GameObject{
 
 	private static final int TEMP_FRAME = 8;//index starts at 0 TODO: should probably change that to start at 1
 	
-	public static float SCREEN_HEIGHT_PERCENTAGE = 0.60f;
+	public static float SCREEN_HEIGHT_PERCENTAGE = 0.65f;
 	public static float SCREEN_WIDTH_PERCENTAGE = 0.80f;
 	
 	private PlayerState playerState;
@@ -421,8 +421,8 @@ public class Player extends GameObject{
 
 	private void executeInput(){
 		Gesture gesture = Gesture.NONE;
-		if(input != Gesture.NONE)
-			Log.d("rising_debug_execute_input", input.toString()+" "+ playerState + " "+currentAction.getAnimation().getFrame());
+		//if(input != Gesture.NONE)
+		//	Log.d("rising_debug_execute_input", input.toString()+" "+ playerState + " "+currentAction.getAnimation().getFrame());
 		
 		/*
 		if(hitStopFrames > 0){

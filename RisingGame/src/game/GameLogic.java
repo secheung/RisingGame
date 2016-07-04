@@ -17,12 +17,14 @@ import structure.ActionDataTool;
 import structure.HitBox;
 import structure.PlaneData;
 import android.content.Context;
+import android.graphics.Point;
 import android.hardware.display.DisplayManager;
 import android.os.AsyncTask;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
+import android.view.WindowManager;
 import android.webkit.WebView.FindListener;
 import android.widget.TextView;
 import engine.open2d.draw.Plane;
@@ -74,6 +76,8 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	float gestureY;
 	int gestureCheck;
 	
+	Plane testBox;//for testing...duh..
+	
 	public GameLogic(Context context, WorldRenderer worldRenderer){
 		this.worldRenderer = worldRenderer;
 		this.context = context;
@@ -111,14 +115,20 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		enemy2.loadAnimIntoRenderer(worldRenderer);
 		gameObjects.put(enemy2.getName(), enemy2);
 		*/
-
+		
 		//temp control box
 		Plane controlBox = new Plane("controlBox", 1.0f, 1.0f, 0.25f, 0.25f, 0.25f, 0.5f);
 		controlBox.drawEnable();
-		//float[] coord = worldRenderer.getUnprojectedPoints(worldRenderer.getScreenWidth()*Player.SCREEN_WIDTH_PERCENTAGE, worldRenderer.getScreenHeight()*Player.SCREEN_HEIGHT_PERCENTAGE, controlBox);
-		controlBox.setTranslationX(2.35f);
-		controlBox.setTranslationY(0.10f);
+		float[] coord = worldRenderer.getUnprojectedPoints(	worldRenderer.getScreenWidth()*Player.SCREEN_WIDTH_PERCENTAGE,
+															worldRenderer.getScreenHeight()*Player.SCREEN_HEIGHT_PERCENTAGE,
+															controlBox);
+		controlBox.setTranslationX(coord[0]-0.5f);//offset control box by half width
+		controlBox.setTranslationY(coord[1]-0.5f);//offset control box by half height
 		worldRenderer.addDrawShape(controlBox);
+		
+		//testBox = new Plane("testBox", 1.0f, 1.0f, 0.25f, 0.0f, 0.0f, 0.75f);
+		//testBox.drawEnable();
+		//worldRenderer.addDrawShape(testBox);
 	}
 	
 	public void update(){
@@ -279,6 +289,12 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	public void passTouchEvents(MotionEvent e, GestureListener gestureListener){
 		Player player = (Player) gameObjects.get(Player.OBJNAME);
 		Gesture gesture = gestureProcessing(e, gestureListener);
+		
+		//float[] coordinates = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), testBox);
+		//Log.d("coord_test","X: "+coordinates[0]+" Y: "+coordinates[1]);
+		//testBox.setTranslationX(coordinates[0]-0.5f);
+		//testBox.setTranslationY(coordinates[1]-0.5f);
+		//worldRenderer.updateDrawObject(testBox);
 		
 		if(e.getAction() == MotionEvent.ACTION_DOWN){
 			for(GameObject gameObject : gameObjects.values()){

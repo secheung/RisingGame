@@ -82,8 +82,10 @@ public class Player extends GameObject{
 
 	private static final int TEMP_FRAME = 8;//index starts at 0 TODO: should probably change that to start at 1
 	
-	public static float SCREEN_HEIGHT_PERCENTAGE = 0.65f;
-	public static float SCREEN_WIDTH_PERCENTAGE = 0.80f;
+	public static float SCREEN_HEIGHT_PERCENTAGE = 0.5f;//percent for screen space
+	public static float SCREEN_WIDTH_PERCENTAGE = 0.80f;//percent for screen space
+	public static float CONTROL_BOX_WIDTH = 1.0f;
+	public static float CONTROL_BOX_HEIGHT = 1.0f;
 	
 	private PlayerState playerState;
 	
@@ -270,16 +272,25 @@ public class Player extends GameObject{
 			}
 		} else if(controlType == CONTROL_TYPE.FIXED){
 			if(g.getDoubleTapY() < screenHeight*SCREEN_HEIGHT_PERCENTAGE){
+				//dtap above control box
 				if(g.getDoubleTapX() > screenWidth*SCREEN_WIDTH_PERCENTAGE){
 					setGesture(Gesture.DTAP_UP_RIGHT);
 				} else if(g.getDoubleTapX() < screenWidth*SCREEN_WIDTH_PERCENTAGE){
 					setGesture(Gesture.DTAP_UP_LEFT);
 				}
-			} else if(g.getDoubleTapX() > screenWidth*SCREEN_WIDTH_PERCENTAGE){
-				setGesture(Gesture.DTAP_RIGHT);
-			} else if(g.getDoubleTapX() < screenWidth*SCREEN_WIDTH_PERCENTAGE){
-				setGesture(Gesture.DTAP_LEFT);
-			}
+			}else if(g.getDoubleTapY() > screenHeight*SCREEN_HEIGHT_PERCENTAGE){
+				float[] unprojectedBounds = worldRenderer.getUnprojectedPoints(	screenWidth*SCREEN_WIDTH_PERCENTAGE,
+																				screenHeight*SCREEN_HEIGHT_PERCENTAGE,
+																				display);
+				//dtap beneath control box
+				if(unprojectedPoints[0] < unprojectedBounds[0] + CONTROL_BOX_WIDTH/2 &&
+				   unprojectedPoints[0] > unprojectedBounds[0] - CONTROL_BOX_WIDTH/2 ){
+					setGesture(Gesture.DTAP_DOWN);
+				} else if(g.getDoubleTapX() > screenWidth*SCREEN_WIDTH_PERCENTAGE){
+					setGesture(Gesture.DTAP_RIGHT);
+				} else if(g.getDoubleTapX() < screenWidth*SCREEN_WIDTH_PERCENTAGE){
+					setGesture(Gesture.DTAP_LEFT);
+				}			}
 		}
 
 		display.unprojectDisable();
@@ -503,6 +514,18 @@ public class Player extends GameObject{
 				if(gesture == Gesture.DTAP_UP_LEFT){
 					this.direction = Direction.LEFT;
 				} else if(gesture == Gesture.DTAP_UP_RIGHT){
+					this.direction = Direction.RIGHT;
+				}
+			}
+		} else if(gesture == Gesture.DTAP_DOWN || gesture == Gesture.DTAP_DOWN_LEFT || gesture == Gesture.DTAP_DOWN_RIGHT){
+			if(currentAction.getActionProperties().hasCancel(ActionDataTool.DTAP_D_TRIGGER)){
+				String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.DTAP_D_TRIGGER);
+				setStateUsingTotalName(cancel);
+				initSpeed = true;
+				
+				if(gesture == Gesture.DTAP_DOWN_LEFT){
+					this.direction = Direction.LEFT;
+				} else if(gesture == Gesture.DTAP_DOWN_RIGHT){
 					this.direction = Direction.RIGHT;
 				}
 			}

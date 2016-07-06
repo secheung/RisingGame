@@ -42,6 +42,7 @@
 				"hold_release_trigger":"stand",
 				"dtap_u_trigger":"jump_startup",
 				"dtap_f_trigger":"dash",
+				"dtap_d_trigger":"n_dswipe",
 				"swipe_u_trigger":"n_uswipe",
 				"swipe_f_trigger":"n_fswipe_combo1",
 				"swipe_d_trigger":"n_dswipe"
@@ -549,6 +550,7 @@
 			"y_init_speed":0.55,
 			"x_accel":-0.0,
 			"y_accel":-0.06,
+			"y_pt_offset":0.5,
 			"modifiers":{
 				"active_after":3
 			},
@@ -591,6 +593,7 @@
 			"y_init_speed":-0.3,
 			"x_accel":0.0,
 			"y_accel":-0.098,
+			"y_pt_offset":0.5,
 			"modifiers":{
 				"active_after":5
 			},

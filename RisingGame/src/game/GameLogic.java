@@ -117,13 +117,13 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		*/
 		
 		//temp control box
-		Plane controlBox = new Plane("controlBox", 1.0f, 1.0f, 0.25f, 0.25f, 0.25f, 0.5f);
+		Plane controlBox = new Plane("controlBox", Player.CONTROL_BOX_WIDTH, Player.CONTROL_BOX_WIDTH, 0.25f, 0.25f, 0.25f, 0.5f);
 		controlBox.drawEnable();
 		float[] coord = worldRenderer.getUnprojectedPoints(	worldRenderer.getScreenWidth()*Player.SCREEN_WIDTH_PERCENTAGE,
 															worldRenderer.getScreenHeight()*Player.SCREEN_HEIGHT_PERCENTAGE,
 															controlBox);
-		controlBox.setTranslationX(coord[0]-0.5f);//offset control box by half width
-		controlBox.setTranslationY(coord[1]-0.5f);//offset control box by half height
+		controlBox.setTranslationX(coord[0]-Player.CONTROL_BOX_WIDTH/2);//offset control box by half width
+		controlBox.setTranslationY(coord[1]-Player.CONTROL_BOX_HEIGHT);//offset control box by half height
 		worldRenderer.addDrawShape(controlBox);
 		
 		//testBox = new Plane("testBox", 1.0f, 1.0f, 0.25f, 0.0f, 0.0f, 0.75f);

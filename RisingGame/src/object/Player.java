@@ -37,6 +37,7 @@ public class Player extends GameObject{
 		DASH("dash"),
 		DODGE("dodge"),
 		DEAD("dead"),
+		NCOUNTERSTANCE("n_counter_stance"),
 		NTAP("n_tap"),
 		NFSWIPECOMBO1("n_fswipe_combo1"),
 		NFSWIPECOMBO2("n_fswipe_combo2"),
@@ -125,6 +126,7 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.JUMP_OUT_OF_MOVE, R.drawable.jack_jump_arc);
 		animationRef.put(PlayerState.DASH, R.drawable.jack_dash);
 		animationRef.put(PlayerState.DODGE, R.drawable.rising_dodge);
+		animationRef.put(PlayerState.NCOUNTERSTANCE, R.drawable.jack_n_counter_stance);
 		animationRef.put(PlayerState.NTAP, R.drawable.jack_n_tap);
 		animationRef.put(PlayerState.NFSWIPE, R.drawable.jack_n_fswipe);
 		animationRef.put(PlayerState.NFSWIPECOMBO1, R.drawable.jack_n_combo1);
@@ -227,6 +229,7 @@ public class Player extends GameObject{
 			//if horizontal swipe set gesture as is
 			if(Math.abs(g.getXDiffSize()) > Math.abs(g.getYDiffSize())){
 				setGesture(g);
+				return;
 			}
 			
 			//if vertical swipe set swipe direction based on relative distance to control square
@@ -279,14 +282,16 @@ public class Player extends GameObject{
 					setGesture(Gesture.DTAP_UP_LEFT);
 				}
 			}else if(g.getDoubleTapY() > screenHeight*SCREEN_HEIGHT_PERCENTAGE){
-				float[] unprojectedBounds = worldRenderer.getUnprojectedPoints(	screenWidth*SCREEN_WIDTH_PERCENTAGE,
-																				screenHeight*SCREEN_HEIGHT_PERCENTAGE,
-																				display);
-				//dtap beneath control box
-				if(unprojectedPoints[0] < unprojectedBounds[0] + CONTROL_BOX_WIDTH/2 &&
-				   unprojectedPoints[0] > unprojectedBounds[0] - CONTROL_BOX_WIDTH/2 ){
-					setGesture(Gesture.DTAP_DOWN);
-				} else if(g.getDoubleTapX() > screenWidth*SCREEN_WIDTH_PERCENTAGE){
+				//float[] unprojectedBounds = worldRenderer.getUnprojectedPoints(	screenWidth*SCREEN_WIDTH_PERCENTAGE,
+				//																screenHeight*SCREEN_HEIGHT_PERCENTAGE,
+				//																display);
+				////dtap beneath control box
+				//if(unprojectedPoints[0] < unprojectedBounds[0] + CONTROL_BOX_WIDTH/2 &&
+				//   unprojectedPoints[0] > unprojectedBounds[0] - CONTROL_BOX_WIDTH/2 ){
+				//	setGesture(Gesture.DTAP_DOWN);
+				//} else
+				
+				if(g.getDoubleTapX() > screenWidth*SCREEN_WIDTH_PERCENTAGE){
 					setGesture(Gesture.DTAP_RIGHT);
 				} else if(g.getDoubleTapX() < screenWidth*SCREEN_WIDTH_PERCENTAGE){
 					setGesture(Gesture.DTAP_LEFT);

@@ -41,7 +41,7 @@
 				"hold_press_trigger":"run",
 				"hold_release_trigger":"stand",
 				"dtap_u_trigger":"jump_startup",
-				"dtap_f_trigger":"n_counter_stance",
+				"dtap_f_trigger":"dash",
 				"swipe_u_trigger":"n_uswipe",
 				"swipe_f_trigger":"n_fswipe_combo1",
 				"swipe_d_trigger":"n_dswipe"

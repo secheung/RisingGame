@@ -188,7 +188,7 @@ public class Enemy extends GameObject {
 			playerRef.activateHitStop(interProperties.getHitStop());
 			this.activateHitStop(interProperties.getHitStop());
 			if(playerRef.getCurrentAction().getActionProperties().getHitType().equals(ActionDataTool.SINGLE_HIT)){
-				playerRef.setHitAvailable(false);
+				playerRef.setHitAvailable(false);//deactivate hitboxes on next update //WILL CAUSE PROBLEMS IF PLAYER IS NOT UPDATED FIRST
 			}
 			
 			//playerRef.setHitActive(false);

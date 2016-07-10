@@ -64,8 +64,8 @@ public abstract class GameObject {
 	protected boolean initSpeed;
 	protected boolean resetAnim;
 	public boolean selected;
-	protected boolean hitActive;
-	protected boolean hitAvailable;
+	protected boolean hitActive;	//determines if hitbox is available
+	protected boolean hitAvailable; //used to disable hit box on next update
 	protected Gesture input;
 	protected Gesture saveHoldState;
 	protected float frameBufferCount;
@@ -170,7 +170,7 @@ public abstract class GameObject {
 	public void switchAction(GameObjectState actionToSwitch){
 		//Log.d(this.name, actionToSwitch.toString());
 		gameFrame = 0;
-		hitAvailable = true;
+		setHitAvailable(true);
 		
 		currentAction.drawDisable();
 		currentAction.getAnimation().resetAnimation();

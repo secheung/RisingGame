@@ -29,6 +29,7 @@ import android.webkit.WebView.FindListener;
 import android.widget.TextView;
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
+import engine.open2d.text.*;
 import game.GameTools.Gesture;
 import game.open2d.R;
 
@@ -106,7 +107,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		//enemy.getDisplay().drawDisable();
 		enemy.prepareGameObject(worldRenderer);
 		gameObjects.put(enemy.getName(), enemy);
-
+		
 		/*
 		enemyIndex = 2;
 		parser.readFile(R.raw.enemy_frame_data);
@@ -117,7 +118,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		*/
 		
 		//temp control box
-		Plane controlBox = new Plane("controlBox", Player.CONTROL_BOX_WIDTH, Player.CONTROL_BOX_WIDTH, 0.25f, 0.25f, 0.25f, 0.5f);
+		Plane controlBox = new Plane("controlBox", Player.CONTROL_BOX_WIDTH, Player.CONTROL_BOX_WIDTH, 0.1f, 0.1f, 0.1f, 0.5f);
 		controlBox.drawEnable();
 		float[] coord = worldRenderer.getUnprojectedPoints(	worldRenderer.getScreenWidth()*Player.SCREEN_WIDTH_PERCENTAGE,
 															worldRenderer.getScreenHeight()*Player.SCREEN_HEIGHT_PERCENTAGE,
@@ -180,6 +181,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	
 	public void updateDrawData(){
 		worldRenderer.setCamera(camX, camY, camZ);
+		//worldRenderer.setOrtho(worldRenderer.getScreenWidth(),worldRenderer.getScreenHeight());
 		Player player = null;
 		for(GameObject gameObject : gameObjects.values()){
 			gameObject.updateDrawData(worldRenderer);

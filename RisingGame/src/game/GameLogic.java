@@ -108,14 +108,15 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		enemy.prepareGameObject(worldRenderer);
 		gameObjects.put(enemy.getName(), enemy);
 		
-		/*
-		enemyIndex = 2;
-		parser.readFile(R.raw.enemy_frame_data);
-		List<ActionData> enemyData2 = parser.parseFrameData();
-		Enemy enemy2 = new Enemy(gameObjects, enemyData2, (Player)gameObjects.get("player"), enemyIndex, -1.0f, -1.0f);
-		enemy2.loadAnimIntoRenderer(worldRenderer);
-		gameObjects.put(enemy2.getName(), enemy2);
-		*/
+		
+		//enemyIndex = 2;
+		//parser.readFile(R.raw.enemy_frame_data);
+		//List<ActionData> enemyData2 = parser.parseFrameData();
+		//Enemy enemy2 = new Enemy(gameObjects, enemyData2, (Player)gameObjects.get("player"), enemyIndex, -1.0f, -1.0f);
+		//enemy2.loadAnimIntoRenderer(worldRenderer);
+		//enemy2.prepareGameObject(worldRenderer);
+		//gameObjects.put(enemy2.getName(), enemy2);
+		
 		
 		//temp control box
 		Plane controlBox = new Plane("controlBox", Player.CONTROL_BOX_WIDTH, Player.CONTROL_BOX_WIDTH, 0.1f, 0.1f, 0.1f, 0.5f);

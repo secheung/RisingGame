@@ -34,7 +34,7 @@ public class GameSurfaceView extends GLSurfaceView{
 		worldRenderer = new WorldRenderer(context);
 		worldRenderer.setTextureQuality(TEXTURE_QUALITY);
 		worldRenderer.setBackground(0.5f, 0.5f, 0.5f, 1.0f);
-		worldRenderer.setTrackFPS(false);
+		worldRenderer.setTrackFPS(true);
 		setRenderer(worldRenderer);
 		
 		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);

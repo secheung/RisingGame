@@ -98,7 +98,7 @@ public class Enemy extends GameObject {
 		
 		enemyState = INIT_STATE;
 		this.name = OBJNAME+index;
-		this.z = -1.0f+index*0.01f;
+		this.z = -1.0f/*+index*0.01f*/;
 		this.playerRef = player;
 		
 		//display = animations.get(EnemyState.STAND);

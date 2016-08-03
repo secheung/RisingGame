@@ -671,7 +671,7 @@
 				"played_trigger":"stand"
 			},
 			"trigger_cancel":{
-				"cancel_frame":[5,6,7,8,9,10,11],
+				"cancel_frame":[5,6,7,8,9,10,11,12],
 				"dtap_u_trigger":"jump_out_of_move",
 				"dtap_f_trigger":"dash"
 			}
@@ -679,7 +679,7 @@
 		"interaction_properties":{
 			"hit_stop":5,
 			"x_init_speed":-0.7,
-			"y_init_speed":0.5,
+			"y_init_speed":0.7,
 			"trigger_change":{
 				"ground_hit_trigger":"knock_back",
 				"air_hit_trigger":"knock_back"

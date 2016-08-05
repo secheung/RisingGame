@@ -43,6 +43,7 @@ public class ActionDataTool {
 	private static String Y_ACCEL = "y_accel";
 	
 	private static String HIT_STOP = "hit_stop";
+	private static String HIT_STUN = "hit_stun";
 	
 	private static String PLANE_WIDTH = "width";
 	private static String PLANE_HEIGHT = "height";
@@ -435,6 +436,10 @@ public class ActionDataTool {
 		
 		if(interData.has(HIT_STOP)){
 			interProperties.setHitStop(interData.getInt(HIT_STOP));
+		}
+		
+		if(interData.has(HIT_STUN)){
+			interProperties.setHitStun(interData.getInt(HIT_STUN));
 		}
 		
 		return interProperties;

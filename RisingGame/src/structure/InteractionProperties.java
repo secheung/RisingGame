@@ -2,10 +2,12 @@ package structure;
 
 public class InteractionProperties extends ActionProperties {
 	private int hitStop;
+	private int hitStun;
 	
 	public InteractionProperties(){
 		super();
 		hitStop = 0;
+		hitStun = 0;
 	}
 	
 	public void copyActionProperties(ActionProperties properties){
@@ -22,5 +24,13 @@ public class InteractionProperties extends ActionProperties {
 	
 	public void setHitStop(int hitStop) {
 		this.hitStop = hitStop;
+	}
+
+	public int getHitStun() {
+		return hitStun;
+	}
+
+	public void setHitStun(int hitStun) {
+		this.hitStun = hitStun;
 	}
 }

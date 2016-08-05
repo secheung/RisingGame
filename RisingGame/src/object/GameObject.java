@@ -72,6 +72,11 @@ public abstract class GameObject {
 	//protected Gesture gesture;
 	
 	protected int hitStopFrames;
+	
+	protected int hitStunFrames;
+	protected int hitTotalStunFrames;
+	protected boolean inHitStun;
+	
 	protected LinkedHashMap<String,GameObject> gameObjects;
 	protected LinkedHashMap<GameObjectState, ActionData> actionData;
 	
@@ -104,6 +109,9 @@ public abstract class GameObject {
 		this.initSpeed = false;
 		this.resetAnim = false;
 		this.hitStopFrames = 0;
+		this.hitStunFrames = 0;
+		this.hitTotalStunFrames = 0;
+		this.inHitStun = false;
 	}
 	
 	
@@ -586,6 +594,45 @@ public abstract class GameObject {
 		Playback defaultPlayback = currentAction.getPlaneData().getPlayback();
 		currentAction.getAnimation().setPlayback(defaultPlayback);
 	}
+	
+	public int getHitStunFrames(){
+		return this.hitStunFrames;
+	}
+	
+	public void activateHitStun(int hitstun){
+		this.hitStunFrames = hitstun;
+		this.hitTotalStunFrames = hitstun;
+		this.inHitStun = true;
+		if(hitStunFrames > 0)
+			currentAction.getAnimation().setPlayback(Playback.PAUSE);
+	}
+	
+	public void deactivateHitStun() {
+		this.hitStunFrames = 0;
+		this.hitTotalStunFrames = 0;
+		this.inHitStun = false;
+		Playback defaultPlayback = currentAction.getPlaneData().getPlayback();
+		currentAction.getAnimation().setPlayback(defaultPlayback);
+	}
+	
+	public int getTotalHitStunFrames(){
+		return this.hitTotalStunFrames;
+	}
+	
+	public void setTotalHitStunFrames(int hitstun){
+		this.hitTotalStunFrames = hitstun;
+	}
+	
+
+	public boolean isInHitStun() {
+		return inHitStun;
+	}
+
+
+	public void setInHitStun(boolean inHitStun) {
+		this.inHitStun = inHitStun;
+	}
+
 
 	public float getxVelocity() {
 		return xVelocity;

@@ -310,6 +310,7 @@
 		},
 		"interaction_properties":{
 			"hit_stop":3,
+			"hit_stun":5,
 			"x_init_speed":0.0,
 			"y_init_speed":0.0,
 			"trigger_change":{
@@ -351,6 +352,7 @@
 		},
 		"interaction_properties":{
 			"hit_stop":3,
+			"hit_stun":5,
 			"x_init_speed":0.0,
 			"y_init_speed":0.0,
 			"trigger_change":{

@@ -187,6 +187,7 @@ public class Enemy extends GameObject {
 			interProperties = playerRef.getCurrentAction().getInterProperties();
 			playerRef.activateHitStop(interProperties.getHitStop());
 			this.activateHitStop(interProperties.getHitStop());
+			this.activateHitStun(interProperties.getHitStun());
 			if(playerRef.getCurrentAction().getActionProperties().getHitType().equals(ActionDataTool.SINGLE_HIT)){
 				playerRef.setHitAvailable(false);//deactivate hitboxes on next update //WILL CAUSE PROBLEMS IF PLAYER IS NOT UPDATED FIRST
 			}
@@ -208,9 +209,9 @@ public class Enemy extends GameObject {
 			}
 			initSpeed = true;
 			resetAnim = true;
+		}else{
+			executeTriggers();
 		}
-
-		executeTriggers();
 
 		if(	currentAction != actionData.get(enemyState) || resetAnim){
 			switchAction(enemyState);
@@ -236,6 +237,12 @@ public class Enemy extends GameObject {
 		if(hitStopFrames > 0){
 			hitStopFrames--;
 			return;
+		}
+
+		if(hitStunFrames > 0){
+			hitStunFrames--;
+		}else{
+			deactivateHitStun();
 		}
 
 		if(enemyState== EnemyState.TEMP){
@@ -277,6 +284,11 @@ public class Enemy extends GameObject {
 	public void updateDisplay() {
 		if(hitStopFrames > 0){
 			return;
+		}else if(inHitStun){
+			double percent = 1 - (double)hitStunFrames/hitTotalStunFrames; 
+			int setFrame = (int) ((currentAction.getAnimation().getTotalFrame()-1)*percent);
+			currentAction.getAnimation().setFrame(setFrame);
+			currentAction.getAnimation().setPlayback(Playback.PAUSE);
 		} else {
 			Playback defaultPlayback = currentAction.getPlaneData().getPlayback();
 			currentAction.getAnimation().setPlayback(defaultPlayback);

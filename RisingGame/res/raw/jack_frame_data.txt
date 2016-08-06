@@ -310,11 +310,20 @@
 		},
 		"interaction_properties":{
 			"hit_stop":3,
-			"hit_stun":5,
-			"x_init_speed":0.0,
-			"y_init_speed":0.0,
+			"hit_stun":5,			
+			"trigger_init_speeds":{
+				"ground_hit_trigger":{
+					"x_init_speed":0.0,
+					"y_init_speed":0.0
+				},
+				"air_hit_trigger":{
+					"x_init_speed":-0.1,
+					"y_init_speed":0.3
+				}
+			},
 			"trigger_change":{
-				"ground_hit_trigger":"struck"
+				"ground_hit_trigger":"struck",
+				"air_hit_trigger":"knock_back"
 			}
 		}
 	},
@@ -355,8 +364,19 @@
 			"hit_stun":5,
 			"x_init_speed":0.0,
 			"y_init_speed":0.0,
+			"trigger_init_speeds":{
+				"ground_hit_trigger":{
+					"x_init_speed":0.0,
+					"y_init_speed":0.0
+				},
+				"air_hit_trigger":{
+					"x_init_speed":-0.3,
+					"y_init_speed":0.65
+				}
+			},
 			"trigger_change":{
-				"ground_hit_trigger":"struck"
+				"ground_hit_trigger":"struck",
+				"air_hit_trigger":"knock_back"
 			}
 		}
 	},

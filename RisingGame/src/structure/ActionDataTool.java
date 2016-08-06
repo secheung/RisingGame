@@ -20,6 +20,7 @@ import engine.open2d.draw.Plane;
 import engine.open2d.texture.AnimatedTexture.Playback;
 
 import android.content.Context;
+import android.graphics.PointF;
 import android.util.Log;
 
 public class ActionDataTool {
@@ -72,6 +73,7 @@ public class ActionDataTool {
 
 	public static String CANCEL_FRAME = "cancel_frame";
 
+	private static String TRIGGER_INIT_SPEED = "trigger_init_speeds";
 	public static String TRIGGER_CHANGE = "trigger_change";
 	public static String TRIGGER_CANCEL = "trigger_cancel";
 	public static String GROUND_HIT_TRIGGER = "ground_hit_trigger";
@@ -440,6 +442,25 @@ public class ActionDataTool {
 		
 		if(interData.has(HIT_STUN)){
 			interProperties.setHitStun(interData.getInt(HIT_STUN));
+		}
+		
+		if(interData.has(TRIGGER_INIT_SPEED)){
+			JSONObject triggerInitSpeeds = interData.getJSONObject(TRIGGER_INIT_SPEED);
+			if(triggerInitSpeeds.has(GROUND_HIT_TRIGGER)){
+				JSONObject value = triggerInitSpeeds.getJSONObject(GROUND_HIT_TRIGGER);
+				PointF point = new PointF();
+				point.x = (float)value.getDouble(X_INIT_SPEED);
+				point.y = (float)value.getDouble(Y_INIT_SPEED);
+				interProperties.addTriggerInitSpeed(GROUND_HIT_TRIGGER, point);
+			}
+			
+			if(triggerInitSpeeds.has(AIR_HIT_TRIGGER)){
+				JSONObject value = triggerInitSpeeds.getJSONObject(AIR_HIT_TRIGGER);
+				PointF point = new PointF();
+				point.x = (float)value.getDouble(X_INIT_SPEED);
+				point.y = (float)value.getDouble(Y_INIT_SPEED);
+				interProperties.addTriggerInitSpeed(AIR_HIT_TRIGGER, point);
+			}
 		}
 		
 		return interProperties;

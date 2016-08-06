@@ -29,10 +29,10 @@ public class MainActivity extends Activity {
 		
 		final WorldRenderer render = surfaceView.getWorldRenderer();
 		
-		textBox = new TextView(surfaceView.getContext());
-		textBox.setText(""+render.getFPS());
+		//textBox = new TextView(surfaceView.getContext());
+		//textBox.setText(""+render.getFPS());
 		
-		addContentView(textBox, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+		//addContentView(textBox, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 	}
 	
     @Override

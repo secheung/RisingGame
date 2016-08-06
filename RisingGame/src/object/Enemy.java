@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -201,10 +202,18 @@ public class Enemy extends GameObject {
 			}
 
 			if(interProperties.hasTriggerChange(ActionDataTool.GROUND_HIT_TRIGGER) && isOnGround()){
-				//Log.d(enemyState.toString(),"groundHit");
+				if(interProperties.hasTriggerInitSpeed(ActionDataTool.GROUND_HIT_TRIGGER)){
+					PointF speed = interProperties.getTriggerInitSpeed(ActionDataTool.GROUND_HIT_TRIGGER);
+					interProperties.setxInitSpeed(speed.x);
+					interProperties.setyInitSpeed(speed.y);
+				}
 				setStateUsingTotalName(interProperties.getTriggerChange(ActionDataTool.GROUND_HIT_TRIGGER));
 			}else if(interProperties.hasTriggerChange(ActionDataTool.AIR_HIT_TRIGGER) && isInAir()){
-				//Log.d(enemyState.toString(),"airHit");
+				if(interProperties.hasTriggerInitSpeed(ActionDataTool.AIR_HIT_TRIGGER)){
+					PointF speed = interProperties.getTriggerInitSpeed(ActionDataTool.AIR_HIT_TRIGGER);
+					interProperties.setxInitSpeed(speed.x);
+					interProperties.setyInitSpeed(speed.y);
+				}
 				setStateUsingTotalName(interProperties.getTriggerChange(ActionDataTool.AIR_HIT_TRIGGER));
 			}
 			initSpeed = true;

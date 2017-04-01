@@ -42,6 +42,7 @@ public class Player extends GameObject{
 		NFSWIPECOMBO1("n_fswipe_combo1"),
 		NFSWIPECOMBO2("n_fswipe_combo2"),
 		NFSWIPE ("n_fswipe"),
+		NFSWIPE2("n_fswipe2"),
 		NUSWIPE ("n_uswipe"),
 		NDSWIPE ("n_dswipe"),
 		AFSWIPE ("a_fswipe"),
@@ -81,7 +82,7 @@ public class Player extends GameObject{
 	public static String OBJNAME = "player";
 	private static PlayerState INIT_STATE = PlayerState.STAND;
 
-	private static final int TEMP_FRAME = 8;//index starts at 0 TODO: should probably change that to start at 1
+	private static final int TEMP_FRAME = 15;//index starts at 0 TODO: should probably change that to start at 1
 	
 	public static float SCREEN_HEIGHT_PERCENTAGE = 0.5f;//percent for screen space
 	public static float SCREEN_WIDTH_PERCENTAGE = 0.80f;//percent for screen space
@@ -116,7 +117,7 @@ public class Player extends GameObject{
 	@Override
 	public void setupAnimRef() {
 		animationRef = new HashMap<GameObjectState, Integer>();
-		animationRef.put(PlayerState.TEMP, R.drawable.jack_d_fswipe2);
+		animationRef.put(PlayerState.TEMP, R.drawable.jack_n_fswipe2);
 		animationRef.put(PlayerState.STAND, R.drawable.jack_stand);
 		animationRef.put(PlayerState.DEAD, R.drawable.rising_stance);
 		animationRef.put(PlayerState.RUN, R.drawable.jack_run);
@@ -129,6 +130,7 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.NCOUNTERSTANCE, R.drawable.jack_n_counter_stance);
 		animationRef.put(PlayerState.NTAP, R.drawable.jack_n_tap);
 		animationRef.put(PlayerState.NFSWIPE, R.drawable.jack_n_fswipe);
+		animationRef.put(PlayerState.NFSWIPE2, R.drawable.jack_n_fswipe2);
 		animationRef.put(PlayerState.NFSWIPECOMBO1, R.drawable.jack_n_combo1);
 		animationRef.put(PlayerState.NFSWIPECOMBO2, R.drawable.jack_n_combo2);
 		animationRef.put(PlayerState.NUSWIPE, R.drawable.jack_n_uswipe);

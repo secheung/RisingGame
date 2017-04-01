@@ -52,15 +52,26 @@ public class ActionDataTool {
 	private static String PLANE_COLUMNS = "columns";
 	private static String PLANE_PLAY_BACK = "play_back";
 
+	public static String RANDOM_TRIGGER = "random_trigger";
+	public static String DISTANCE_TRIGGER = "distance_trigger";
+	
 	public static String CONT_ANIM = "cont_anim";//continues animation from previous state. current maps to 1 with no value meaning. as long as modifier exists
 	
 	private static String ACTION_PROPERTIES = "action_properties";
 	private static String INTERACTION_PROPERTIES = "interaction_properties";
 	
+	public static String TRIGGER_PROP_STATE = "state";
+	public static String TRIGGER_PROP_VALUE = "value";
+	
 	private static String MODIFIERS = "modifiers";
 	public static String ACTIVE_AFTER = "active_after";
 	public static String ACTIVE_BEFORE = "active_before";
 	public static String REVERSE_X = "reverse_x";
+	
+	public static String FACE_PLAYER = "face_player";//options - track-1, look-2
+	public static int FACE_PLAYER_FOLLOW = 1;
+	public static int FACE_PLAYER_LOOK = 2;
+	
 	public static String X_POINT_OFFSET = "x_pt_offset";
 	public static String Y_POINT_OFFSET = "y_pt_offset";
 	
@@ -83,6 +94,7 @@ public class ActionDataTool {
 	public static String PLAYED_TRIGGER = "played_trigger";
 	public static String STOPPED_X_TRIGGER = "stopped_x_trigger";//triggers when x movement stopped
 	public static String STOPPED_Y_TRIGGER = "stopped_y_trigger";//triggers when y movement stopped
+	public static String CONTINUOUS_TRIGGER = "continuous_trigger";
 	
 	public static String SWIPE_F_TRIGGER = "swipe_f_trigger";
 	public static String SWIPE_U_TRIGGER = "swipe_u_trigger";
@@ -321,6 +333,23 @@ public class ActionDataTool {
 				String value = triggerJSON.getString(STOPPED_Y_TRIGGER);
 				actionProperties.addTriggerChange(STOPPED_Y_TRIGGER, value);
 			}
+			
+			if(triggerJSON.has(CONTINUOUS_TRIGGER)){
+				String value = triggerJSON.getString(CONTINUOUS_TRIGGER);
+				actionProperties.addTriggerChange(CONTINUOUS_TRIGGER, value);
+			}
+			
+			if(triggerJSON.has(RANDOM_TRIGGER)){
+				JSONArray propertyArray = triggerJSON.getJSONArray(RANDOM_TRIGGER);
+				TriggerProperties triggerProp = parseTriggerProperty(propertyArray);
+				actionProperties.addTriggerProperties(RANDOM_TRIGGER, triggerProp);
+			}
+			
+			if(triggerJSON.has(DISTANCE_TRIGGER)){
+				JSONArray propertyArray = triggerJSON.getJSONArray(DISTANCE_TRIGGER);
+				TriggerProperties triggerProp = parseTriggerProperty(propertyArray);
+				actionProperties.addTriggerProperties(DISTANCE_TRIGGER, triggerProp);
+			}
 		}
 		
 		if(propertyData.has(MODIFIERS)){
@@ -344,6 +373,14 @@ public class ActionDataTool {
 			if(modifiersJSON.has(CONT_ANIM)){
 				int value = modifiersJSON.getInt(CONT_ANIM);
 				actionProperties.addModifier(CONT_ANIM, value);
+			}
+			
+			if(modifiersJSON.has(FACE_PLAYER)){
+				String value = modifiersJSON.getString(FACE_PLAYER);
+				if(value.equals("follow"))
+					actionProperties.addModifier(FACE_PLAYER, FACE_PLAYER_FOLLOW);
+				else
+					actionProperties.addModifier(FACE_PLAYER, FACE_PLAYER_LOOK);
 			}
 			
 			if(modifiersJSON.has(CONT_SPEED)){
@@ -431,6 +468,25 @@ public class ActionDataTool {
 		}
 		
 		return actionProperties;
+	}
+	
+	public TriggerProperties parseTriggerProperty(JSONArray triggerPropData){
+		TriggerProperties prop = new TriggerProperties();
+		for(int index = 0; index < triggerPropData.length(); index++){
+			JSONObject propEntry;
+			try {
+				propEntry = triggerPropData.getJSONObject(index);
+				String state = propEntry.getString(TRIGGER_PROP_STATE);
+				double value = propEntry.getDouble(TRIGGER_PROP_VALUE);
+				
+				prop.state.add(state);
+				prop.value.add(value);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return prop;
 	}
 	
 	public InteractionProperties parseInteractionProperties(JSONObject interData) throws JSONException{

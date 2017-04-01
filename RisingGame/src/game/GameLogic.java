@@ -71,7 +71,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	CONTROL_TYPE controlType = CONTROL_TYPE.FIXED;
 	boolean gameRun = false;
 	
-	LinkedHashMap<String,GameObject> gameObjects;
+	public LinkedHashMap<String,GameObject> gameObjects;
 	
 	float gestureX;
 	float gestureY;
@@ -95,7 +95,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		parser.readFile(R.raw.jack_frame_data);
 		List<ActionData> playerData = parser.parseFrameData();
 		
-		Player player = new Player(gameObjects, playerData, -3.0f, FLOOR, controlType);
+		Player player = new Player(this, playerData, -3.0f, FLOOR, controlType);
 		player.prepareGameObject(worldRenderer);
 		gameObjects.put(player.getName(), player);
 
@@ -103,7 +103,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		parser.readFile(R.raw.enemy_frame_data);
 		List<ActionData> enemyData = parser.parseFrameData();
 		//Enemy enemy = new Enemy(gameObjects, (Player)gameObjects.get("player"), 0, (float)(5.7f), -1.0f, 3.5f, 3.5f);
-		Enemy enemy = new Enemy(gameObjects, enemyData, (Player)gameObjects.get("player"), enemyIndex, 1.0f, -1.0f);
+		Enemy enemy = new Enemy(this, enemyData, (Player)gameObjects.get("player"), enemyIndex, 1.0f, -1.0f);
 		//enemy.getDisplay().drawDisable();
 		enemy.prepareGameObject(worldRenderer);
 		gameObjects.put(enemy.getName(), enemy);

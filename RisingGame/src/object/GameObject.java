@@ -12,6 +12,7 @@ import structure.GameObjectLogic;
 import structure.HitBox;
 import structure.HurtBox;
 import structure.InteractionProperties;
+import structure.TriggerProperties;
 import android.util.Log;
 import android.view.MotionEvent;
 import engine.open2d.draw.Plane;
@@ -53,6 +54,8 @@ public abstract class GameObject {
 	
 	protected int gameFrame;
 	
+	protected GameLogic gameLogic;
+	
 	protected ActionData currentAction;
 	protected GameObjectLogic currentLogic;
 
@@ -80,7 +83,7 @@ public abstract class GameObject {
 	protected LinkedHashMap<String,GameObject> gameObjects;
 	protected LinkedHashMap<GameObjectState, ActionData> actionData;
 	
-	public GameObject(LinkedHashMap<String,GameObject> gameObjects, List<ActionData> actionData, GameObjectState initState, float x, float y){
+	public GameObject(GameLogic logic, List<ActionData> actionData, GameObjectState initState, float x, float y){
 		this.x = x;
 		this.y = y;
 		
@@ -92,7 +95,8 @@ public abstract class GameObject {
 		this.yAccel = 0;
 		this.zAccel = 0;
 		
-		this.gameObjects = gameObjects;
+		this.gameLogic = logic;
+		this.gameObjects = logic.gameObjects;
 		this.actionData = new LinkedHashMap<GameObjectState, ActionData>();
 		this.setupAnimRef();
 		this.mapActionData(actionData);
@@ -256,6 +260,30 @@ public abstract class GameObject {
 				setStateUsingTotalName(state);
 				interProperties = null;
 				initSpeed = true;
+			}
+		}
+		
+		if(currentLogic.hasTrigger(ActionDataTool.CONTINUOUS_TRIGGER)){
+			String state = currentLogic.getTrigger(ActionDataTool.CONTINUOUS_TRIGGER);
+			setStateUsingTotalName(state);
+			interProperties = null;
+			initSpeed = true;
+		}
+		
+		if(currentAction.getActionProperties().hasTriggerProperties(ActionDataTool.RANDOM_TRIGGER)){
+			double rand = Math.random();
+			TriggerProperties randomTriggers = currentAction.getActionProperties().getTriggerProperties(ActionDataTool.RANDOM_TRIGGER);
+			double currentPercent = 0.0;
+			for(int i = 0; i < randomTriggers.value.size(); ++i){
+				double percent = randomTriggers.value.get(i);
+				if((currentPercent <= rand) && (rand < currentPercent+percent)){
+					String state = randomTriggers.state.get(i);
+					setStateUsingTotalName(state);
+					interProperties = null;
+					initSpeed = true;
+					break;
+				}
+				currentPercent += percent;
 			}
 		}
 	}

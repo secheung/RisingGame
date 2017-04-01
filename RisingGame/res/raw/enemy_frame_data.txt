@@ -29,7 +29,11 @@
 		"hit_box":[
 		],
 		"action_properties":{
+			"trigger_change":{
+				"continuous_trigger":"behaviour"
+			},
 			"modifiers":{
+				"face_player":"look",
 				"snap_to_floor":1
 			}
 		}
@@ -48,7 +52,16 @@
 			{"left":0.5,"bottom":0.5,"right":3.4,"top":2.35,"active_frame":[6,7,8,9,10,11,12,13,14,15]}
 		],
 		"hit_box":[
-		]
+		],
+		"action_properties":{
+			"x_init_speed":0.1,
+			"modifiers":{
+				"face_player":"follow"
+			},
+			"trigger_change":{
+				"continuous_trigger":"behaviour"
+			}
+		}
 	},
 	
 	"walk_action":{
@@ -262,6 +275,7 @@
 			},
 			"x_accel":-0.1,
 			"y_accel":-0.098,
+			"y_pt_offset":1.0,
 			"trigger_change":{
 				"ground_trigger":"knock_down_forward"
 			}

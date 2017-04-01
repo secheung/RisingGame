@@ -18,6 +18,8 @@ public class ActionProperties {
 
 	LinkedHashMap<String, Integer> modifiers;
 	
+	LinkedHashMap<String,TriggerProperties> triggerPropertiesList;//key, property values - like triggerChange and trigger cancel, but has properties for logic and change
+	
 	public ActionProperties(){
 		hitType = ActionDataTool.SINGLE_HIT;
 		xInitSpeed = 0;
@@ -31,6 +33,8 @@ public class ActionProperties {
 		triggerCancel = new LinkedHashMap<String, String>();
 		cancelFrame = new HashSet<Integer>();
 		modifiers = new LinkedHashMap<String, Integer>();
+		
+		triggerPropertiesList = new LinkedHashMap<String,TriggerProperties>();
 	}
 
 	public String getHitType() {
@@ -151,6 +155,22 @@ public class ActionProperties {
 
 	public LinkedHashMap<String,Integer> getModifiers(){
 		return modifiers;
+	}
+	
+	public void addTriggerProperties(String trigger, TriggerProperties triggerProp){
+		triggerPropertiesList.put(trigger, triggerProp);
+	}
+	
+	public TriggerProperties getTriggerProperties(String trigger){
+		return triggerPropertiesList.get(trigger);
+	}
+
+	public boolean hasTriggerProperties(String trigger){
+		return triggerPropertiesList.containsKey(trigger);
+	}
+	
+	public LinkedHashMap<String,TriggerProperties> getTriggerPropertyList(){
+		return triggerPropertiesList;
 	}
 	
 }

@@ -47,6 +47,7 @@ public class Player extends GameObject{
 		NDSWIPE ("n_dswipe"),
 		AFSWIPE ("a_fswipe"),
 		AFSWIPE2("a_fswipe2"),
+		AFSWIPE3("a_fswipe3"),
 		AUSWIPE ("a_uswipe"),
 		ADSWIPE ("a_dswipe"),
 		DFSWIPE ("d_fswipe"),
@@ -99,8 +100,8 @@ public class Player extends GameObject{
 	private float unprojectedX;
 	private float unprojectedY;
 	
-	public Player(LinkedHashMap<String,GameObject> gameObjects, List<ActionData> actionData, float x, float y, CONTROL_TYPE controlType){
-		super(gameObjects,actionData,INIT_STATE,x,y);
+	public Player(GameLogic logic, List<ActionData> actionData, float x, float y, CONTROL_TYPE controlType){
+		super(logic,actionData,INIT_STATE,x,y);
 		
 		playerState = INIT_STATE;
 		this.name = OBJNAME;
@@ -137,6 +138,7 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.NDSWIPE, R.drawable.jack_n_dswipe);
 		animationRef.put(PlayerState.AFSWIPE, R.drawable.jack_a_fswipe);
 		animationRef.put(PlayerState.AFSWIPE2, R.drawable.jack_a_fswipe2);
+		animationRef.put(PlayerState.AFSWIPE3, R.drawable.jack_n_fswipe2);
 		animationRef.put(PlayerState.AUSWIPE, R.drawable.jack_d_uswipe);
 		animationRef.put(PlayerState.ADSWIPE, R.drawable.jack_a_dswipe);
 		animationRef.put(PlayerState.DFSWIPE, R.drawable.jack_d_fswipe2);

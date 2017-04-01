@@ -8,6 +8,7 @@ import game.GameTools;
 import game.GestureListener;
 import game.GameTools.Gesture;
 import game.open2d.R;
+import junit.framework.Assert;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -25,10 +26,12 @@ import structure.ActionDataTool;
 import structure.HitBox;
 import structure.HurtBox;
 import structure.InteractionProperties;
+import structure.TriggerProperties;
 
 public class Enemy extends GameObject {
 	public static enum EnemyState implements GameObjectState{
 		TEMP("temp"),
+		BEHAVIOUR("behaviour"),//special state for frame that gets triggered set state using logic in game
 		STAND("stand"),
 		STRIKE1("strike"),
 		STRUCK("struck"),
@@ -90,12 +93,17 @@ public class Enemy extends GameObject {
 	private static float JUMP_SPEED = 0.45f;
 	public static float COLLISION_FRAME = 20.0f;
 	
+	private static int NEUTRAL_BEHAVIOUR_TICK_TRIGGER = 60;
+	
 	Player playerRef;
 	EnemyState enemyState;
 	
+	int neutralBehaviourTick = 0;
+	boolean disableBehaviour = false;
+	
 	//public Enemy(LinkedHashMap<String,GameObject> gameObjects, Player player, int index, float x, float y, float width, float height){
-	public Enemy(LinkedHashMap<String,GameObject> gameObjects, List<ActionData> actionData, Player player, int index, float x, float y){
-		super(gameObjects,actionData,INIT_STATE,x,y);
+	public Enemy(GameLogic logic, List<ActionData> actionData, Player player, int index, float x, float y){
+		super(logic,actionData,INIT_STATE,x,y);
 		
 		enemyState = INIT_STATE;
 		this.name = OBJNAME+index;
@@ -108,6 +116,9 @@ public class Enemy extends GameObject {
 		currentAction.drawEnable();
 		this.direction = Direction.LEFT;
 		
+		this.neutralBehaviourTick = 0;
+		
+		switchAction(enemyState);//initialze state
 	}
 
 	@Override
@@ -155,19 +166,19 @@ public class Enemy extends GameObject {
 		float checkX = getMidX();
 		
 		//if(!isStrikeState() && !isDodging()){
-		if(		enemyState != EnemyState.KNOCK_BACK &&
-				enemyState != EnemyState.KNOCK_DOWN &&
-				enemyState != EnemyState.KNOCK_DOWN_FORWARD &&
-				enemyState != EnemyState.WALL_BOUNCE &&
-				enemyState != EnemyState.KNOCK_UP &&
-				enemyState != EnemyState.HOVER&&
-				enemyState != EnemyState.TRIP_FORWARD){
-			if(playerRef.getMidX() > checkX){
-				direction = Direction.RIGHT;
-			} else if(playerRef.getMidX() < checkX){
-				direction = Direction.LEFT;
-			}
-		}
+		//if(		enemyState != EnemyState.KNOCK_BACK &&
+		//		enemyState != EnemyState.KNOCK_DOWN &&
+		//		enemyState != EnemyState.KNOCK_DOWN_FORWARD &&
+		//		enemyState != EnemyState.WALL_BOUNCE &&
+		//		enemyState != EnemyState.KNOCK_UP &&
+		//		enemyState != EnemyState.HOVER&&
+		//		enemyState != EnemyState.TRIP_FORWARD){
+		//	if(playerRef.getMidX() > checkX){
+		//		direction = Direction.RIGHT;
+		//	} else if(playerRef.getMidX() < checkX){
+		//		direction = Direction.LEFT;
+		//	}
+		//}
 
 		/*
 		if(enemyState == EnemyState.STAND){
@@ -219,7 +230,12 @@ public class Enemy extends GameObject {
 			initSpeed = true;
 			resetAnim = true;
 		}else{
+			EnemyState prevState = enemyState;
 			executeTriggers();
+			if(enemyState == EnemyState.BEHAVIOUR){
+				enemyState = prevState;//restore previous state from before behaviour state happen
+				executeBehaviour();
+			}
 		}
 
 		if(	currentAction != actionData.get(enemyState) || resetAnim){
@@ -236,6 +252,73 @@ public class Enemy extends GameObject {
 		}
 	}
 
+	public void executeBehaviour(){
+		if(disableBehaviour)
+			return;
+		
+		neutralBehaviourTick++;
+		
+		//execute behaviour every at tick count
+		//simple behaviour
+		if(enemyState == EnemyState.STAND){
+			if(neutralBehaviourTick > NEUTRAL_BEHAVIOUR_TICK_TRIGGER){
+				neutralBehaviourTick = 0;
+			
+				double rand = Math.random();
+				double currentPercent = 0.1;
+				if(currentPercent <= rand){
+					String state = EnemyState.RUN.getName();
+					setStateUsingTotalName(state);
+					interProperties = null;
+					initSpeed = true;
+					return;
+				}
+			}
+		}
+		
+		if(enemyState == EnemyState.RUN){
+			boolean change_to_stand = false;
+			if(neutralBehaviourTick > NEUTRAL_BEHAVIOUR_TICK_TRIGGER){
+				neutralBehaviourTick = 0;
+				double rand = Math.random();
+				double currentPercent = 0.5;
+				change_to_stand = (currentPercent <= rand);
+			}
+			
+			double playerX = playerRef.getMidX();
+			double currentX = getMidX();
+			double distance = 1.25;
+			
+			if(Math.abs(playerX - currentX) < distance || change_to_stand){
+				setStateUsingTotalName(EnemyState.STAND.getName());
+				interProperties = null;
+				initSpeed = true;
+				return;
+			}	
+		}
+		
+		/*
+		if(currentAction.getActionProperties().hasTriggerProperties(ActionDataTool.DISTANCE_TRIGGER)){
+			TriggerProperties triggerProps = currentAction.getActionProperties().getTriggerProperties(ActionDataTool.DISTANCE_TRIGGER);
+			double playerX = playerRef.getMidX();
+			double currentX = getMidX();
+			for(int i = 0; i < triggerProps.value.size(); ++i){
+				double distance = triggerProps.value.get(i);
+				if(Math.abs(playerX - currentX) < distance){
+					String state = triggerProps.state.get(i);
+					setStateUsingTotalName(state);
+					interProperties = null;
+					initSpeed = true;
+					break;
+				}
+			}	
+		}
+		*/
+		
+		//Executing Behaviour must end in state of behaviour  
+		Assert.assertTrue(enemyState != EnemyState.BEHAVIOUR);
+	}
+	
 	@Override
 	public void updateLogic() {
 		/*
@@ -259,34 +342,52 @@ public class Enemy extends GameObject {
 			direction = Direction.RIGHT;
 		}
 		
-		if(enemyState == EnemyState.STAND){
-
-		}else if(isStrikeState()){
+		//if(enemyState == EnemyState.STAND){
+        //
+		//}else if(isStrikeState()){
+		//	
+		//}else if(enemyState == EnemyState.RUN){
+		//	if(direction == Direction.RIGHT)
+		//		x += RUN_SPEED;
+		//	else if(direction == Direction.LEFT)
+		//		x -= RUN_SPEED;
+		//}else if(enemyState == EnemyState.WALK){
+		//	if(direction == Direction.RIGHT)
+		//		x += WALK_SPEED;
+		//	else if(direction == Direction.LEFT)
+		//		x -= WALK_SPEED;
+		//}else if(enemyState == EnemyState.JUMP_BACK){
+		//	if(direction == Direction.RIGHT)
+		//		x -= JUMP_BACK_SPEED;
+		//	else if(direction == Direction.LEFT)
+		//		x += JUMP_BACK_SPEED;
+		//}else if(enemyState == EnemyState.CROSS_ROLL){
+		//	if(direction == Direction.RIGHT)
+		//		x += CROSS_ROLL_SPEED;
+		//	else if(direction == Direction.LEFT)
+		//		x -= CROSS_ROLL_SPEED;
+		//}else {
+		//	executeLogic();
+		//	//Log.d(enemyState.toString(),"xVel"+xVelocity+" xAccel "+xAccel);
+		//}
+		
+		if(currentAction.getActionProperties().hasModifier(ActionDataTool.FACE_PLAYER)){
+			float checkX = getMidX();
+			if(playerRef.getMidX() > checkX){
+				direction = Direction.RIGHT;
+			} else if(playerRef.getMidX() < checkX){
+				direction = Direction.LEFT;
+			}
 			
-		}else if(enemyState == EnemyState.RUN){
-			if(direction == Direction.RIGHT)
-				x += RUN_SPEED;
-			else if(direction == Direction.LEFT)
-				x -= RUN_SPEED;
-		}else if(enemyState == EnemyState.WALK){
-			if(direction == Direction.RIGHT)
-				x += WALK_SPEED;
-			else if(direction == Direction.LEFT)
-				x -= WALK_SPEED;
-		}else if(enemyState == EnemyState.JUMP_BACK){
-			if(direction == Direction.RIGHT)
-				x -= JUMP_BACK_SPEED;
-			else if(direction == Direction.LEFT)
-				x += JUMP_BACK_SPEED;
-		}else if(enemyState == EnemyState.CROSS_ROLL){
-			if(direction == Direction.RIGHT)
-				x += CROSS_ROLL_SPEED;
-			else if(direction == Direction.LEFT)
-				x -= CROSS_ROLL_SPEED;
-		}else {
-			executeLogic();
-			//Log.d(enemyState.toString(),"xVel"+xVelocity+" xAccel "+xAccel);
+			boolean follow = (currentAction.getActionProperties().getModifier(ActionDataTool.FACE_PLAYER) == ActionDataTool.FACE_PLAYER_FOLLOW);
+			if(follow){//constantly update speed to follow direction of player
+				initSpeed = true;
+			}
 		}
+		
+		
+		
+		executeLogic();
 	}
 
 	@Override

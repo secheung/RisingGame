@@ -463,8 +463,7 @@
 			"y_init_speed":0.65,
 			"trigger_change":{
 				"ground_hit_trigger":"knock_up",
-				"air_hit_trigger":"knock_up",
-				"wall_trigger":"wall_bounce"
+				"air_hit_trigger":"knock_up"
 			}
 		}
 	},
@@ -642,6 +641,7 @@
 			"y_init_speed":0.6,
 			"x_accel":-0.1,
 			"y_accel":-0.098,
+			"y_pt_offset":1.0,
 			"modifiers":{
 			},
 			"trigger_change":{
@@ -661,8 +661,7 @@
 			"y_init_speed":0.65,
 			"trigger_change":{
 				"ground_hit_trigger":"knock_up",
-				"air_hit_trigger":"knock_up",
-				"wall_trigger":"wall_bounce"
+				"air_hit_trigger":"knock_up"
 			}
 		}
 	},

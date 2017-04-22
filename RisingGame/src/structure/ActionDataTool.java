@@ -18,8 +18,9 @@ import org.json.JSONObject;
 
 import engine.open2d.draw.Plane;
 import engine.open2d.texture.AnimatedTexture.Playback;
-
+import junit.framework.Assert;
 import android.content.Context;
+import android.drm.DrmStore.Action;
 import android.graphics.PointF;
 import android.util.Log;
 
@@ -62,6 +63,8 @@ public class ActionDataTool {
 	
 	public static String TRIGGER_PROP_STATE = "state";
 	public static String TRIGGER_PROP_VALUE = "value";
+	public static String TRIGGER_PROP_STATE_COND = "state_cond";
+	public static String TRIGGER_PROP_DEFAULT = "default";
 	
 	private static String MODIFIERS = "modifiers";
 	public static String ACTIVE_AFTER = "active_after";
@@ -89,6 +92,7 @@ public class ActionDataTool {
 	public static String TRIGGER_CANCEL = "trigger_cancel";
 	public static String GROUND_HIT_TRIGGER = "ground_hit_trigger";
 	public static String AIR_HIT_TRIGGER = "air_hit_trigger";
+	public static String AIR_HIT_COND_TRIGGER = "air_hit_cond_trigger";
 	public static String WALL_TRIGGER = "wall_trigger";
 	public static String GROUND_TRIGGER = "ground_trigger";
 	public static String PLAYED_TRIGGER = "played_trigger";
@@ -309,6 +313,12 @@ public class ActionDataTool {
 				actionProperties.addTriggerChange(AIR_HIT_TRIGGER, value);
 			}
 			
+			if(triggerJSON.has(AIR_HIT_COND_TRIGGER)){
+				JSONArray propertyArray = triggerJSON.getJSONArray(AIR_HIT_COND_TRIGGER);
+				TriggerProperties triggerProp = parseTriggerCondProperty(propertyArray);
+				actionProperties.addTriggerProperties(AIR_HIT_COND_TRIGGER, triggerProp);
+			}
+			
 			if(triggerJSON.has(GROUND_TRIGGER)){
 				String value = triggerJSON.getString(GROUND_TRIGGER);
 				actionProperties.addTriggerChange(GROUND_TRIGGER, value);
@@ -489,6 +499,31 @@ public class ActionDataTool {
 		return prop;
 	}
 	
+	public TriggerProperties parseTriggerCondProperty(JSONArray triggerPropData){
+		TriggerProperties prop = new TriggerProperties();
+		
+		boolean found_default = false;
+		for(int index = 0; index < triggerPropData.length(); index++){
+			JSONObject propEntry;
+			try {
+				propEntry = triggerPropData.getJSONObject(index);
+				String cond  = propEntry.getString(TRIGGER_PROP_STATE_COND);
+				String state = propEntry.getString(TRIGGER_PROP_STATE);
+				
+				if(cond.equals(TRIGGER_PROP_DEFAULT))
+					found_default = true;
+				
+				prop.cond_state.put(cond, state);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		Assert.assertTrue(found_default);//Should always have a default go to conditition
+		
+		return prop;
+	}
+	
 	public InteractionProperties parseInteractionProperties(JSONObject interData) throws JSONException{
 		InteractionProperties interProperties = new InteractionProperties();
 		
@@ -516,6 +551,19 @@ public class ActionDataTool {
 				point.x = (float)value.getDouble(X_INIT_SPEED);
 				point.y = (float)value.getDouble(Y_INIT_SPEED);
 				interProperties.addTriggerInitSpeed(AIR_HIT_TRIGGER, point);
+			}
+			
+			if(triggerInitSpeeds.has(AIR_HIT_COND_TRIGGER)){
+				JSONArray speeds = triggerInitSpeeds.getJSONArray(AIR_HIT_COND_TRIGGER);
+				for(int i = 0; i < speeds.length(); ++i){
+					JSONObject value = speeds.getJSONObject(i);
+					String trigger_state = AIR_HIT_COND_TRIGGER+"_"+value.getString(TRIGGER_PROP_STATE);
+					PointF point = new PointF();
+					point.x = (float)value.getDouble(X_INIT_SPEED);
+					point.y = (float)value.getDouble(Y_INIT_SPEED);
+					
+					interProperties.addTriggerInitSpeed(trigger_state, point);
+				}
 			}
 		}
 		

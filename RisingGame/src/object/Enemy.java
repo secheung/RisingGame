@@ -226,6 +226,22 @@ public class Enemy extends GameObject {
 					interProperties.setyInitSpeed(speed.y);
 				}
 				setStateUsingTotalName(interProperties.getTriggerChange(ActionDataTool.AIR_HIT_TRIGGER));
+			}else if(interProperties.hasTriggerProperties(ActionDataTool.AIR_HIT_COND_TRIGGER) && isInAir()){
+				TriggerProperties props = interProperties.getTriggerProperties(ActionDataTool.AIR_HIT_COND_TRIGGER);
+				if(props.cond_state.containsKey(enemyState.getName())){
+					setStateUsingTotalName(props.cond_state.get(enemyState.getName()));
+				}else{
+					String default_state = props.cond_state.get(ActionDataTool.TRIGGER_PROP_DEFAULT);
+					setStateUsingTotalName(default_state);
+				}
+				
+				String trigger_name = ActionDataTool.AIR_HIT_COND_TRIGGER+"_"+enemyState.getName();
+				Log.d("rising_debug", trigger_name+" "+interProperties.getxInitSpeed());
+				if(interProperties.hasTriggerInitSpeed(trigger_name)){
+					PointF speed = interProperties.getTriggerInitSpeed(trigger_name);
+					interProperties.setxInitSpeed(speed.x);
+					interProperties.setyInitSpeed(speed.y);
+				}
 			}
 			initSpeed = true;
 			resetAnim = true;

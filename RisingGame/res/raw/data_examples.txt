@@ -1,0 +1,46 @@
+﻿quick references on how to do stuff with your file you made
+
+				in trigger change
+				
+				"random_trigger":[
+					{
+						"value":1,
+						"state":"behaviour"
+					}
+				]
+				"distance_trigger":[
+					{
+						"value":1.75,
+						"state":"stand"
+					}
+				]
+
+
+			Conditional triggers - make sure you have a default
+			"trigger_init_speeds":{
+				"air_hit_cond_trigger":[
+					{
+						"state":"hover",
+						"x_init_speed":0.0,
+						"y_init_speed":0.0
+					},
+					{
+						"state":"knock_back",
+						"x_init_speed":-1.0,
+						"y_init_speed":0.0
+					}
+				]
+			},
+			"trigger_change":{
+				"air_hit_cond_trigger":[
+					{
+						"state_cond":"default",
+						"state":"hover"
+					},
+					{
+						"state_cond":"hover",
+						"state":"knock_back"
+					}
+				],
+				"ground_hit_trigger":"knock_down"
+			}

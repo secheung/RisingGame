@@ -576,8 +576,32 @@
 			"hit_stop":0,
 			"x_init_speed":0.0,
 			"y_init_speed":0.0,
+			
+			"trigger_init_speeds":{
+				"air_hit_cond_trigger":[
+					{
+						"state":"hover",
+						"x_init_speed":0.0,
+						"y_init_speed":0.0
+					},
+					{
+						"state":"knock_back",
+						"x_init_speed":-1.0,
+						"y_init_speed":0.0
+					}
+				]
+			},
 			"trigger_change":{
-				"air_hit_trigger":"hover",
+				"air_hit_cond_trigger":[
+					{
+						"state_cond":"default",
+						"state":"hover"
+					},
+					{
+						"state_cond":"hover",
+						"state":"knock_back"
+					}
+				],
 				"ground_hit_trigger":"knock_down"
 			}
 		}

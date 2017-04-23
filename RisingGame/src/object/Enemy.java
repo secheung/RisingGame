@@ -35,6 +35,7 @@ public class Enemy extends GameObject {
 		STAND("stand"),
 		STRIKE1("strike"),
 		STRUCK("struck"),
+		STAGGER1("stagger1"),
 		KNOCK_BACK("knock_back"),
 		KNOCK_DOWN("knock_down"),
 		KNOCK_DOWN_FORWARD("knock_down_forward"),
@@ -134,6 +135,7 @@ public class Enemy extends GameObject {
 		animationRef.put(EnemyState.DEAD, R.drawable.enemy_stance);
 		animationRef.put(EnemyState.STRIKE1, R.drawable.enemy_strike1);
 		animationRef.put(EnemyState.STRUCK, R.drawable.enemy_struck);
+		animationRef.put(EnemyState.STAGGER1, R.drawable.enemy_stagger1);
 		
 		animationRef.put(EnemyState.KNOCK_BACK, R.drawable.enemy_knock_back);
 		animationRef.put(EnemyState.KNOCK_DOWN, R.drawable.enemy_knock_down);
@@ -219,6 +221,27 @@ public class Enemy extends GameObject {
 					interProperties.setyInitSpeed(speed.y);
 				}
 				setStateUsingTotalName(interProperties.getTriggerChange(ActionDataTool.GROUND_HIT_TRIGGER));
+			}else if(interProperties.hasTriggerProperties(ActionDataTool.GROUND_HIT_COND_TRIGGER) && isOnGround()){
+				TriggerProperties props = interProperties.getTriggerProperties(ActionDataTool.GROUND_HIT_COND_TRIGGER);
+				String prev_state = enemyState.getName();//get name before state change
+				if(props.cond_state.containsKey(enemyState.getName())){
+					setStateUsingTotalName(props.cond_state.get(enemyState.getName()));
+				}else{
+					String default_state = props.cond_state.get(ActionDataTool.TRIGGER_PROP_DEFAULT);
+					setStateUsingTotalName(default_state);
+				}
+				
+				String trigger_name = ActionDataTool.GROUND_HIT_COND_TRIGGER+"_"+prev_state;
+				String trigger_default = ActionDataTool.GROUND_HIT_COND_TRIGGER+"_"+ActionDataTool.TRIGGER_PROP_DEFAULT;
+				if(interProperties.hasTriggerInitSpeed(trigger_name)){
+					PointF speed = interProperties.getTriggerInitSpeed(trigger_name);
+					interProperties.setxInitSpeed(speed.x);
+					interProperties.setyInitSpeed(speed.y);
+				}else if(interProperties.hasTriggerInitSpeed(trigger_default)){
+					PointF speed = interProperties.getTriggerInitSpeed(trigger_default);
+					interProperties.setxInitSpeed(speed.x);
+					interProperties.setyInitSpeed(speed.y);
+				}
 			}else if(interProperties.hasTriggerChange(ActionDataTool.AIR_HIT_TRIGGER) && isInAir()){
 				if(interProperties.hasTriggerInitSpeed(ActionDataTool.AIR_HIT_TRIGGER)){
 					PointF speed = interProperties.getTriggerInitSpeed(ActionDataTool.AIR_HIT_TRIGGER);
@@ -228,6 +251,8 @@ public class Enemy extends GameObject {
 				setStateUsingTotalName(interProperties.getTriggerChange(ActionDataTool.AIR_HIT_TRIGGER));
 			}else if(interProperties.hasTriggerProperties(ActionDataTool.AIR_HIT_COND_TRIGGER) && isInAir()){
 				TriggerProperties props = interProperties.getTriggerProperties(ActionDataTool.AIR_HIT_COND_TRIGGER);
+				String prev_state = enemyState.getName();//get name before state change
+				
 				if(props.cond_state.containsKey(enemyState.getName())){
 					setStateUsingTotalName(props.cond_state.get(enemyState.getName()));
 				}else{
@@ -235,10 +260,14 @@ public class Enemy extends GameObject {
 					setStateUsingTotalName(default_state);
 				}
 				
-				String trigger_name = ActionDataTool.AIR_HIT_COND_TRIGGER+"_"+enemyState.getName();
-				Log.d("rising_debug", trigger_name+" "+interProperties.getxInitSpeed());
+				String trigger_name = ActionDataTool.AIR_HIT_COND_TRIGGER+"_"+prev_state;
+				String trigger_default = ActionDataTool.AIR_HIT_COND_TRIGGER+"_"+ActionDataTool.TRIGGER_PROP_DEFAULT;
 				if(interProperties.hasTriggerInitSpeed(trigger_name)){
 					PointF speed = interProperties.getTriggerInitSpeed(trigger_name);
+					interProperties.setxInitSpeed(speed.x);
+					interProperties.setyInitSpeed(speed.y);
+				}else if(interProperties.hasTriggerInitSpeed(trigger_default)){
+					PointF speed = interProperties.getTriggerInitSpeed(trigger_default);
 					interProperties.setxInitSpeed(speed.x);
 					interProperties.setyInitSpeed(speed.y);
 				}

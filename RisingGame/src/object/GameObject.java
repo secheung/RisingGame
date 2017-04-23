@@ -238,6 +238,7 @@ public abstract class GameObject {
 		
 		if(currentLogic.hasTrigger(ActionDataTool.PLAYED_TRIGGER)){
 			if(currentAction.getAnimation().isPlayed()){
+				//Log.d("rising_debug", "played trigger "+currentAction.getAnimation().getFrame());
 				String state = currentLogic.getTrigger(ActionDataTool.PLAYED_TRIGGER);
 				setStateUsingTotalName(state);
 				interProperties = null;

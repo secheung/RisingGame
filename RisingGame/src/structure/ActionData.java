@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.graphics.RectF;
+import android.util.Log;
 import object.GameObject;
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
@@ -54,6 +55,9 @@ public class ActionData {
 		
 		float offset_width = planeData.getWidth()/2;//draw in middle
 		worldRenderer.updateDrawObject(animation, pairedObj.getX()-offset_width, pairedObj.getY(), pairedObj.getZ());
+		
+		//if(name.equals("enemy_stagger1"))
+		//	Log.d("rising_debug", animation.getFrame()+"");
 		
 		if(POINT_DEBUG){
 			float pointBox_width = 0.15f/2;

@@ -91,6 +91,7 @@ public class ActionDataTool {
 	public static String TRIGGER_CHANGE = "trigger_change";
 	public static String TRIGGER_CANCEL = "trigger_cancel";
 	public static String GROUND_HIT_TRIGGER = "ground_hit_trigger";
+	public static String GROUND_HIT_COND_TRIGGER = "ground_hit_cond_trigger";
 	public static String AIR_HIT_TRIGGER = "air_hit_trigger";
 	public static String AIR_HIT_COND_TRIGGER = "air_hit_cond_trigger";
 	public static String WALL_TRIGGER = "wall_trigger";
@@ -306,6 +307,12 @@ public class ActionDataTool {
 			if(triggerJSON.has(GROUND_HIT_TRIGGER)){
 				String value = triggerJSON.getString(GROUND_HIT_TRIGGER);
 				actionProperties.addTriggerChange(GROUND_HIT_TRIGGER, value);
+			}
+			
+			if(triggerJSON.has(GROUND_HIT_COND_TRIGGER)){
+				JSONArray propertyArray = triggerJSON.getJSONArray(GROUND_HIT_COND_TRIGGER);
+				TriggerProperties triggerProp = parseTriggerCondProperty(propertyArray);
+				actionProperties.addTriggerProperties(GROUND_HIT_COND_TRIGGER, triggerProp);
 			}
 			
 			if(triggerJSON.has(AIR_HIT_TRIGGER)){
@@ -543,6 +550,19 @@ public class ActionDataTool {
 				point.x = (float)value.getDouble(X_INIT_SPEED);
 				point.y = (float)value.getDouble(Y_INIT_SPEED);
 				interProperties.addTriggerInitSpeed(GROUND_HIT_TRIGGER, point);
+			}
+			
+			if(triggerInitSpeeds.has(GROUND_HIT_COND_TRIGGER)){
+				JSONArray speeds = triggerInitSpeeds.getJSONArray(GROUND_HIT_COND_TRIGGER);
+				for(int i = 0; i < speeds.length(); ++i){
+					JSONObject value = speeds.getJSONObject(i);
+					String trigger_state = GROUND_HIT_COND_TRIGGER+"_"+value.getString(TRIGGER_PROP_STATE);
+					PointF point = new PointF();
+					point.x = (float)value.getDouble(X_INIT_SPEED);
+					point.y = (float)value.getDouble(Y_INIT_SPEED);
+					
+					interProperties.addTriggerInitSpeed(trigger_state, point);
+				}
 			}
 			
 			if(triggerInitSpeeds.has(AIR_HIT_TRIGGER)){

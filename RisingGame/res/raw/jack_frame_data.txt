@@ -361,7 +361,7 @@
 		},
 		"interaction_properties":{
 			"hit_stop":3,
-			"hit_stun":5,
+			"hit_stun":45,
 			"x_init_speed":0.0,
 			"y_init_speed":0.0,
 			"trigger_init_speeds":{
@@ -375,7 +375,7 @@
 				}
 			},
 			"trigger_change":{
-				"ground_hit_trigger":"struck",
+				"ground_hit_trigger":"stagger1",
 				"air_hit_trigger":"knock_back"
 			}
 		}
@@ -580,12 +580,12 @@
 			"trigger_init_speeds":{
 				"air_hit_cond_trigger":[
 					{
-						"state":"hover",
+						"state":"default",
 						"x_init_speed":0.0,
 						"y_init_speed":0.0
 					},
 					{
-						"state":"knock_back",
+						"state":"hover",
 						"x_init_speed":-1.0,
 						"y_init_speed":0.0
 					}
@@ -636,6 +636,7 @@
 			}
 		},
 		"interaction_properties":{
+			"hit_type":"single_hit",
 			"hit_stop":3,
 			"x_init_speed":-1.2,
 			"y_init_speed":0.3,
@@ -768,11 +769,36 @@
 		},
 		"interaction_properties":{
 			"hit_stop":2,
+			
 			"x_init_speed":0.0,
 			"y_init_speed":0.4,
+			"trigger_init_speeds":{
+				"ground_hit_cond_trigger":[
+					{
+						"state":"default",
+						"x_init_speed":0.0,
+						"y_init_speed":0.4
+					},
+					{
+						"state":"stagger1",
+						"x_init_speed":-1.0,
+						"y_init_speed":0.5
+					}
+				]
+			},
+			
 			"trigger_change":{
 				"air_hit_trigger":"knock_back",
-				"ground_hit_trigger":"knock_back"
+				"ground_hit_cond_trigger":[
+					{
+						"state_cond":"default",
+						"state":"knock_back"
+					},
+					{
+						"state_cond":"stagger1",
+						"state":"knock_back"
+					}
+				]
 			}
 		}
 	},

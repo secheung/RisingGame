@@ -1,6 +1,6 @@
 ﻿quick references on how to do stuff with your file you made
 
-				in trigger change
+in trigger change
 				
 				"random_trigger":[
 					{
@@ -16,7 +16,7 @@
 				]
 
 
-			Conditional triggers - make sure you have a default
+Conditional triggers - make sure you have a default
 			"trigger_init_speeds":{
 				"air_hit_cond_trigger":[
 					{
@@ -44,3 +44,8 @@
 				],
 				"ground_hit_trigger":"knock_down"
 			}
+
+
+NOTE ON HIT STUN
+this represents the number of frames you want hitstun to last so it will map the animation to number set
+i.e if animation is 10 frames and hitsun set to 5, will map 10 -> 5

@@ -452,8 +452,7 @@
 				
 			},
 			"trigger_cancel":{
-				"cancel_frame":[15,16,17,18,19,20,21,22,23,24,25,26,27,28],
-				"dtap_f_trigger":"dash",
+				"cancel_frame":[9,10,11,12],
 				"dtap_u_trigger":"jump_startup"
 			}
 		},
@@ -826,7 +825,8 @@
 				"active_after":2
 			},
 			"trigger_change":{
-				"played_trigger":"stand"
+				"played_trigger":"stand",
+				"on_hit_trigger":"n_fswipe2"
 			},
 			"trigger_cancel":{
 				"cancel_frame":[5,6,7,8,9,10,11,12],

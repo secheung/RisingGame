@@ -20,6 +20,16 @@ public class InteractionProperties extends ActionProperties {
 		triggerInitSpeeds = new LinkedHashMap<String, PointF>();
 	}
 	
+	public InteractionProperties(InteractionProperties other){
+		copyActionProperties(other);
+		
+		this.hitStop = other.hitStop;
+		this.hitStun = other.hitStun;
+		
+		this.triggerInitSpeeds = new LinkedHashMap<String, PointF>();
+		this.triggerInitSpeeds.putAll(other.triggerInitSpeeds);
+	}
+	
 	//TODO: Should really move away from this cause you forget to add stuff here
 	public void copyActionProperties(ActionProperties properties){
 		this.hitType = properties.hitType;
@@ -27,8 +37,12 @@ public class InteractionProperties extends ActionProperties {
 		this.yInitSpeed = properties.yInitSpeed;
 		this.xAccel = properties.xAccel;
 		this.yAccel = properties.yAccel;
-		this.triggerChange = properties.triggerChange;
-		this.triggerPropertiesList = properties.triggerPropertiesList;
+		
+		this.triggerChange = new LinkedHashMap<String, String>();
+		this.triggerChange.putAll(properties.triggerChange);
+		
+		this.triggerPropertiesList = new LinkedHashMap<String, TriggerProperties>();
+		this.triggerPropertiesList.putAll(properties.triggerPropertiesList);
 	}
 	
 	public int getHitStop() {

@@ -12,6 +12,7 @@ import object.GameObject.GameObjectState;
 import structure.ActionData;
 import structure.ActionDataTool;
 import structure.HitBox;
+import structure.InteractionProperties;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -337,14 +338,41 @@ public class Player extends GameObject{
 	}
 	
 	@Override
+	public void interactionPreCheck() {
+		if(hitStopFrames > 0){
+			return;
+		}
+		
+		if(getHitActive() && onHit()){
+			//Log.d("rising_debug", "on hit "+this.currentAction.getName());
+			//String state = currentLogic.getTrigger(ActionDataTool.ON_HIT_TRIGGER);
+			//setNextStateUsingTotalName(state);
+			//return;
+			Log.d("rising_debug", currentAction.getName()+" hitstop "+currentAction.getInterProperties().getHitStop());
+			interactionSnapShot = new InteractionProperties(currentAction.getInterProperties());
+			onHit = true;
+		}else{
+			interactionSnapShot = null;
+			onHit = false;
+		}
+	}
+	
+	@Override
 	public void updateState() {
 		if(hitStopFrames > 0){
 			return;
 		}
-
+		
 		//String state1 = playerState.toString();
 		executeTriggers();
 		executeInput();
+		
+		if(onHit){
+			executeOnHit();
+			if(hitStopFrames > 0)//if execute on hit is triggerd don't switch since hitstop needs to play out
+				return;
+		}
+		
 		/*
 		String state2 = playerState.toString();
 		if(!state1.equals(state2)){
@@ -357,12 +385,11 @@ public class Player extends GameObject{
 			this.switchAction(playerState);
 			resetAnim = false;
 		}
-		
 	}
 	
 	@Override
 	public void updateLogic() {
-		if(currentAction.isHitBoxActive() && isHitAvailable()){
+		if(isHitAvailable()){
 			this.setHitActive(true);
 		} else {
 			this.setHitActive(false);
@@ -439,6 +466,26 @@ public class Player extends GameObject{
 		}
 	}
 
+	private void executeOnHit(){
+
+		this.activateHitStop(interactionSnapShot.getHitStop());
+		if(currentAction.getActionProperties().getHitType().equals(ActionDataTool.SINGLE_HIT)){
+			setHitAvailable(false);
+		}
+		
+		if(currentLogic.hasTrigger(ActionDataTool.ON_HIT_TRIGGER)){
+			String state = currentLogic.getTrigger(ActionDataTool.ON_HIT_TRIGGER);
+			setStateUsingTotalName(state);
+			
+			interProperties = null;
+			initSpeed = true;
+			
+			return;
+		}
+		
+		return;
+	}
+	
 	private void executeInput(){
 		Gesture gesture = Gesture.NONE;
 		//if(input != Gesture.NONE)

@@ -19,7 +19,9 @@ import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
 import engine.open2d.texture.AnimatedTexture.Playback;
 import game.GameTools.Gesture;
+import object.Player.PlayerState;
 import game.GameLogic;
+import game.GameTools;
 import game.GestureListener;
 
 public abstract class GameObject {
@@ -74,6 +76,10 @@ public abstract class GameObject {
 	protected float frameBufferCount;
 	//protected Gesture gesture;
 	
+	boolean isHit = false;
+	boolean onHit = false;
+	InteractionProperties interactionSnapShot;
+	
 	protected int hitStopFrames;
 	
 	protected int hitStunFrames;
@@ -122,6 +128,7 @@ public abstract class GameObject {
 	public abstract void setupAnimRef();
 	public abstract void mapActionData(List<ActionData> actionData);
 	
+	public abstract void interactionPreCheck();
 	public abstract void updateState();
 	public abstract void updateLogic();
 	public abstract void updateDisplay();
@@ -263,6 +270,16 @@ public abstract class GameObject {
 				initSpeed = true;
 			}
 		}
+		
+		//if(currentLogic.hasTrigger(ActionDataTool.ON_HIT_TRIGGER)){
+		//	if(onHit()){
+		//		Log.d("rising_debug", "on hit "+this.currentAction.getName());
+		//		String state = currentLogic.getTrigger(ActionDataTool.ON_HIT_TRIGGER);
+		//		setStateUsingTotalName(state);
+		//		interProperties = null;
+		//		initSpeed = true;
+		//	}
+		//}
 		
 		if(currentLogic.hasTrigger(ActionDataTool.CONTINUOUS_TRIGGER)){
 			String state = currentLogic.getTrigger(ActionDataTool.CONTINUOUS_TRIGGER);
@@ -471,6 +488,36 @@ public abstract class GameObject {
 			
 			if(xVelocity < 0 && x-width/2 <= GameLogic.WALL_LEFT)
 				return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean onHit(){
+		//List<HitBox> hitBoxes = this.actionData.get(this.currentFrameState).getHitBoxes();
+		List<HitBox> hitBoxes = currentAction.getHitBoxes();
+		//cycle through objects
+		for(GameObject gameObject : gameObjects.values()){
+			if(gameObject == this)
+				continue;
+			
+			//List<HurtBox> hurtBoxes = gameObject.actionData.get(gameObject.currentFrameState).getHurtBoxes();
+			List<HurtBox> hurtBoxes = gameObject.currentAction.getHurtBoxes();
+			
+			//check every hurtbox against hit box
+			for(HitBox hitBox : hitBoxes){
+				for(HurtBox hurtBox :hurtBoxes){
+					boolean hitBoxActive = hitBox.getActiveFrame().contains(currentAction.getAnimation().getFrame());
+					boolean hurtBoxActive = hurtBox.getActiveFrame().contains(gameObject.currentAction.getAnimation().getFrame()) || (hurtBox.getActiveFrame().size() == 0);
+					if( hitBoxActive && 
+						hurtBoxActive && 
+						GameTools.boxColDetect(hurtBox.getBoxData(), gameObject, hitBox.getBoxData(), this)
+					){
+						//TODO: in future add reference to object that gets hit
+						return true;
+					}
+				}
+			}
 		}
 		
 		return false;

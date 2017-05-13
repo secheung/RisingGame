@@ -140,6 +140,11 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 			//gameObjects.put(enemy.getName(), enemy);
 			//enemyIndex++;
 		}
+
+		//interaction pre check
+		for(GameObject gameObject : gameObjects.values()){
+			gameObject.interactionPreCheck();
+		}
 		
 		ArrayList<String> removeObjects = new ArrayList<String>();
 		for(GameObject gameObject : gameObjects.values()){

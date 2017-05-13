@@ -160,120 +160,32 @@ public class Enemy extends GameObject {
 	}
 
 	@Override
+	public void interactionPreCheck(){
+		if(hitStopFrames > 0){
+			return;
+		}
+		
+		if(isHit()){
+			//executeGetHit();
+			isHit = true;
+			interactionSnapShot = new InteractionProperties(playerRef.currentAction.getInterProperties());
+		}else{
+			isHit = false;
+			interactionSnapShot = null;
+		}
+		
+	}
+	
+	@Override
 	public void updateState() {
 		if(hitStopFrames > 0){
 			return;
 		}
 		
 		float checkX = getMidX();
-		
-		//if(!isStrikeState() && !isDodging()){
-		//if(		enemyState != EnemyState.KNOCK_BACK &&
-		//		enemyState != EnemyState.KNOCK_DOWN &&
-		//		enemyState != EnemyState.KNOCK_DOWN_FORWARD &&
-		//		enemyState != EnemyState.WALL_BOUNCE &&
-		//		enemyState != EnemyState.KNOCK_UP &&
-		//		enemyState != EnemyState.HOVER&&
-		//		enemyState != EnemyState.TRIP_FORWARD){
-		//	if(playerRef.getMidX() > checkX){
-		//		direction = Direction.RIGHT;
-		//	} else if(playerRef.getMidX() < checkX){
-		//		direction = Direction.LEFT;
-		//	}
-		//}
 
-		/*
-		if(enemyState == EnemyState.STAND){
-			
-			if(Math.abs(checkX - playerRef.getMidX()) > CLOSE_DIST_TO_PLAYER){
-				enemyState = EnemyState.WALK;
-			}
-			
-			if(Math.abs(checkX - playerRef.getMidX()) > FAR_DIST_TO_PLAYER){
-				enemyState = EnemyState.RUN;
-			}
-		} else if(enemyState == EnemyState.RUN || enemyState == EnemyState.WALK){
-			executeMovement();
-		}
-		*/
-
-		if(isHit()){
-			interProperties = playerRef.getCurrentAction().getInterProperties();
-			playerRef.activateHitStop(interProperties.getHitStop());
-			this.activateHitStop(interProperties.getHitStop());
-			this.activateHitStun(interProperties.getHitStun());
-			if(playerRef.getCurrentAction().getActionProperties().getHitType().equals(ActionDataTool.SINGLE_HIT)){
-				playerRef.setHitAvailable(false);//deactivate hitboxes on next update //WILL CAUSE PROBLEMS IF PLAYER IS NOT UPDATED FIRST
-			}
-			
-			//playerRef.setHitActive(false);
-			
-			if(playerRef.getDirection() == Direction.RIGHT){
-				direction = Direction.LEFT;
-			} else if(playerRef.getDirection() == Direction.LEFT){
-				direction = Direction.RIGHT;
-			}
-
-			if(interProperties.hasTriggerChange(ActionDataTool.GROUND_HIT_TRIGGER) && isOnGround()){
-				if(interProperties.hasTriggerInitSpeed(ActionDataTool.GROUND_HIT_TRIGGER)){
-					PointF speed = interProperties.getTriggerInitSpeed(ActionDataTool.GROUND_HIT_TRIGGER);
-					interProperties.setxInitSpeed(speed.x);
-					interProperties.setyInitSpeed(speed.y);
-				}
-				setStateUsingTotalName(interProperties.getTriggerChange(ActionDataTool.GROUND_HIT_TRIGGER));
-			}else if(interProperties.hasTriggerProperties(ActionDataTool.GROUND_HIT_COND_TRIGGER) && isOnGround()){
-				TriggerProperties props = interProperties.getTriggerProperties(ActionDataTool.GROUND_HIT_COND_TRIGGER);
-				String prev_state = enemyState.getName();//get name before state change
-				if(props.cond_state.containsKey(enemyState.getName())){
-					setStateUsingTotalName(props.cond_state.get(enemyState.getName()));
-				}else{
-					String default_state = props.cond_state.get(ActionDataTool.TRIGGER_PROP_DEFAULT);
-					setStateUsingTotalName(default_state);
-				}
-				
-				String trigger_name = ActionDataTool.GROUND_HIT_COND_TRIGGER+"_"+prev_state;
-				String trigger_default = ActionDataTool.GROUND_HIT_COND_TRIGGER+"_"+ActionDataTool.TRIGGER_PROP_DEFAULT;
-				if(interProperties.hasTriggerInitSpeed(trigger_name)){
-					PointF speed = interProperties.getTriggerInitSpeed(trigger_name);
-					interProperties.setxInitSpeed(speed.x);
-					interProperties.setyInitSpeed(speed.y);
-				}else if(interProperties.hasTriggerInitSpeed(trigger_default)){
-					PointF speed = interProperties.getTriggerInitSpeed(trigger_default);
-					interProperties.setxInitSpeed(speed.x);
-					interProperties.setyInitSpeed(speed.y);
-				}
-			}else if(interProperties.hasTriggerChange(ActionDataTool.AIR_HIT_TRIGGER) && isInAir()){
-				if(interProperties.hasTriggerInitSpeed(ActionDataTool.AIR_HIT_TRIGGER)){
-					PointF speed = interProperties.getTriggerInitSpeed(ActionDataTool.AIR_HIT_TRIGGER);
-					interProperties.setxInitSpeed(speed.x);
-					interProperties.setyInitSpeed(speed.y);
-				}
-				setStateUsingTotalName(interProperties.getTriggerChange(ActionDataTool.AIR_HIT_TRIGGER));
-			}else if(interProperties.hasTriggerProperties(ActionDataTool.AIR_HIT_COND_TRIGGER) && isInAir()){
-				TriggerProperties props = interProperties.getTriggerProperties(ActionDataTool.AIR_HIT_COND_TRIGGER);
-				String prev_state = enemyState.getName();//get name before state change
-				
-				if(props.cond_state.containsKey(enemyState.getName())){
-					setStateUsingTotalName(props.cond_state.get(enemyState.getName()));
-				}else{
-					String default_state = props.cond_state.get(ActionDataTool.TRIGGER_PROP_DEFAULT);
-					setStateUsingTotalName(default_state);
-				}
-				
-				String trigger_name = ActionDataTool.AIR_HIT_COND_TRIGGER+"_"+prev_state;
-				String trigger_default = ActionDataTool.AIR_HIT_COND_TRIGGER+"_"+ActionDataTool.TRIGGER_PROP_DEFAULT;
-				if(interProperties.hasTriggerInitSpeed(trigger_name)){
-					PointF speed = interProperties.getTriggerInitSpeed(trigger_name);
-					interProperties.setxInitSpeed(speed.x);
-					interProperties.setyInitSpeed(speed.y);
-				}else if(interProperties.hasTriggerInitSpeed(trigger_default)){
-					PointF speed = interProperties.getTriggerInitSpeed(trigger_default);
-					interProperties.setxInitSpeed(speed.x);
-					interProperties.setyInitSpeed(speed.y);
-				}
-			}
-			initSpeed = true;
-			resetAnim = true;
+		if(isHit){
+			executeGetHit();
 		}else{
 			EnemyState prevState = enemyState;
 			executeTriggers();
@@ -288,6 +200,10 @@ public class Enemy extends GameObject {
 			resetAnim = false;
 		}
 		
+		//if(isHit){
+		//	this.activateHitStop(interProperties.getHitStop());
+		//	this.activateHitStun(interProperties.getHitStun());
+		//}
 		
 		if(		enemyState != EnemyState.STAND && 
 				enemyState != EnemyState.RUN && 
@@ -295,6 +211,90 @@ public class Enemy extends GameObject {
 			//Log.d(enemyState.toString(),"xVel "+xVelocity+" xAccel "+xAccel);
 			//Log.d(enemyState.toString(),"yVel "+yVelocity+" yAccel "+yAccel);
 		}
+	}
+	
+	public void executeGetHit(){
+		//Log.d("rising_debug", "enemy hit "+this.currentAction.toString());
+		
+		//interProperties = playerRef.currentAction.getInterProperties();
+		interProperties = interactionSnapShot;
+		
+		
+		this.activateHitStop(interProperties.getHitStop());
+		this.activateHitStun(interProperties.getHitStun());
+		///playerRef.activateHitStop(interProperties.getHitStop());
+		///if(playerRef.currentAction.getActionProperties().getHitType().equals(ActionDataTool.SINGLE_HIT)){
+		///	playerRef.setHitAvailable(false);//deactivate hitboxes on next update //WILL CAUSE PROBLEMS IF PLAYER IS NOT UPDATED FIRST
+		///}
+		
+		//playerRef.setHitActive(false);
+		
+		if(playerRef.getDirection() == Direction.RIGHT){
+			direction = Direction.LEFT;
+		} else if(playerRef.getDirection() == Direction.LEFT){
+			direction = Direction.RIGHT;
+		}
+
+		if(interProperties.hasTriggerChange(ActionDataTool.GROUND_HIT_TRIGGER) && isOnGround()){
+			if(interProperties.hasTriggerInitSpeed(ActionDataTool.GROUND_HIT_TRIGGER)){
+				PointF speed = interProperties.getTriggerInitSpeed(ActionDataTool.GROUND_HIT_TRIGGER);
+				interProperties.setxInitSpeed(speed.x);
+				interProperties.setyInitSpeed(speed.y);
+			}
+			setStateUsingTotalName(interProperties.getTriggerChange(ActionDataTool.GROUND_HIT_TRIGGER));
+		}else if(interProperties.hasTriggerProperties(ActionDataTool.GROUND_HIT_COND_TRIGGER) && isOnGround()){
+			TriggerProperties props = interProperties.getTriggerProperties(ActionDataTool.GROUND_HIT_COND_TRIGGER);
+			String prev_state = enemyState.getName();//get name before state change
+			if(props.cond_state.containsKey(enemyState.getName())){
+				setStateUsingTotalName(props.cond_state.get(enemyState.getName()));
+			}else{
+				String default_state = props.cond_state.get(ActionDataTool.TRIGGER_PROP_DEFAULT);
+				setStateUsingTotalName(default_state);
+			}
+			
+			String trigger_name = ActionDataTool.GROUND_HIT_COND_TRIGGER+"_"+prev_state;
+			String trigger_default = ActionDataTool.GROUND_HIT_COND_TRIGGER+"_"+ActionDataTool.TRIGGER_PROP_DEFAULT;
+			if(interProperties.hasTriggerInitSpeed(trigger_name)){
+				PointF speed = interProperties.getTriggerInitSpeed(trigger_name);
+				interProperties.setxInitSpeed(speed.x);
+				interProperties.setyInitSpeed(speed.y);
+			}else if(interProperties.hasTriggerInitSpeed(trigger_default)){
+				PointF speed = interProperties.getTriggerInitSpeed(trigger_default);
+				interProperties.setxInitSpeed(speed.x);
+				interProperties.setyInitSpeed(speed.y);
+			}
+		}else if(interProperties.hasTriggerChange(ActionDataTool.AIR_HIT_TRIGGER) && isInAir()){
+			if(interProperties.hasTriggerInitSpeed(ActionDataTool.AIR_HIT_TRIGGER)){
+				PointF speed = interProperties.getTriggerInitSpeed(ActionDataTool.AIR_HIT_TRIGGER);
+				interProperties.setxInitSpeed(speed.x);
+				interProperties.setyInitSpeed(speed.y);
+			}
+			setStateUsingTotalName(interProperties.getTriggerChange(ActionDataTool.AIR_HIT_TRIGGER));
+		}else if(interProperties.hasTriggerProperties(ActionDataTool.AIR_HIT_COND_TRIGGER) && isInAir()){
+			TriggerProperties props = interProperties.getTriggerProperties(ActionDataTool.AIR_HIT_COND_TRIGGER);
+			String prev_state = enemyState.getName();//get name before state change
+			
+			if(props.cond_state.containsKey(enemyState.getName())){
+				setStateUsingTotalName(props.cond_state.get(enemyState.getName()));
+			}else{
+				String default_state = props.cond_state.get(ActionDataTool.TRIGGER_PROP_DEFAULT);
+				setStateUsingTotalName(default_state);
+			}
+			
+			String trigger_name = ActionDataTool.AIR_HIT_COND_TRIGGER+"_"+prev_state;
+			String trigger_default = ActionDataTool.AIR_HIT_COND_TRIGGER+"_"+ActionDataTool.TRIGGER_PROP_DEFAULT;
+			if(interProperties.hasTriggerInitSpeed(trigger_name)){
+				PointF speed = interProperties.getTriggerInitSpeed(trigger_name);
+				interProperties.setxInitSpeed(speed.x);
+				interProperties.setyInitSpeed(speed.y);
+			}else if(interProperties.hasTriggerInitSpeed(trigger_default)){
+				PointF speed = interProperties.getTriggerInitSpeed(trigger_default);
+				interProperties.setxInitSpeed(speed.x);
+				interProperties.setyInitSpeed(speed.y);
+			}
+		}
+		initSpeed = true;
+		resetAnim = true;
 	}
 
 	public void executeBehaviour(){
@@ -551,8 +551,13 @@ public class Enemy extends GameObject {
 		if(playerRef.getHitActive() && this.getHitStopFrames() == 0){
 			ActionData playerAction = playerRef.getCurrentAction();
 			for(HitBox hitBox : playerAction.getHitBoxes()){
-				for(HurtBox hurtBox : currentAction.getHurtBoxes()){
-					if(GameTools.boxColDetect(hurtBox.getBoxData(), this, hitBox.getBoxData(), playerRef)){
+				for(HurtBox hurtBox : this.currentAction.getHurtBoxes()){
+					boolean hitBoxActive = hitBox.getActiveFrame().contains(playerRef.currentAction.getAnimation().getFrame());
+					boolean hurtBoxActive = hurtBox.getActiveFrame().contains(currentAction.getAnimation().getFrame()) || (hurtBox.getActiveFrame().size() == 0);
+					
+					if( hitBoxActive &&
+						hurtBoxActive && 
+						GameTools.boxColDetect(hurtBox.getBoxData(), this, hitBox.getBoxData(), playerRef)){
 						return true;
 					}
 				}
@@ -641,7 +646,7 @@ public class Enemy extends GameObject {
 		}
 		this.enemyState = changeState;
 	}
-
+	
 	public boolean isSelected() {
 		return selected;
 	}

@@ -762,7 +762,7 @@
 				"on_hit_cond_trigger":[
 					{
 						"state_cond":"default",
-						"state":"n_fswipe2"
+						"state":"nothing"
 					},
 					{
 						"state_cond":"stagger1",

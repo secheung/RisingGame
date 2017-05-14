@@ -65,6 +65,7 @@ public class ActionDataTool {
 	public static String TRIGGER_PROP_VALUE = "value";
 	public static String TRIGGER_PROP_STATE_COND = "state_cond";
 	public static String TRIGGER_PROP_DEFAULT = "default";
+	public static String TRIGGER_PROP_NOTHING = "nothing";
 	
 	private static String MODIFIERS = "modifiers";
 	public static String ACTIVE_AFTER = "active_after";

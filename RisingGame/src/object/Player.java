@@ -499,7 +499,7 @@ public class Player extends GameObject{
 				to_change_state = props.cond_state.get(ActionDataTool.TRIGGER_PROP_DEFAULT);
 			}
 			
-			if(!to_change_state.isEmpty()){
+			if(!to_change_state.isEmpty() && !to_change_state.equals(ActionDataTool.TRIGGER_PROP_NOTHING)){
 				setStateUsingTotalName(to_change_state);
 				interProperties = null;
 				initSpeed = true;

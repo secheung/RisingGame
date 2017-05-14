@@ -758,7 +758,17 @@
 				"active_after":5
 			},
 			"trigger_change":{
-				"ground_trigger":"jump_land"
+				"ground_trigger":"jump_land",
+				"on_hit_cond_trigger":[
+					{
+						"state_cond":"default",
+						"state":"n_fswipe2"
+					},
+					{
+						"state_cond":"stagger1",
+						"state":"jump_startup"
+					}
+				]
 			},
 			"trigger_cancel":{
 				"cancel_frame":[5],

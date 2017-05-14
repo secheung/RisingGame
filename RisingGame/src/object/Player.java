@@ -13,6 +13,7 @@ import structure.ActionData;
 import structure.ActionDataTool;
 import structure.HitBox;
 import structure.InteractionProperties;
+import structure.TriggerProperties;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -343,12 +344,13 @@ public class Player extends GameObject{
 			return;
 		}
 		
-		if(getHitActive() && onHit()){
+		hitObject = onHitCheck();
+		if(getHitActive() && (hitObject != null)){
 			//Log.d("rising_debug", "on hit "+this.currentAction.getName());
 			//String state = currentLogic.getTrigger(ActionDataTool.ON_HIT_TRIGGER);
 			//setNextStateUsingTotalName(state);
 			//return;
-			Log.d("rising_debug", currentAction.getName()+" hitstop "+currentAction.getInterProperties().getHitStop());
+			//Log.d("rising_debug", currentAction.getName()+" hitstop "+currentAction.getInterProperties().getHitStop());
 			interactionSnapShot = new InteractionProperties(currentAction.getInterProperties());
 			onHit = true;
 		}else{
@@ -481,6 +483,29 @@ public class Player extends GameObject{
 			initSpeed = true;
 			
 			return;
+		}else if(currentAction.getActionProperties().hasTriggerProperties(ActionDataTool.ON_HIT_COND_TRIGGER)){
+			TriggerProperties props = currentAction.getActionProperties().getTriggerProperties(ActionDataTool.ON_HIT_COND_TRIGGER);
+			boolean has_hit_object = (hitObject != null);
+			
+			String to_change_state = "";
+			if(has_hit_object){
+				String hit_obj_state = ((Enemy)hitObject).enemyState.getName();//assume enemy
+				if(props.cond_state.containsKey(hit_obj_state)){
+					to_change_state = props.cond_state.get(hit_obj_state);
+				}else{
+					to_change_state = props.cond_state.get(ActionDataTool.TRIGGER_PROP_DEFAULT);
+				}
+			}else{
+				to_change_state = props.cond_state.get(ActionDataTool.TRIGGER_PROP_DEFAULT);
+			}
+			
+			if(!to_change_state.isEmpty()){
+				setStateUsingTotalName(to_change_state);
+				interProperties = null;
+				initSpeed = true;
+				
+				return;
+			}
 		}
 		
 		return;

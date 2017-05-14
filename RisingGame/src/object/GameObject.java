@@ -78,6 +78,7 @@ public abstract class GameObject {
 	
 	boolean isHit = false;
 	boolean onHit = false;
+	GameObject hitObject;
 	InteractionProperties interactionSnapShot;
 	
 	protected int hitStopFrames;
@@ -493,7 +494,8 @@ public abstract class GameObject {
 		return false;
 	}
 	
-	public boolean onHit(){
+	//if has hit a gameObject returns the hit object else returns null
+	public GameObject onHitCheck(){
 		//List<HitBox> hitBoxes = this.actionData.get(this.currentFrameState).getHitBoxes();
 		List<HitBox> hitBoxes = currentAction.getHitBoxes();
 		//cycle through objects
@@ -513,14 +515,17 @@ public abstract class GameObject {
 						hurtBoxActive && 
 						GameTools.boxColDetect(hurtBox.getBoxData(), gameObject, hitBox.getBoxData(), this)
 					){
-						//TODO: in future add reference to object that gets hit
-						return true;
+						return gameObject;
+						//hitObject = gameObject;
+						//return true;
 					}
 				}
 			}
 		}
 		
-		return false;
+		//hitObject = null;
+		//return false;
+		return null;
 	}
 	
 	public boolean isXStopped(){

@@ -96,6 +96,7 @@ public class ActionDataTool {
 	public static String AIR_HIT_COND_TRIGGER = "air_hit_cond_trigger";
 	public static String WALL_TRIGGER = "wall_trigger";
 	public static String ON_HIT_TRIGGER = "on_hit_trigger";
+	public static String ON_HIT_COND_TRIGGER = "on_hit_cond_trigger";
 	public static String GROUND_TRIGGER = "ground_trigger";
 	public static String PLAYED_TRIGGER = "played_trigger";
 	public static String STOPPED_X_TRIGGER = "stopped_x_trigger";//triggers when x movement stopped
@@ -340,6 +341,12 @@ public class ActionDataTool {
 			if(triggerJSON.has(ON_HIT_TRIGGER)){
 				String value = triggerJSON.getString(ON_HIT_TRIGGER);
 				actionProperties.addTriggerChange(ON_HIT_TRIGGER, value);
+			}
+			
+			if(triggerJSON.has(ON_HIT_COND_TRIGGER)){
+				JSONArray propertyArray = triggerJSON.getJSONArray(ON_HIT_COND_TRIGGER);
+				TriggerProperties triggerProp = parseTriggerCondProperty(propertyArray);
+				actionProperties.addTriggerProperties(ON_HIT_COND_TRIGGER, triggerProp);
 			}
 			
 			if(triggerJSON.has(PLAYED_TRIGGER)){

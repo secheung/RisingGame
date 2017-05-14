@@ -49,3 +49,7 @@ Conditional triggers - make sure you have a default
 NOTE ON HIT STUN
 this represents the number of frames you want hitstun to last so it will map the animation to number set
 i.e if animation is 10 frames and hitsun set to 5, will map 10 -> 5
+
+NOTE ON CONDITIONAL CHANGE
+ - checks enemy state for conditional change
+ - if you make an input during or before the hitstop, the buffer will store it and overwrite the conditional hit

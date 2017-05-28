@@ -36,6 +36,8 @@ public class Enemy extends GameObject {
 		STRIKE1("strike"),
 		STRUCK("struck"),
 		STAGGER1("stagger1"),
+		AIR_GRABBED("air_grabbed"),
+		NFINISH1("n_finish1"),
 		KNOCK_BACK("knock_back"),
 		KNOCK_DOWN("knock_down"),
 		KNOCK_DOWN_FORWARD("knock_down_forward"),
@@ -136,6 +138,8 @@ public class Enemy extends GameObject {
 		animationRef.put(EnemyState.STRIKE1, R.drawable.enemy_strike1);
 		animationRef.put(EnemyState.STRUCK, R.drawable.enemy_struck);
 		animationRef.put(EnemyState.STAGGER1, R.drawable.enemy_stagger1);
+		animationRef.put(EnemyState.AIR_GRABBED, R.drawable.enemy_air_grabbed);
+		animationRef.put(EnemyState.NFINISH1, R.drawable.enemy_n_finish1);
 		
 		animationRef.put(EnemyState.KNOCK_BACK, R.drawable.enemy_knock_back);
 		animationRef.put(EnemyState.KNOCK_DOWN, R.drawable.enemy_knock_down);
@@ -169,9 +173,20 @@ public class Enemy extends GameObject {
 			//executeGetHit();
 			isHit = true;
 			interactionSnapShot = new InteractionProperties(playerRef.currentAction.getInterProperties());
+			interactionObject = playerRef;
 		}else{
 			isHit = false;
 			interactionSnapShot = null;
+			interactionObject = null;
+		}
+		
+		
+		if(currentAction.getActionProperties().hasModifier(ActionDataTool.GRAB_TYPE)){
+			grab_flag = true;
+			grabObject = playerRef;
+		}else{
+			grab_flag = false;
+			grabObject = null;
 		}
 		
 	}
@@ -220,7 +235,7 @@ public class Enemy extends GameObject {
 		interProperties = interactionSnapShot;
 		
 		
-		this.activateHitStop(interProperties.getHitStop());
+		this.activateHitStop(interProperties.getHitStop()+1);//add one frame of hitstop since enemy switches state 1 frame earlier than player. The one frame allows the player to catch up for the frame change.
 		this.activateHitStun(interProperties.getHitStun());
 		///playerRef.activateHitStop(interProperties.getHitStop());
 		///if(playerRef.currentAction.getActionProperties().getHitType().equals(ActionDataTool.SINGLE_HIT)){

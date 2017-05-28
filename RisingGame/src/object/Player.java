@@ -41,6 +41,7 @@ public class Player extends GameObject{
 		DEAD("dead"),
 		NCOUNTERSTANCE("n_counter_stance"),
 		NTAP("n_tap"),
+		NFINISH1("n_finish1"),
 		NFSWIPECOMBO1("n_fswipe_combo1"),
 		NFSWIPECOMBO2("n_fswipe_combo2"),
 		NFSWIPE ("n_fswipe"),
@@ -132,6 +133,7 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.DODGE, R.drawable.rising_dodge);
 		animationRef.put(PlayerState.NCOUNTERSTANCE, R.drawable.jack_n_counter_stance);
 		animationRef.put(PlayerState.NTAP, R.drawable.jack_n_tap);
+		animationRef.put(PlayerState.NFINISH1, R.drawable.jack_n_finish1);
 		animationRef.put(PlayerState.NFSWIPE, R.drawable.jack_n_fswipe);
 		animationRef.put(PlayerState.NFSWIPE2, R.drawable.jack_n_fswipe2);
 		animationRef.put(PlayerState.NFSWIPECOMBO1, R.drawable.jack_n_combo1);
@@ -140,7 +142,7 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.NDSWIPE, R.drawable.jack_n_dswipe);
 		animationRef.put(PlayerState.AFSWIPE, R.drawable.jack_a_fswipe);
 		animationRef.put(PlayerState.AFSWIPE2, R.drawable.jack_a_fswipe2);
-		animationRef.put(PlayerState.AFSWIPE3, R.drawable.jack_n_fswipe2);
+		animationRef.put(PlayerState.AFSWIPE3, R.drawable.jack_a_fswipe3);
 		animationRef.put(PlayerState.AUSWIPE, R.drawable.jack_d_uswipe);
 		animationRef.put(PlayerState.ADSWIPE, R.drawable.jack_a_dswipe);
 		animationRef.put(PlayerState.DFSWIPE, R.drawable.jack_d_fswipe2);
@@ -344,8 +346,8 @@ public class Player extends GameObject{
 			return;
 		}
 		
-		hitObject = onHitCheck();
-		if(getHitActive() && (hitObject != null)){
+		interactionObject = onHitCheck();
+		if(getHitActive() && (interactionObject != null)){
 			//Log.d("rising_debug", "on hit "+this.currentAction.getName());
 			//String state = currentLogic.getTrigger(ActionDataTool.ON_HIT_TRIGGER);
 			//setNextStateUsingTotalName(state);
@@ -356,6 +358,22 @@ public class Player extends GameObject{
 		}else{
 			interactionSnapShot = null;
 			onHit = false;
+		}
+		
+		if(currentAction.getActionProperties().hasModifier(ActionDataTool.GRAB_TYPE)){
+			grab_flag = true;
+			
+			//look for grabbed enemy
+			for(GameObject gameObject : gameObjects.values()){
+				boolean current_action_is_grab = gameObject.currentAction.getActionProperties().hasModifier(ActionDataTool.GRAB_TYPE);
+				if(gameObject != this && current_action_is_grab){
+					grabObject = gameObject;
+					return;
+				}
+			}
+		}else{
+			grab_flag = false;
+			grabObject = null;
 		}
 	}
 	
@@ -485,11 +503,11 @@ public class Player extends GameObject{
 			return;
 		}else if(currentAction.getActionProperties().hasTriggerProperties(ActionDataTool.ON_HIT_COND_TRIGGER)){
 			TriggerProperties props = currentAction.getActionProperties().getTriggerProperties(ActionDataTool.ON_HIT_COND_TRIGGER);
-			boolean has_hit_object = (hitObject != null);
+			boolean has_hit_object = (interactionObject != null);
 			
 			String to_change_state = "";
 			if(has_hit_object){
-				String hit_obj_state = ((Enemy)hitObject).enemyState.getName();//assume enemy
+				String hit_obj_state = ((Enemy)interactionObject).enemyState.getName();//assume enemy
 				if(props.cond_state.containsKey(hit_obj_state)){
 					to_change_state = props.cond_state.get(hit_obj_state);
 				}else{

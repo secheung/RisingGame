@@ -76,10 +76,14 @@ public abstract class GameObject {
 	protected float frameBufferCount;
 	//protected Gesture gesture;
 	
-	boolean isHit = false;
-	boolean onHit = false;
-	GameObject hitObject;
+	boolean isHit;
+	boolean onHit;
+	GameObject interactionObject;
+	GameObject grabObject;
 	InteractionProperties interactionSnapShot;
+	
+	boolean grab_flag;//flag implies continuous
+	
 	
 	protected int hitStopFrames;
 	
@@ -123,6 +127,11 @@ public abstract class GameObject {
 		this.hitStunFrames = 0;
 		this.hitTotalStunFrames = 0;
 		this.inHitStun = false;
+		
+		isHit = false;
+		onHit = false;
+		
+		grab_flag = false;
 	}
 	
 	
@@ -282,6 +291,15 @@ public abstract class GameObject {
 		//	}
 		//}
 		
+		if(currentLogic.hasTrigger(ActionDataTool.RELEASE_TRIGGER)){
+			if(!grabObject.grab_flag){
+				String state = currentLogic.getTrigger(ActionDataTool.RELEASE_TRIGGER);
+				setStateUsingTotalName(state);
+				interProperties = null;
+				initSpeed = true;
+			}
+		}
+		
 		if(currentLogic.hasTrigger(ActionDataTool.CONTINUOUS_TRIGGER)){
 			String state = currentLogic.getTrigger(ActionDataTool.CONTINUOUS_TRIGGER);
 			setStateUsingTotalName(state);
@@ -351,18 +369,38 @@ public abstract class GameObject {
 			//executeYPhys();
 			//return;
 		}
-
-		/*
-		if(isXStopped() || isAtWall()){
-			initXPhys(0, 0);
-		} else {
-			executeXPhys();
+		
+		//perform snap and leave function
+		//if(!currentAction.getActionProperties().getSnapTo().isEmpty()){
+		if(grab_flag && (grabObject != null)){
+			Integer grab_type = currentAction.getActionProperties().getModifier(ActionDataTool.GRAB_TYPE); 
+			if((grab_type != null) && grab_type == ActionDataTool.GRAB_TYPE_GRABBED){
+				//String obj_to_snap_to = currentAction.getActionProperties().getSnapTo();
+				initXPhys(0, 0);
+				initYPhys(0, 0);
+				initSpeed = false;
+				
+				double x_snap = currentAction.getActionProperties().getxPtSnap();
+				if(direction == Direction.RIGHT){
+					x_snap = x_snap;
+				} else if(direction == Direction.LEFT){
+					x_snap = -1*x_snap;
+				}
+				
+				double y_snap = currentAction.getActionProperties().getyPtSnap();
+				
+				//GameObject gameObj = gameLogic.gameObjects.get(obj_to_snap_to);
+				GameObject gameObj = grabObject;
+				setX((float)(gameObj.getOffsetX() + x_snap));
+				setY((float)(gameObj.getOffsetY() + y_snap));
+				return;
+			}
 		}
-		*/
+		
 		if(!currentLogic.hasTrigger(ActionDataTool.STOPPED_X_TRIGGER) && isXStopped()){
 			initXPhys(0, 0);
 		} else if(!currentLogic.hasTrigger(ActionDataTool.WALL_TRIGGER) && isAtWall()){
-			initXPhys(0, 0);
+			initXPhys(0, 0);			
 		} else {
 			executeXPhys();
 		}

@@ -306,5 +306,58 @@
 				"ground_trigger":"knock_down_forward"
 			}
 		}
+	},
+	"air_grabbed_action":{
+		"name":"enemy_air_grabbed",
+		"plane_data":{
+			"width":3.5,
+			"height":3.5,
+			"rows":2,
+			"columns":7,
+			"play_back":"play"
+		},
+		"hurt_box":[
+			{"left":1.1,"bottom":1.25,"right":2.9,"top":2.5}
+		],
+		"hit_box":[
+		],
+		"action_properties":{
+			"modifiers":{
+				"grab_type":2
+			},
+			"x_accel":0.0,
+			"y_accel":0.0,
+			"x_pt_snap":1.5,
+			"y_pt_snap":-2.2,
+			"trigger_change":{
+				"release_trigger":"knock_down_forward"
+			}
+		}
+	},
+	"n_finish1_action":{
+		"name":"enemy_n_finish1",
+		"plane_data":{
+			"width":3.5,
+			"height":3.5,
+			"rows":5,
+			"columns":5,
+			"play_back":"play_once"
+		},
+		"hurt_box":[
+		],
+		"hit_box":[
+		],
+		"action_properties":{
+			"modifiers":{
+				"grab_type":2
+			},
+			"x_accel":0.0,
+			"y_accel":0.0,
+			"x_pt_snap":0.0,
+			"y_pt_snap":0.0,
+			"trigger_change":{
+				"release_trigger":"knock_down"
+			}
+		}
 	}
 }

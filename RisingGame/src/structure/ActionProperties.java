@@ -12,6 +12,10 @@ public class ActionProperties {
 	protected float xPtOffset;
 	protected float yPtOffset;
 	
+	protected String snapTo;
+	protected float xPtSnap;
+	protected float yPtSnap;
+	
 	LinkedHashMap<String,String> triggerChange;
 	LinkedHashMap<String,String> triggerCancel;
 	HashSet<Integer> cancelFrame;
@@ -29,6 +33,10 @@ public class ActionProperties {
 		xPtOffset = 0.0f;
 		yPtOffset = 0.0f;
 
+		snapTo = "";
+		xPtSnap = 0.0f;
+		yPtSnap = 0.0f;
+		
 		triggerChange = new LinkedHashMap<String, String>();
 		triggerCancel = new LinkedHashMap<String, String>();
 		cancelFrame = new HashSet<Integer>();
@@ -93,6 +101,30 @@ public class ActionProperties {
 		this.yPtOffset = yPtOffset;
 	}
 
+	public String getSnapTo(){
+		return snapTo;
+	}
+	
+	public void setSnapTo(String snapTo){
+		this.snapTo = snapTo;
+	}
+	
+	public float getxPtSnap() {
+		return xPtSnap;
+	}
+
+	public void setxPtSnap(float xPtSnap) {
+		this.xPtSnap = xPtSnap;
+	}
+
+	public float getyPtSnap() {
+		return yPtSnap;
+	}
+
+	public void setyPtSnap(float yPtSnap) {
+		this.yPtSnap = yPtSnap;
+	}
+	
 	public void addTriggerChange(String trigger, String nextState){
 		triggerChange.put(trigger, nextState);
 	}

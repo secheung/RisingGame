@@ -79,6 +79,13 @@ public class ActionDataTool {
 	public static String X_POINT_OFFSET = "x_pt_offset";
 	public static String Y_POINT_OFFSET = "y_pt_offset";
 	
+	public static String SNAP_TO = "snap_to";
+	public static String X_POINT_SNAP = "x_pt_snap";
+	public static String Y_POINT_SNAP = "y_pt_snap";
+	public static String GRAB_TYPE = "grab_type";//options - grabber-1, grabbed-2
+	public static int GRAB_TYPE_GRABBER = 1;
+	public static int GRAB_TYPE_GRABBED = 2;
+	
 	public static String CONT_SPEED = "cont_speed";//options - both-1, x-2, y-3
 	public static int CONT_SPEED_BOTH_DIR = 1;
 	public static int CONT_SPEED_X_DIR    = 2;
@@ -103,6 +110,7 @@ public class ActionDataTool {
 	public static String STOPPED_X_TRIGGER = "stopped_x_trigger";//triggers when x movement stopped
 	public static String STOPPED_Y_TRIGGER = "stopped_y_trigger";//triggers when y movement stopped
 	public static String CONTINUOUS_TRIGGER = "continuous_trigger";
+	public static String RELEASE_TRIGGER = "release_trigger";
 	
 	public static String SWIPE_F_TRIGGER = "swipe_f_trigger";
 	public static String SWIPE_U_TRIGGER = "swipe_u_trigger";
@@ -304,6 +312,19 @@ public class ActionDataTool {
 			actionProperties.setyPtOffset((float)propertyData.getDouble(Y_POINT_OFFSET));
 		}
 		
+		if(propertyData.has(SNAP_TO)){
+			String value = propertyData.getString(SNAP_TO);
+			actionProperties.setSnapTo(value);
+		}
+		
+		if(propertyData.has(X_POINT_SNAP)){
+			actionProperties.setxPtSnap((float)propertyData.getDouble(X_POINT_SNAP));
+		}
+		
+		if(propertyData.has(Y_POINT_SNAP)){
+			actionProperties.setyPtSnap((float)propertyData.getDouble(Y_POINT_SNAP));
+		}
+		
 		//trigger parsing
 		if(propertyData.has(TRIGGER_CHANGE)){
 			JSONObject triggerJSON = propertyData.getJSONObject(TRIGGER_CHANGE);
@@ -370,6 +391,11 @@ public class ActionDataTool {
 				actionProperties.addTriggerChange(CONTINUOUS_TRIGGER, value);
 			}
 			
+			if(triggerJSON.has(RELEASE_TRIGGER)){
+				String value = triggerJSON.getString(RELEASE_TRIGGER);
+				actionProperties.addTriggerChange(RELEASE_TRIGGER, value);
+			}			
+			
 			if(triggerJSON.has(RANDOM_TRIGGER)){
 				JSONArray propertyArray = triggerJSON.getJSONArray(RANDOM_TRIGGER);
 				TriggerProperties triggerProp = parseTriggerProperty(propertyArray);
@@ -429,6 +455,11 @@ public class ActionDataTool {
 			if(modifiersJSON.has(SNAP_TO_FLOOR)){
 				int value = modifiersJSON.getInt(SNAP_TO_FLOOR);
 				actionProperties.addModifier(SNAP_TO_FLOOR, value);
+			}
+			
+			if(modifiersJSON.has(GRAB_TYPE)){
+				int value = modifiersJSON.getInt(GRAB_TYPE);
+				actionProperties.addModifier(GRAB_TYPE, value);
 			}
 		}
 		

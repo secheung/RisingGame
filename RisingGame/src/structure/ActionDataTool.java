@@ -71,6 +71,7 @@ public class ActionDataTool {
 	public static String ACTIVE_AFTER = "active_after";
 	public static String ACTIVE_BEFORE = "active_before";
 	public static String REVERSE_X = "reverse_x";
+	public static String FACE_SIDE_SWITCH = "face_side_switch";
 	
 	public static String FACE_PLAYER = "face_player";//options - track-1, look-2
 	public static int FACE_PLAYER_FOLLOW = 1;
@@ -425,6 +426,11 @@ public class ActionDataTool {
 			if(modifiersJSON.has(REVERSE_X)){
 				int value = modifiersJSON.getInt(REVERSE_X);
 				actionProperties.addModifier(REVERSE_X, value);
+			}
+			
+			if(modifiersJSON.has(FACE_SIDE_SWITCH)){
+				int value = modifiersJSON.getInt(FACE_SIDE_SWITCH);
+				actionProperties.addModifier(FACE_SIDE_SWITCH, value);
 			}
 			
 			if(modifiersJSON.has(CONT_ANIM)){

@@ -302,7 +302,7 @@
 				"played_trigger":"stand"
 			},
 			"trigger_cancel":{
-				"cancel_frame":[5,6,7],
+				"cancel_frame":[6,7],
 				"dtap_f_trigger":"dash",
 				"dtap_u_trigger":"jump_startup",
 				"swipe_f_trigger":"n_fswipe_combo2"
@@ -353,7 +353,7 @@
 				"played_trigger":"stand"
 			},
 			"trigger_cancel":{
-				"cancel_frame":[5,6,7,8,9],
+				"cancel_frame":[6,7,8,9],
 				"dtap_f_trigger":"dash",
 				"dtap_u_trigger":"jump_startup",
 				"swipe_f_trigger":"n_fswipe"
@@ -408,7 +408,7 @@
 				"played_trigger":"stand"
 			},
 			"trigger_cancel":{
-				"cancel_frame":[11,12,13,14,15,16,17,18,19,20,21,22],
+				"cancel_frame":[15,16,17,18,19,20,21],
 				"dtap_f_trigger":"dash",
 				"dtap_u_trigger":"jump_startup",
 				"swipe_f_trigger":"n_fswipe2"
@@ -445,6 +445,7 @@
 			"x_accel":-0.1,
 			"y_accel":-0.098,
 			"modifiers":{
+				"face_side_switch":1
 			},
 			"trigger_change":{
 				"played_trigger":"stand",
@@ -488,7 +489,7 @@
 				"played_trigger":"stand"
 			},
 			"trigger_cancel":{
-				"cancel_frame":[2,3,4,5,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+				"cancel_frame":[14,15,16,17,18,19,20,21,22],
 				"dtap_u_trigger":"jump_startup",
 				"dtap_f_trigger":"dash",
 				"swipe_f_trigger":"n_fswipe"
@@ -525,7 +526,7 @@
 				"played_trigger":"stand"
 			},
 			"trigger_cancel":{
-				"cancel_frame":[8,9,10,11,12,13,14,15,16,17,18],
+				"cancel_frame":[10,11,12,13,14,15,16,17,18],
 				"dtap_u_trigger":"jump_startup",
 				"dtap_f_trigger":"dash",
 				"swipe_f_trigger":"n_fswipe_combo1",

@@ -664,12 +664,20 @@ public class Player extends GameObject{
 					String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.SWIPE_U_TRIGGER);
 					setStateUsingTotalName(cancel);
 					initSpeed = true;
+					
+					if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.SWIPE_RIGHT){
+						this.direction = Direction.RIGHT;
+					} else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.SWIPE_LEFT){
+						this.direction = Direction.LEFT;
+					}
 				}
 				
-				if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.SWIPE_RIGHT){
-					this.direction = Direction.RIGHT;
-				} else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.SWIPE_LEFT){
-					this.direction = Direction.LEFT;
+				if(currentAction.getActionProperties().hasModifier(ActionDataTool.FACE_SIDE_SWITCH)){
+					if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.SWIPE_RIGHT){
+						this.direction = Direction.RIGHT;
+					} else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.SWIPE_LEFT){
+						this.direction = Direction.LEFT;
+					}
 				}
 				
 			} else if(GameTools.gestureBreakdownVertical(gesture) == Gesture.SWIPE_DOWN){
@@ -677,12 +685,20 @@ public class Player extends GameObject{
 					String cancel = currentAction.getActionProperties().getCancel(ActionDataTool.SWIPE_D_TRIGGER);
 					setStateUsingTotalName(cancel);
 					initSpeed = true;
+					
+					if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.SWIPE_RIGHT){
+						this.direction = Direction.RIGHT;
+					} else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.SWIPE_LEFT){
+						this.direction = Direction.LEFT;
+					}
 				}
 				
-				if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.SWIPE_RIGHT){
-					this.direction = Direction.RIGHT;
-				} else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.SWIPE_LEFT){
-					this.direction = Direction.LEFT;
+				if(currentAction.getActionProperties().hasModifier(ActionDataTool.FACE_SIDE_SWITCH)){
+					if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.SWIPE_RIGHT){
+						this.direction = Direction.RIGHT;
+					} else if(GameTools.gestureBreakdownHorizontal(gesture) == Gesture.SWIPE_LEFT){
+						this.direction = Direction.LEFT;
+					}	
 				}
 			}
 		}

@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import object.Enemy;
 import object.Enemy.EnemyState;
@@ -72,6 +73,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 	boolean gameRun = false;
 	
 	public LinkedHashMap<String,GameObject> gameObjects;
+	public LinkedHashMap<String,Label> gameLabels;
 	
 	float gestureX;
 	float gestureY;
@@ -90,6 +92,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 									);
 		
 		gameObjects = new LinkedHashMap<String,GameObject>();
+		gameLabels = new LinkedHashMap<String, Label>();
 		
 		ActionDataTool parser = new ActionDataTool(context);
 		parser.readFile(R.raw.jack_frame_data);
@@ -109,13 +112,13 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		gameObjects.put(enemy.getName(), enemy);
 		
 		
-		//enemyIndex = 2;
-		//parser.readFile(R.raw.enemy_frame_data);
-		//List<ActionData> enemyData2 = parser.parseFrameData();
-		//Enemy enemy2 = new Enemy(gameObjects, enemyData2, (Player)gameObjects.get("player"), enemyIndex, -1.0f, -1.0f);
-		//enemy2.loadAnimIntoRenderer(worldRenderer);
-		//enemy2.prepareGameObject(worldRenderer);
-		//gameObjects.put(enemy2.getName(), enemy2);
+		enemyIndex = 2;
+		parser.readFile(R.raw.enemy_frame_data);
+		List<ActionData> enemyData2 = parser.parseFrameData();
+		Enemy enemy2 = new Enemy(this, enemyData2, (Player)gameObjects.get("player"), enemyIndex, -1.0f, -1.0f);
+		enemy2.loadAnimIntoRenderer(worldRenderer);
+		enemy2.prepareGameObject(worldRenderer);
+		gameObjects.put(enemy2.getName(), enemy2);
 		
 		
 		//temp control box
@@ -131,6 +134,11 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		//testBox = new Plane("testBox", 1.0f, 1.0f, 0.25f, 0.0f, 0.0f, 0.75f);
 		//testBox.drawEnable();
 		//worldRenderer.addDrawShape(testBox);
+		
+		gameLabels.put(player.getName()+"_pos", new Label(UUID.randomUUID().toString()));
+		for(Label gameText : gameLabels.values()){
+			worldRenderer.addDrawText(gameText);
+		}
 	}
 	
 	public void update(){
@@ -191,8 +199,16 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		Player player = null;
 		for(GameObject gameObject : gameObjects.values()){
 			gameObject.updateDrawData(worldRenderer);
+			//gameObject.updateDrawText(worldRenderer);
 			if(gameObject instanceof Player){
 				player = (Player)gameObject;
+				
+				Label lab = gameLabels.get(player.getName()+"_pos");
+				//float[] unProjPoint = worldRenderer.getProjectedPoint(player.getX(), player.getY()+player.getHeight(), player.getZ());
+				//lab.setText("player pos "+(unProjPoint[0])+" "+(unProjPoint[1]));
+				//lab.setLocation(unProjPoint[0],unProjPoint[1]);
+				lab.setText("player pos "+(player.getX())+" "+(player.getY()));
+				lab.setLocation(-worldRenderer.getScreenWidth()/2, worldRenderer.getScreenHeight()/4);//(0,0 is middle of screen)
 			}
 		}
 		

@@ -275,6 +275,30 @@
 			}
 		}
 	},
+	"get_hit_action":{
+		"name":"jack_get_hit",
+		"plane_data":{
+			"width":3.5,
+			"height":3.5,
+			"rows":4,
+			"columns":5,
+			"play_back":"play_once"
+		},
+		"hurt_box":[
+		],
+		"hit_box":[
+		],
+		"action_properties":{
+			"x_accel":-0.0,
+			"y_accel":0.0,
+			"modifiers":{
+				"snap_to_floor":1
+			},
+			"trigger_change":{
+				"played_trigger":"stand"
+			}
+		}
+	},
 	"n_fswipe_combo1_action":{
 		"name":"jack_n_fswipe_combo1",
 		"plane_data":{

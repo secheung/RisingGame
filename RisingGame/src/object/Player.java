@@ -39,6 +39,7 @@ public class Player extends GameObject{
 		DASH("dash"),
 		DODGE("dodge"),
 		DEAD("dead"),
+		GETHIT("get_hit"),
 		NCOUNTERSTANCE("n_counter_stance"),
 		NTAP("n_tap"),
 		NFINISH1("n_finish1"),
@@ -131,6 +132,7 @@ public class Player extends GameObject{
 		animationRef.put(PlayerState.JUMP_OUT_OF_MOVE, R.drawable.jack_jump_arc);
 		animationRef.put(PlayerState.DASH, R.drawable.jack_dash);
 		animationRef.put(PlayerState.DODGE, R.drawable.rising_dodge);
+		animationRef.put(PlayerState.GETHIT, R.drawable.jack_get_hit);
 		animationRef.put(PlayerState.NCOUNTERSTANCE, R.drawable.jack_n_counter_stance);
 		animationRef.put(PlayerState.NTAP, R.drawable.jack_n_tap);
 		animationRef.put(PlayerState.NFINISH1, R.drawable.jack_n_finish1);
@@ -178,6 +180,10 @@ public class Player extends GameObject{
 		}else{
 			this.playerState = PlayerState.getStateFromTotalName(buffer.toString());
 		}
+	}
+	
+	public String getStateName(){
+		return playerState.getName();
 	}
 	
 	public void setPlayerState(PlayerState playerState) {
@@ -346,18 +352,35 @@ public class Player extends GameObject{
 			return;
 		}
 		
-		interactionObject = onHitCheck();
-		if(getHitActive() && (interactionObject != null)){
+		interactionHitObject = onHitCheck();
+		if(getHitActive() && (interactionHitObject != null)){
 			//Log.d("rising_debug", "on hit "+this.currentAction.getName());
 			//String state = currentLogic.getTrigger(ActionDataTool.ON_HIT_TRIGGER);
 			//setNextStateUsingTotalName(state);
 			//return;
 			//Log.d("rising_debug", currentAction.getName()+" hitstop "+currentAction.getInterProperties().getHitStop());
-			interactionSnapShot = new InteractionProperties(currentAction.getInterProperties());
+			interactionHitSnapShot = new InteractionProperties(currentAction.getInterProperties());
 			onHit = true;
 		}else{
-			interactionSnapShot = null;
+			interactionHitSnapShot = null;
 			onHit = false;
+		}
+		
+		for(GameObject gameObject : gameObjects.values()){
+			if(gameObject == this)
+				continue;
+			
+			if(isHit(gameObject)){
+				//executeGetHit();
+				isHit = true;
+				interactionHitterSnapShot = new InteractionProperties(gameObject.currentAction.getInterProperties());
+				interactionHitterObject = gameObject;
+				break;
+			}else{
+				isHit = false;
+				interactionHitterSnapShot = null;
+				interactionHitterObject = null;
+			}
 		}
 		
 		if(currentAction.getActionProperties().hasModifier(ActionDataTool.GRAB_TYPE)){
@@ -391,6 +414,8 @@ public class Player extends GameObject{
 			executeOnHit();
 			if(hitStopFrames > 0)//if execute on hit is triggerd don't switch since hitstop needs to play out
 				return;
+		} else if(isHit){
+			executeGetHit();
 		}
 		
 		/*
@@ -484,49 +509,6 @@ public class Player extends GameObject{
 				playerState = PlayerState.STAND;
 			}
 		}
-	}
-
-	private void executeOnHit(){
-
-		this.activateHitStop(interactionSnapShot.getHitStop());
-		if(currentAction.getActionProperties().getHitType().equals(ActionDataTool.SINGLE_HIT)){
-			setHitAvailable(false);
-		}
-		
-		if(currentLogic.hasTrigger(ActionDataTool.ON_HIT_TRIGGER)){
-			String state = currentLogic.getTrigger(ActionDataTool.ON_HIT_TRIGGER);
-			setStateUsingTotalName(state);
-			
-			interProperties = null;
-			initSpeed = true;
-			
-			return;
-		}else if(currentAction.getActionProperties().hasTriggerProperties(ActionDataTool.ON_HIT_COND_TRIGGER)){
-			TriggerProperties props = currentAction.getActionProperties().getTriggerProperties(ActionDataTool.ON_HIT_COND_TRIGGER);
-			boolean has_hit_object = (interactionObject != null);
-			
-			String to_change_state = "";
-			if(has_hit_object){
-				String hit_obj_state = ((Enemy)interactionObject).enemyState.getName();//assume enemy
-				if(props.cond_state.containsKey(hit_obj_state)){
-					to_change_state = props.cond_state.get(hit_obj_state);
-				}else{
-					to_change_state = props.cond_state.get(ActionDataTool.TRIGGER_PROP_DEFAULT);
-				}
-			}else{
-				to_change_state = props.cond_state.get(ActionDataTool.TRIGGER_PROP_DEFAULT);
-			}
-			
-			if(!to_change_state.isEmpty() && !to_change_state.equals(ActionDataTool.TRIGGER_PROP_NOTHING)){
-				setStateUsingTotalName(to_change_state);
-				interProperties = null;
-				initSpeed = true;
-				
-				return;
-			}
-		}
-		
-		return;
 	}
 	
 	private void executeInput(){

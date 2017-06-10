@@ -80,6 +80,45 @@
 		]
 	},
 	
+	"attack1_action":{
+		"name":"enemy_attack1",
+		"plane_data":{
+			"width":3.5,
+			"height":3.5,
+			"rows":4,
+			"columns":6,
+			"play_back":"play_once"
+		},
+		"hurt_box":[
+		],
+		"hit_box":[
+			{"left":2.35,"bottom":2.175,"right":3.1,"top":2.75,"active_frame":[18,19,20]},
+			{"left":1.6,"bottom":1.9,"right":2.35,"top":2.475,"active_frame":[18,19,20]}
+		],
+		"action_properties":{
+			"x_init_speed":0.0,
+			"y_init_speed":0.0,
+			"x_accel":0.0,
+			"y_accel":0.0,
+			"modifiers":{
+			},
+			"trigger_change":{
+				"played_trigger":"stand"
+			},
+			"trigger_cancel":{
+			}
+		},
+		"interaction_properties":{
+			"hit_stop":1,
+			"x_init_speed":-0.1,
+			"y_init_speed":0.0,
+			"trigger_change":{
+				"ground_hit_trigger":"get_hit",
+				"air_hit_trigger":"get_hit"
+			}
+		}
+	},
+	
 	"struck_action":{
 		"name":"enemy_struck",
 		"plane_data":{

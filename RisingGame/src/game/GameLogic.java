@@ -204,11 +204,11 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 				player = (Player)gameObject;
 				
 				Label lab = gameLabels.get(player.getName()+"_pos");
-				//float[] unProjPoint = worldRenderer.getProjectedPoint(player.getX(), player.getY()+player.getHeight(), player.getZ());
-				//lab.setText("player pos "+(unProjPoint[0])+" "+(unProjPoint[1]));
-				//lab.setLocation(unProjPoint[0],unProjPoint[1]);
-				lab.setText("player pos "+(player.getX())+" "+(player.getY()));
-				lab.setLocation(-worldRenderer.getScreenWidth()/2, worldRenderer.getScreenHeight()/4);//(0,0 is middle of screen)
+				////float[] unProjPoint = worldRenderer.getProjectedPoint(player.getX(), player.getY()+player.getHeight(), player.getZ());
+				////lab.setText("player pos "+(unProjPoint[0])+" "+(unProjPoint[1]));
+				////lab.setLocation(unProjPoint[0],unProjPoint[1]);
+				//lab.setText("player pos "+(player.getX())+" "+(player.getY()));
+				//lab.setLocation(-worldRenderer.getScreenWidth()/2, worldRenderer.getScreenHeight()/4);//(0,0 is middle of screen)
 			}
 		}
 		

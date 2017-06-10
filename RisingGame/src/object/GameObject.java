@@ -13,12 +13,14 @@ import structure.HitBox;
 import structure.HurtBox;
 import structure.InteractionProperties;
 import structure.TriggerProperties;
+import android.graphics.PointF;
 import android.util.Log;
 import android.view.MotionEvent;
 import engine.open2d.draw.Plane;
 import engine.open2d.renderer.WorldRenderer;
 import engine.open2d.texture.AnimatedTexture.Playback;
 import game.GameTools.Gesture;
+import object.GameObject.Direction;
 import object.Player.PlayerState;
 import game.GameLogic;
 import game.GameTools;
@@ -78,9 +80,11 @@ public abstract class GameObject {
 	
 	boolean isHit;
 	boolean onHit;
-	GameObject interactionObject;
+	GameObject interactionHitObject;
+	GameObject interactionHitterObject;
 	GameObject grabObject;
-	InteractionProperties interactionSnapShot;
+	InteractionProperties interactionHitSnapShot;
+	InteractionProperties interactionHitterSnapShot;
 	
 	boolean grab_flag;//flag implies continuous
 	
@@ -147,6 +151,7 @@ public abstract class GameObject {
 	public abstract void passDoubleTouchEvent(GestureListener g, WorldRenderer worldRenderer);
 	
 	public abstract void setStateUsingTotalName(String state);
+	public abstract String getStateName();
 	
 	public void updateDrawData(WorldRenderer worldRenderer){
 		currentAction.updateDrawData(worldRenderer,this);
@@ -564,6 +569,153 @@ public abstract class GameObject {
 		//hitObject = null;
 		//return false;
 		return null;
+	}
+	
+	protected void executeOnHit(){
+
+		this.activateHitStop(interactionHitSnapShot.getHitStop());
+		if(currentAction.getActionProperties().getHitType().equals(ActionDataTool.SINGLE_HIT)){
+			setHitAvailable(false);
+		}
+		
+		if(currentLogic.hasTrigger(ActionDataTool.ON_HIT_TRIGGER)){
+			String state = currentLogic.getTrigger(ActionDataTool.ON_HIT_TRIGGER);
+			setStateUsingTotalName(state);
+			
+			interProperties = null;
+			initSpeed = true;
+			
+			return;
+		}else if(currentAction.getActionProperties().hasTriggerProperties(ActionDataTool.ON_HIT_COND_TRIGGER)){
+			TriggerProperties props = currentAction.getActionProperties().getTriggerProperties(ActionDataTool.ON_HIT_COND_TRIGGER);
+			boolean has_hit_object = (interactionHitObject != null);
+			
+			String to_change_state = "";
+			if(has_hit_object){
+				String hit_obj_state = ((Enemy)interactionHitObject).enemyState.getName();//assume enemy
+				if(props.cond_state.containsKey(hit_obj_state)){
+					to_change_state = props.cond_state.get(hit_obj_state);
+				}else{
+					to_change_state = props.cond_state.get(ActionDataTool.TRIGGER_PROP_DEFAULT);
+				}
+			}else{
+				to_change_state = props.cond_state.get(ActionDataTool.TRIGGER_PROP_DEFAULT);
+			}
+			
+			if(!to_change_state.isEmpty() && !to_change_state.equals(ActionDataTool.TRIGGER_PROP_NOTHING)){
+				setStateUsingTotalName(to_change_state);
+				interProperties = null;
+				initSpeed = true;
+				
+				return;
+			}
+		}
+		
+		return;
+	}
+	
+	public boolean isHit(GameObject checkObject){
+		if(checkObject.getHitActive() && this.getHitStopFrames() == 0){
+			ActionData playerAction = checkObject.getCurrentAction();
+			for(HitBox hitBox : playerAction.getHitBoxes()){
+				for(HurtBox hurtBox : this.currentAction.getHurtBoxes()){
+					boolean hitBoxActive = hitBox.getActiveFrame().contains(checkObject.currentAction.getAnimation().getFrame());
+					boolean hurtBoxActive = hurtBox.getActiveFrame().contains(currentAction.getAnimation().getFrame()) || (hurtBox.getActiveFrame().size() == 0);
+					
+					if( hitBoxActive &&
+						hurtBoxActive && 
+						GameTools.boxColDetect(hurtBox.getBoxData(), this, hitBox.getBoxData(), checkObject)){
+						return true;
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	public void executeGetHit(){
+		//Log.d("rising_debug", "enemy hit "+this.currentAction.toString());
+		
+		//interProperties = playerRef.currentAction.getInterProperties();
+		interProperties = interactionHitterSnapShot;
+		
+		
+		this.activateHitStop(interProperties.getHitStop()+1);//add one frame of hitstop since enemy switches state 1 frame earlier than player. The one frame allows the player to catch up for the frame change.
+		this.activateHitStun(interProperties.getHitStun());
+		///playerRef.activateHitStop(interProperties.getHitStop());
+		///if(playerRef.currentAction.getActionProperties().getHitType().equals(ActionDataTool.SINGLE_HIT)){
+		///	playerRef.setHitAvailable(false);//deactivate hitboxes on next update //WILL CAUSE PROBLEMS IF PLAYER IS NOT UPDATED FIRST
+		///}
+		
+		//playerRef.setHitActive(false);
+		
+		if(interactionHitterObject.getDirection() == Direction.RIGHT){
+			direction = Direction.LEFT;
+		} else if(interactionHitterObject.getDirection() == Direction.LEFT){
+			direction = Direction.RIGHT;
+		}
+
+		if(interProperties.hasTriggerChange(ActionDataTool.GROUND_HIT_TRIGGER) && isOnGround()){
+			if(interProperties.hasTriggerInitSpeed(ActionDataTool.GROUND_HIT_TRIGGER)){
+				PointF speed = interProperties.getTriggerInitSpeed(ActionDataTool.GROUND_HIT_TRIGGER);
+				interProperties.setxInitSpeed(speed.x);
+				interProperties.setyInitSpeed(speed.y);
+			}
+			setStateUsingTotalName(interProperties.getTriggerChange(ActionDataTool.GROUND_HIT_TRIGGER));
+		}else if(interProperties.hasTriggerProperties(ActionDataTool.GROUND_HIT_COND_TRIGGER) && isOnGround()){
+			TriggerProperties props = interProperties.getTriggerProperties(ActionDataTool.GROUND_HIT_COND_TRIGGER);
+			String prev_state = getStateName();//get name before state change
+			if(props.cond_state.containsKey(getStateName())){
+				setStateUsingTotalName(props.cond_state.get(getStateName()));
+			}else{
+				String default_state = props.cond_state.get(ActionDataTool.TRIGGER_PROP_DEFAULT);
+				setStateUsingTotalName(default_state);
+			}
+			
+			String trigger_name = ActionDataTool.GROUND_HIT_COND_TRIGGER+"_"+prev_state;
+			String trigger_default = ActionDataTool.GROUND_HIT_COND_TRIGGER+"_"+ActionDataTool.TRIGGER_PROP_DEFAULT;
+			if(interProperties.hasTriggerInitSpeed(trigger_name)){
+				PointF speed = interProperties.getTriggerInitSpeed(trigger_name);
+				interProperties.setxInitSpeed(speed.x);
+				interProperties.setyInitSpeed(speed.y);
+			}else if(interProperties.hasTriggerInitSpeed(trigger_default)){
+				PointF speed = interProperties.getTriggerInitSpeed(trigger_default);
+				interProperties.setxInitSpeed(speed.x);
+				interProperties.setyInitSpeed(speed.y);
+			}
+		}else if(interProperties.hasTriggerChange(ActionDataTool.AIR_HIT_TRIGGER) && isInAir()){
+			if(interProperties.hasTriggerInitSpeed(ActionDataTool.AIR_HIT_TRIGGER)){
+				PointF speed = interProperties.getTriggerInitSpeed(ActionDataTool.AIR_HIT_TRIGGER);
+				interProperties.setxInitSpeed(speed.x);
+				interProperties.setyInitSpeed(speed.y);
+			}
+			setStateUsingTotalName(interProperties.getTriggerChange(ActionDataTool.AIR_HIT_TRIGGER));
+		}else if(interProperties.hasTriggerProperties(ActionDataTool.AIR_HIT_COND_TRIGGER) && isInAir()){
+			TriggerProperties props = interProperties.getTriggerProperties(ActionDataTool.AIR_HIT_COND_TRIGGER);
+			String prev_state = getStateName();//get name before state change
+			
+			if(props.cond_state.containsKey(getStateName())){
+				setStateUsingTotalName(props.cond_state.get(getStateName()));
+			}else{
+				String default_state = props.cond_state.get(ActionDataTool.TRIGGER_PROP_DEFAULT);
+				setStateUsingTotalName(default_state);
+			}
+			
+			String trigger_name = ActionDataTool.AIR_HIT_COND_TRIGGER+"_"+prev_state;
+			String trigger_default = ActionDataTool.AIR_HIT_COND_TRIGGER+"_"+ActionDataTool.TRIGGER_PROP_DEFAULT;
+			if(interProperties.hasTriggerInitSpeed(trigger_name)){
+				PointF speed = interProperties.getTriggerInitSpeed(trigger_name);
+				interProperties.setxInitSpeed(speed.x);
+				interProperties.setyInitSpeed(speed.y);
+			}else if(interProperties.hasTriggerInitSpeed(trigger_default)){
+				PointF speed = interProperties.getTriggerInitSpeed(trigger_default);
+				interProperties.setxInitSpeed(speed.x);
+				interProperties.setyInitSpeed(speed.y);
+			}
+		}
+		initSpeed = true;
+		resetAnim = true;
 	}
 	
 	public boolean isXStopped(){

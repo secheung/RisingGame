@@ -83,7 +83,7 @@ public class Enemy extends GameObject {
 	
 	private static EnemyState INIT_STATE = EnemyState.STAND;
 	
-	private static final int TEMP_FRAME = 1;
+	private static final int TEMP_FRAME = 19;
 	
 	private static float RUN_SPEED = 0.16f;
 	private static float WALK_SPEED = 0.08f;
@@ -102,8 +102,8 @@ public class Enemy extends GameObject {
 	Player playerRef;
 	EnemyState enemyState;
 	
-	int neutralBehaviourTick = 0;
-	boolean disableBehaviour = false;
+	public int neutralBehaviourTick = 0;
+	public boolean disableBehaviour = false;
 	
 	//public Enemy(LinkedHashMap<String,GameObject> gameObjects, Player player, int index, float x, float y, float width, float height){
 	public Enemy(GameLogic logic, List<ActionData> actionData, Player player, int index, float x, float y){
@@ -118,7 +118,7 @@ public class Enemy extends GameObject {
 		//this.currentAction = this.actionData.get(INIT_STATE);
 		
 		currentAction.drawEnable();
-		this.direction = Direction.LEFT;
+		this.direction = Direction.RIGHT;
 		
 		this.neutralBehaviourTick = 0;
 		
@@ -128,7 +128,7 @@ public class Enemy extends GameObject {
 	@Override
 	public void setupAnimRef() {
 		animationRef = new HashMap<GameObjectState, Integer>();
-		animationRef.put(EnemyState.TEMP, R.drawable.enemy_knock_up);
+		animationRef.put(EnemyState.TEMP, R.drawable.enemy_strike1);
 		animationRef.put(EnemyState.STAND, R.drawable.enemy_stance);
 		animationRef.put(EnemyState.FREEZE, R.drawable.enemy_stance);
 		animationRef.put(EnemyState.RUN, R.drawable.enemy_run);
@@ -213,6 +213,7 @@ public class Enemy extends GameObject {
 
 		if(onHit){
 			executeOnHit();
+			//TODO implement onhit dodge behaviour here
 			if(hitStopFrames > 0)
 				return;
 		}
@@ -251,28 +252,29 @@ public class Enemy extends GameObject {
 		
 		neutralBehaviourTick++;
 		
+		boolean behaviourTick = (neutralBehaviourTick > NEUTRAL_BEHAVIOUR_TICK_TRIGGER);
+		if(behaviourTick)
+			neutralBehaviourTick = 0;
+		
 		//execute behaviour every at tick count
 		//simple behaviour
 		if(enemyState == EnemyState.STAND){
-			if(neutralBehaviourTick > NEUTRAL_BEHAVIOUR_TICK_TRIGGER){
-				neutralBehaviourTick = 0;
-			
+			if(behaviourTick){
 				double rand = Math.random();
 				double currentPercent = 0.1;
 				if(currentPercent <= rand){
-					String state = EnemyState.ATTACK1.getName();
+					String state = EnemyState.RUN.getName();
 					setStateUsingTotalName(state);
 					interProperties = null;
 					initSpeed = true;
-					return;
+					//return;
 				}
 			}
 		}
 		
 		if(enemyState == EnemyState.RUN){
 			boolean change_to_stand = false;
-			if(neutralBehaviourTick > NEUTRAL_BEHAVIOUR_TICK_TRIGGER){
-				neutralBehaviourTick = 0;
+			if(behaviourTick){
 				double rand = Math.random();
 				double currentPercent = 0.5;
 				change_to_stand = (currentPercent <= rand);
@@ -286,8 +288,24 @@ public class Enemy extends GameObject {
 				setStateUsingTotalName(EnemyState.STAND.getName());
 				interProperties = null;
 				initSpeed = true;
-				return;
+				//return;
 			}	
+		}
+		
+		if(enemyState == EnemyState.STAND || enemyState == EnemyState.RUN){
+			//if(behaviourTick){
+				double rand = Math.random();
+				double currentPercent = 0.1;
+				
+				boolean close_to_player = Math.abs(playerRef.getMidX() - getMidX()) < 1.75; 
+				if(/*currentPercent <= rand &&*/ close_to_player){
+					String state = EnemyState.ATTACK1.getName();
+					setStateUsingTotalName(state);
+					interProperties = null;
+					initSpeed = true;
+					//return;
+				}
+			//}
 		}
 		
 		/*
@@ -460,8 +478,10 @@ public class Enemy extends GameObject {
 		}
 		
 		if(enemyState == EnemyState.TEMP){
+			//float[] coord = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), this.getDisplay());
+			//Log.d("debug",coord[0] + " " + coord[1] + " " + coord[2]);
 			float[] coord = worldRenderer.getUnprojectedPoints(e.getX(), e.getY(), this.getDisplay());
-			Log.d("debug",coord[0] + " " + coord[1] + " " + coord[2]);
+			Log.i("rising_debug","x: "+coord[0] + " y: " + coord[1] + " z: " + coord[2] +" "+getMidX());
 		}
 		
 //		if(enemyState != EnemyState.FREEZE)

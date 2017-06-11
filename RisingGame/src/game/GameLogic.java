@@ -98,7 +98,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		parser.readFile(R.raw.jack_frame_data);
 		List<ActionData> playerData = parser.parseFrameData();
 		
-		Player player = new Player(this, playerData, -3.0f, FLOOR, controlType);
+		Player player = new Player(this, playerData, 2.0f, FLOOR, controlType);
 		player.prepareGameObject(worldRenderer);
 		gameObjects.put(player.getName(), player);
 
@@ -109,6 +109,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		Enemy enemy = new Enemy(this, enemyData, (Player)gameObjects.get("player"), enemyIndex, 1.0f, -1.0f);
 		//enemy.getDisplay().drawDisable();
 		enemy.prepareGameObject(worldRenderer);
+		enemy.disableBehaviour = false;
 		gameObjects.put(enemy.getName(), enemy);
 		
 		
@@ -118,6 +119,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		Enemy enemy2 = new Enemy(this, enemyData2, (Player)gameObjects.get("player"), enemyIndex, -1.0f, -1.0f);
 		enemy2.loadAnimIntoRenderer(worldRenderer);
 		enemy2.prepareGameObject(worldRenderer);
+		enemy2.disableBehaviour = false;
 		gameObjects.put(enemy2.getName(), enemy2);
 		
 		
@@ -136,6 +138,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		//worldRenderer.addDrawShape(testBox);
 		
 		gameLabels.put(player.getName()+"_pos", new Label(UUID.randomUUID().toString()));
+		gameLabels.put(enemy.getName(), new Label(UUID.randomUUID().toString()));
 		for(Label gameText : gameLabels.values()){
 			worldRenderer.addDrawText(gameText);
 		}
@@ -204,11 +207,19 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 				player = (Player)gameObject;
 				
 				Label lab = gameLabels.get(player.getName()+"_pos");
-				////float[] unProjPoint = worldRenderer.getProjectedPoint(player.getX(), player.getY()+player.getHeight(), player.getZ());
-				////lab.setText("player pos "+(unProjPoint[0])+" "+(unProjPoint[1]));
-				////lab.setLocation(unProjPoint[0],unProjPoint[1]);
-				//lab.setText("player pos "+(player.getX())+" "+(player.getY()));
-				//lab.setLocation(-worldRenderer.getScreenWidth()/2, worldRenderer.getScreenHeight()/4);//(0,0 is middle of screen)
+				//float[] unProjPoint = worldRenderer.getProjectedPoint(player.getX(), player.getY()+player.getHeight(), player.getZ());
+				//lab.setText("player pos "+(unProjPoint[0])+" "+(unProjPoint[1]));
+				//lab.setLocation(unProjPoint[0],unProjPoint[1]);
+				lab.setText("player pos "+(player.getX())+" "+(player.getY()));
+				lab.setLocation(-worldRenderer.getScreenWidth()/2, worldRenderer.getScreenHeight()/4);//(0,0 is middle of screen)
+			}else if(gameObject instanceof Enemy){
+				Enemy enemy = (Enemy)gameObject;
+				if(!gameLabels.containsKey(enemy.getName()))
+					continue;
+				
+				Label lab = gameLabels.get(enemy.getName());
+				lab.setText("enemy behaviour tick "+enemy.neutralBehaviourTick);
+				lab.setLocation(-worldRenderer.getScreenWidth()/2, worldRenderer.getScreenHeight()/3);//(0,0 is middle of screen)
 			}
 		}
 		

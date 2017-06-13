@@ -104,6 +104,7 @@ public class ActionDataTool {
 	public static String AIR_HIT_TRIGGER = "air_hit_trigger";
 	public static String AIR_HIT_COND_TRIGGER = "air_hit_cond_trigger";
 	public static String WALL_TRIGGER = "wall_trigger";
+	public static String ON_DEFENSE_HIT_TRIGGER = "on_defense_hit_trigger";
 	public static String ON_HIT_TRIGGER = "on_hit_trigger";
 	public static String ON_HIT_COND_TRIGGER = "on_hit_cond_trigger";
 	public static String GROUND_TRIGGER = "ground_trigger";
@@ -361,6 +362,11 @@ public class ActionDataTool {
 				actionProperties.addTriggerChange(WALL_TRIGGER, value);
 			}
 			
+			if(triggerJSON.has(ON_DEFENSE_HIT_TRIGGER)){
+				String value = triggerJSON.getString(ON_DEFENSE_HIT_TRIGGER);
+				actionProperties.addTriggerChange(ON_DEFENSE_HIT_TRIGGER, value);
+			}
+
 			if(triggerJSON.has(ON_HIT_TRIGGER)){
 				String value = triggerJSON.getString(ON_HIT_TRIGGER);
 				actionProperties.addTriggerChange(ON_HIT_TRIGGER, value);

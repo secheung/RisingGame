@@ -110,6 +110,7 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		//enemy.getDisplay().drawDisable();
 		enemy.prepareGameObject(worldRenderer);
 		enemy.disableBehaviour = false;
+		enemy.disableDefence = false;
 		gameObjects.put(enemy.getName(), enemy);
 		
 		
@@ -120,7 +121,19 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		enemy2.loadAnimIntoRenderer(worldRenderer);
 		enemy2.prepareGameObject(worldRenderer);
 		enemy2.disableBehaviour = false;
+		enemy2.disableDefence = false;
 		gameObjects.put(enemy2.getName(), enemy2);
+		
+		
+		enemyIndex = 3;
+		parser.readFile(R.raw.enemy_frame_data);
+		List<ActionData> enemyData3 = parser.parseFrameData();
+		Enemy enemy3 = new Enemy(this, enemyData3, (Player)gameObjects.get("player"), enemyIndex, -1.5f, -1.0f);
+		enemy3.loadAnimIntoRenderer(worldRenderer);
+		enemy3.prepareGameObject(worldRenderer);
+		enemy3.disableBehaviour = false;
+		enemy3.disableDefence = false;
+		gameObjects.put(enemy3.getName(), enemy3);
 		
 		
 		//temp control box

@@ -411,9 +411,18 @@ public class Player extends GameObject{
 		executeInput();
 		
 		if(onHit){
-			executeOnHit();
-			if(hitStopFrames > 0)//if execute on hit is triggerd don't switch since hitstop needs to play out
-				return;
+			boolean run_hit = true;
+			//check for enemy defence
+			if(interactionHitObject instanceof Enemy){
+				Enemy enemy = (Enemy)interactionHitObject;
+				run_hit = !enemy.isDefence;
+			}
+			
+			if(run_hit){
+				executeOnHit();
+				if(hitStopFrames > 0)//if execute on hit is triggerd don't switch since hitstop needs to play out
+					return;
+			}
 		} else if(isHit){
 			executeGetHit();
 		}

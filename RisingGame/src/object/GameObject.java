@@ -80,6 +80,7 @@ public abstract class GameObject {
 	
 	boolean isHit;
 	boolean onHit;
+	
 	GameObject interactionHitObject;
 	GameObject interactionHitterObject;
 	GameObject grabObject;

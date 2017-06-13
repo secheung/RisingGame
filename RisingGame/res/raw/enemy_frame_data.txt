@@ -28,7 +28,8 @@
 		],
 		"action_properties":{
 			"trigger_change":{
-				"continuous_trigger":"behaviour"
+				"continuous_trigger":"behaviour",
+				"on_defense_hit_trigger":"dodge"
 			},
 			"modifiers":{
 				"face_player":"look",
@@ -52,12 +53,13 @@
 		"hit_box":[
 		],
 		"action_properties":{
-			"x_init_speed":0.1,
+			"x_init_speed":0.15,
 			"modifiers":{
 				"face_player":"follow"
 			},
 			"trigger_change":{
-				"continuous_trigger":"behaviour"
+				"continuous_trigger":"behaviour",
+				"on_defense_hit_trigger":"dodge"
 			}
 		}
 	},
@@ -76,6 +78,33 @@
 		],
 		"hit_box":[
 		]
+	},
+	
+	"dodge_action":{
+		"name":"enemy_dodge",
+		"plane_data":{
+			"width":3.5,
+			"height":3.5,
+			"rows":4,
+			"columns":5
+		},
+		"hurt_box":[
+		],
+		"hit_box":[
+		],
+		"action_properties":{
+			"x_init_speed":-0.5,
+			"y_init_speed":0.0,
+			"x_accel":-0.05,
+			"y_accel":0.0,
+			"modifiers":{
+			},
+			"trigger_change":{
+				"played_trigger":"stand"
+			},
+			"trigger_cancel":{
+			}
+		}
 	},
 	
 	"attack1_action":{
@@ -101,7 +130,8 @@
 			"modifiers":{
 			},
 			"trigger_change":{
-				"played_trigger":"stand"
+				"played_trigger":"stand",
+				"on_defense_hit_trigger":"dodge"
 			},
 			"trigger_cancel":{
 			}

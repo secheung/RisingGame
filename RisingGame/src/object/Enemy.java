@@ -97,13 +97,19 @@ public class Enemy extends GameObject {
 	private static float JUMP_SPEED = 0.45f;
 	public static float COLLISION_FRAME = 20.0f;
 	
-	private static int NEUTRAL_BEHAVIOUR_TICK_TRIGGER = 60;
+	private static int NEUTRAL_BEHAVIOUR_TICK_TRIGGER = 20;
 	
 	Player playerRef;
 	EnemyState enemyState;
 	
+	boolean isDefence;//used for enemy dodges/defense
+	
+	public static int INIT_DEFENCE_MOVES = 1;
+	public int defenciveMoves = INIT_DEFENCE_MOVES;
+	
 	public int neutralBehaviourTick = 0;
 	public boolean disableBehaviour = false;
+	public boolean disableDefence = false;
 	
 	//public Enemy(LinkedHashMap<String,GameObject> gameObjects, Player player, int index, float x, float y, float width, float height){
 	public Enemy(GameLogic logic, List<ActionData> actionData, Player player, int index, float x, float y){
@@ -120,6 +126,7 @@ public class Enemy extends GameObject {
 		currentAction.drawEnable();
 		this.direction = Direction.RIGHT;
 		
+		this.defenciveMoves = INIT_DEFENCE_MOVES;
 		this.neutralBehaviourTick = 0;
 		
 		switchAction(enemyState);//initialze state
@@ -152,6 +159,7 @@ public class Enemy extends GameObject {
 		
 		animationRef.put(EnemyState.STRIKE1, R.drawable.enemy_strike1);
 		animationRef.put(EnemyState.ATTACK1, R.drawable.enemy_strike1);
+		animationRef.put(EnemyState.DODGE, R.drawable.enemy_cross_roll);
 	}
 
 	@Override
@@ -186,6 +194,11 @@ public class Enemy extends GameObject {
 			isHit = true;
 			interactionHitterSnapShot = new InteractionProperties(playerRef.currentAction.getInterProperties());
 			interactionHitterObject = playerRef;
+			
+			if(!disableDefence && 
+				defenciveMoves > 0 && 
+				currentLogic.hasTrigger(ActionDataTool.ON_DEFENSE_HIT_TRIGGER))
+				isDefence = true;
 		}else{
 			isHit = false;
 			interactionHitterSnapShot = null;
@@ -210,15 +223,20 @@ public class Enemy extends GameObject {
 		}
 		
 		float checkX = getMidX();
-
 		if(onHit){
 			executeOnHit();
-			//TODO implement onhit dodge behaviour here
 			if(hitStopFrames > 0)
-				return;
+				return;	
 		}
 		else if(isHit){
-			executeGetHit();
+			if(isDefence && !disableDefence){
+				executeDefenciveMove();
+			}else{
+				executeGetHit();
+				
+				//reset defencive moves on hit
+				defenciveMoves = INIT_DEFENCE_MOVES;
+			}
 		}else{
 			EnemyState prevState = enemyState;
 			executeTriggers();
@@ -246,6 +264,25 @@ public class Enemy extends GameObject {
 		}
 	}
 
+	public void executeDefenciveMove(){
+		isDefence = false;
+		if(defenciveMoves > 0 && currentLogic.hasTrigger(ActionDataTool.ON_DEFENSE_HIT_TRIGGER)){
+			--defenciveMoves;
+			
+			String state = currentLogic.getTrigger(ActionDataTool.ON_DEFENSE_HIT_TRIGGER);
+			setStateUsingTotalName(state);
+			interProperties = null;
+			initSpeed = true;
+			
+			//random side move(should this be here?)
+			double side_select = Math.random();
+			if(side_select > 0.5)
+				direction = Direction.RIGHT;
+			else
+				direction = Direction.LEFT;
+		}
+	}
+	
 	public void executeBehaviour(){
 		if(disableBehaviour)
 			return;

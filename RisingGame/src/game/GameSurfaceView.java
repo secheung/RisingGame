@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.opengl.GLSurfaceView;
+import android.support.v4.view.MotionEventCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -64,8 +65,55 @@ public class GameSurfaceView extends GLSurfaceView{
 		if(gestureDetector.onTouchEvent(e)){
 			gameLogic.passDoubleTouchEvents(gestureListener);
 		}
-
+		
+		//DoMultiTouchStuff(e);
+		
 		return true;
+	}
+	
+	public void DoMultiTouchStuff(MotionEvent e){
+		//multi touch changes
+		int action = MotionEventCompat.getActionMasked(e);
+		// Get the index of the pointer associated with the action.
+		int index = MotionEventCompat.getActionIndex(e);
+		int xPos = -1;
+		int yPos = -1;
+
+		//Log.d("Multitouch","The action is " + actionToString(action));
+
+		if (e.getPointerCount() > 1) {
+		    // The coordinates of the current screen contact, relative to
+		    // the responding View or Activity.
+			int size = MotionEventCompat.getPointerCount(e);
+			for(int i = 0; i < size; ++i){
+				xPos = (int)MotionEventCompat.getX(e, i);
+				yPos = (int)MotionEventCompat.getY(e, i);
+		    
+				Log.d("Multitouch","Multi touch event: index: "+i+", size: "+MotionEventCompat.getPointerCount(e)+", xPos: "+xPos+", yPos: "+yPos);
+			}
+		} else {
+		    // Single touch event
+		    //Log.d("Multitouch","Single touch event");
+		    xPos = (int)MotionEventCompat.getX(e, index);
+		    yPos = (int)MotionEventCompat.getY(e, index);
+		    
+		    Log.d("Multitouch","Single touch event: index "+index+", xPos: "+xPos+", yPos "+yPos);
+		}
+	}
+	
+	// Given an action int, returns a string description
+	public static String actionToString(int action) {
+	    switch (action) {
+
+	        case MotionEvent.ACTION_DOWN: return "Down";
+	        case MotionEvent.ACTION_MOVE: return "Move";
+	        case MotionEvent.ACTION_POINTER_DOWN: return "Pointer Down";
+	        case MotionEvent.ACTION_UP: return "Up";
+	        case MotionEvent.ACTION_POINTER_UP: return "Pointer Up";
+	        case MotionEvent.ACTION_OUTSIDE: return "Outside";
+	        case MotionEvent.ACTION_CANCEL: return "Cancel";
+	    }
+	    return "";
 	}
 	
     public WorldRenderer getWorldRenderer() {

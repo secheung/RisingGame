@@ -326,7 +326,7 @@
 				"played_trigger":"stand"
 			},
 			"trigger_cancel":{
-				"cancel_frame":[6,7],
+				"cancel_frame":[4,5,6,7],
 				"dtap_f_trigger":"dash",
 				"dtap_u_trigger":"jump_startup",
 				"swipe_f_trigger":"n_fswipe_combo2"
@@ -416,8 +416,8 @@
 		"hurt_box":[
 		],
 		"hit_box":[
-			{"left":2.35,"bottom":2.175,"right":3.1,"top":2.75,"active_frame":[11,12,13]},
-			{"left":1.6,"bottom":1.9,"right":2.35,"top":2.475,"active_frame":[11,12,13]}
+			{"left":2.35,"bottom":2.175,"right":3.1,"top":2.75,"active_frame":[9,10,11,12,13,14]},
+			{"left":1.6,"bottom":1.9,"right":2.35,"top":2.475,"active_frame":[9,10,11,12,13,14]}
 		],
 		"action_properties":{
 			"x_init_speed":0.2,
@@ -598,7 +598,7 @@
 					},
 					{
 						"state_cond":"knock_up",
-						"state":"a_fswipe3"
+						"state":"nothing"
 					},
 					{
 						"state_cond":"hover",
@@ -613,6 +613,7 @@
 		},
 		"interaction_properties":{
 			"hit_stop":0,
+			"hit_stun":30,
 			"x_init_speed":0.0,
 			"y_init_speed":0.0,
 			
@@ -643,7 +644,7 @@
 					},
 					{
 						"state_cond":"knock_up",
-						"state":"air_grabbed"
+						"state":"hover"
 					},
 					{
 						"state_cond":"hover",
@@ -707,6 +708,7 @@
 		"hurt_box":[
 		],
 		"hit_box":[
+			{"left":0,"bottom":1.83,"right":3.5,"top":2.275,"active_frame":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]}
 		],
 		"action_properties":{
 			"x_init_speed":0.8,
@@ -724,8 +726,10 @@
 			}
 		},
 		"interaction_properties":{
-			"hit_stop":1,
+			"hit_stop":7,
 			"trigger_change":{
+				"ground_hit_trigger":"knock_down",
+				"air_hit_trigger":"hover"
 			}
 		}
 	},
@@ -994,7 +998,8 @@
 				"played_trigger":"stand"
 			},
 			"trigger_cancel":{
-				"swipe_u_trigger":"d_dswipe_followup"
+				"swipe_u_trigger":"d_dswipe_followup",
+				"dtap_u_trigger":"jump_startup"
 			}
 		},
 		"interaction_properties":{

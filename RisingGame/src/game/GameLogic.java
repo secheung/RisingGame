@@ -109,31 +109,31 @@ public class GameLogic extends AsyncTask<Void, Void, Void>{
 		Enemy enemy = new Enemy(this, enemyData, (Player)gameObjects.get("player"), enemyIndex, 1.0f, -1.0f);
 		//enemy.getDisplay().drawDisable();
 		enemy.prepareGameObject(worldRenderer);
-		enemy.disableBehaviour = false;
-		enemy.disableDefence = false;
+		enemy.disableBehaviour = true;
+		enemy.disableDefence = true;
 		gameObjects.put(enemy.getName(), enemy);
 		
 		
-		enemyIndex = 2;
-		parser.readFile(R.raw.enemy_frame_data);
-		List<ActionData> enemyData2 = parser.parseFrameData();
-		Enemy enemy2 = new Enemy(this, enemyData2, (Player)gameObjects.get("player"), enemyIndex, -1.0f, -1.0f);
-		enemy2.loadAnimIntoRenderer(worldRenderer);
-		enemy2.prepareGameObject(worldRenderer);
-		enemy2.disableBehaviour = false;
-		enemy2.disableDefence = false;
-		gameObjects.put(enemy2.getName(), enemy2);
+		//enemyIndex = 2;
+		//parser.readFile(R.raw.enemy_frame_data);
+		//List<ActionData> enemyData2 = parser.parseFrameData();
+		//Enemy enemy2 = new Enemy(this, enemyData2, (Player)gameObjects.get("player"), enemyIndex, -1.0f, -1.0f);
+		//enemy2.loadAnimIntoRenderer(worldRenderer);
+		//enemy2.prepareGameObject(worldRenderer);
+		//enemy2.disableBehaviour = false;
+		//enemy2.disableDefence = false;
+		//gameObjects.put(enemy2.getName(), enemy2);
 		
 		
-		enemyIndex = 3;
-		parser.readFile(R.raw.enemy_frame_data);
-		List<ActionData> enemyData3 = parser.parseFrameData();
-		Enemy enemy3 = new Enemy(this, enemyData3, (Player)gameObjects.get("player"), enemyIndex, -1.5f, -1.0f);
-		enemy3.loadAnimIntoRenderer(worldRenderer);
-		enemy3.prepareGameObject(worldRenderer);
-		enemy3.disableBehaviour = false;
-		enemy3.disableDefence = false;
-		gameObjects.put(enemy3.getName(), enemy3);
+		//enemyIndex = 3;
+		//parser.readFile(R.raw.enemy_frame_data);
+		//List<ActionData> enemyData3 = parser.parseFrameData();
+		//Enemy enemy3 = new Enemy(this, enemyData3, (Player)gameObjects.get("player"), enemyIndex, -1.5f, -1.0f);
+		//enemy3.loadAnimIntoRenderer(worldRenderer);
+		//enemy3.prepareGameObject(worldRenderer);
+		//enemy3.disableBehaviour = false;
+		//enemy3.disableDefence = false;
+		//gameObjects.put(enemy3.getName(), enemy3);
 		
 		
 		//temp control box

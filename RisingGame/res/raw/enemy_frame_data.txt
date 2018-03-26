@@ -89,11 +89,12 @@
 			"columns":5
 		},
 		"hurt_box":[
+			{"left":1.0,"bottom":0.5,"right":2.5,"top":2.8,"active_frame":[10,11,12,13,14,15,16,17,18,19]}
 		],
 		"hit_box":[
 		],
 		"action_properties":{
-			"x_init_speed":-0.5,
+			"x_init_speed":-0.3,
 			"y_init_speed":0.0,
 			"x_accel":-0.05,
 			"y_accel":0.0,
@@ -384,7 +385,6 @@
 			"play_back":"play"
 		},
 		"hurt_box":[
-			{"left":1.1,"bottom":1.25,"right":2.9,"top":2.5}
 		],
 		"hit_box":[
 		],

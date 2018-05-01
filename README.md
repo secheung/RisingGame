@@ -1,4 +1,3 @@
-Open2DRenderer
+Mobile Brawler Game
 ==============
-
-openGL ES pipeline renderer
+Mobile brawler game using openGL ES pipeline renderer
